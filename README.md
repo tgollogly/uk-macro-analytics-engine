@@ -52,14 +52,9 @@ _Primary payloads are **WebP** (most browsers). Approximate sizes after `tools/r
   [ data/exports: .parquet + .json ]
 ```
 
-**Mermaid** (GitHub.com and most IDEs; **not** in GitHub mobile app, many email clients, or plain `git show`):
+**Editable diagram (Mermaid source):** [`docs/architecture.mmd`](./docs/architecture.mmd)
 
-```mermaid
-flowchart LR
-  Ingestion --> DuckDB
-  DuckDB --> Analytics
-  Analytics --> Exports
-```
+GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks in README files—they always show the raw text (as in your screenshot). The **PNG / WebP** diagram above is the portable diagram; use the `.mmd` file in [Mermaid Live Editor](https://mermaid.live) or a desktop IDE when you want the interactive version.
 
 ## Tech stack
 
@@ -82,6 +77,8 @@ flowchart LR
 ├── architecture.webp
 ├── architecture.png
 ├── architecture.svg
+├── docs/
+│   └── architecture.mmd    # Mermaid source (use mermaid.live / IDE; not mobile README)
 ├── .github/workflows/ci.yml
 ├── src/
 │   ├── __init__.py
