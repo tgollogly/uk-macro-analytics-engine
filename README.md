@@ -1,6 +1,6 @@
 # uk-macro-analytics-engine
 
-![Project hero](./hero.png)
+<img src="./hero.png" alt="UK Macro Analytics Engine banner" width="100%" />
 
 A small, production-minded **Python 3.11+** pipeline that downloads **open UK macroeconomic**
 CSVs, validates shape and column names, caches **Parquet** locally, loads into **DuckDB**,
@@ -8,30 +8,17 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 
 ## Architecture
 
+**Works everywhere:** SVG (no Mermaid required):
+
+<img src="./architecture.svg" alt="Architecture: Ingestion, DuckDB, Analytics, Exports" width="100%" />
+
+**Interactive diagram (GitHub, GitLab, many Markdown viewers):** plain Mermaid `flowchart LR` only — avoids nested subgraphs and special characters that break some renderers.
+
 ```mermaid
 flowchart LR
-  subgraph Ingest["Ingestion"]
-    CFG["config.py\n(dataset URLs + DuckDB tuning)"]
-    HTTP["requests\n(retries + timeouts)"]
-    DF["data_fetcher.py\n(parse · validate · Parquet cache)"]
-  end
-
-  subgraph Store["Storage & compute"]
-    DDB["DuckDB\n(db_engine.py)"]
-    VWS["Views / indexes\n(v_cpih_core · v_psnb_monthly)"]
-  end
-
-  subgraph Analytics["Analytics & export"]
-    AN["analytics.py\n(SQL + exports)"]
-    OUT["data/exports\n(.parquet · .json)"]
-  end
-
-  CFG --> DF
-  HTTP --> DF
-  DF --> DDB
-  DDB --> VWS
-  VWS --> AN
-  AN --> OUT
+  Ingestion --> DuckDB
+  DuckDB --> Analytics
+  Analytics --> Exports
 ```
 
 ## Tech stack
@@ -50,6 +37,8 @@ flowchart LR
 
 ```
 .
+├── hero.png
+├── architecture.svg
 ├── .github/workflows/ci.yml
 ├── src/
 │   ├── __init__.py
@@ -133,7 +122,7 @@ pytest -q
 
 ## Hero image
 
-The markdown above references `./hero.png`. Add your own dashboard screenshot or diagram at the repository root as **`hero.png`** (not committed in this template).
+`hero.png` in the repo root is a lightweight banner so the README image works out of the box. Replace it with your own dashboard screenshot if you prefer.
 
 ## Licence
 
