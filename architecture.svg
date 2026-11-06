@@ -3,7 +3,7 @@
   <rect width="720" height="2000" rx="20" fill="#fefce8" stroke="#4338ca" stroke-width="4"/>
   <rect x="32" y="32" width="656" height="120" rx="14" fill="#312e81" stroke="#4f46e5" stroke-width="3"/>
   <text x="60" y="88" fill="#ffffff" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="32" font-weight="700">Architecture</text>
-  <text x="60" y="122" fill="#c7d2fe" font-family="system-ui,sans-serif" font-size="20">Diagram v7 · overflow padding (see architecture.png)</text>
+  <text x="60" y="122" fill="#c7d2fe" font-family="system-ui,sans-serif" font-size="20">Diagram v8 · deep bottom padding (see architecture.png)</text>
 
   <!-- Ingestion -->
   <rect x="40" y="190" width="640" height="340" rx="16" fill="#f0fdfa" stroke="#312e81" stroke-width="3"/>

@@ -20,12 +20,11 @@
 </p>
 
 <p align="center">
-  <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
-  <!-- ?v= bumps GitHub’s image CDN when the PNG bytes change (otherwise it can look “stuck”). -->
-  <!-- href has no ?v= so mobile “open image” matches this file; ?v= on src only busts CDN cache. -->
-  <a href="./hero.png" title="hero.png (this branch)">
+  <!-- Relative ./ links can open the wrong blob on GitHub mobile; use canonical main file URL for tap targets. -->
+  <!-- ?v= on src only: Camo CDN cache bust (bump when PNG bytes change). -->
+  <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/hero.png" title="hero.png on main">
     <img
-      src="./hero.png?v=8"
+      src="./hero.png?v=9"
       alt="UK Macro Analytics Engine banner"
       width="100%"
       decoding="async"
@@ -77,9 +76,9 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png" title="architecture.png (this branch)">
+  <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/architecture.png" title="architecture.png on main">
     <img
-      src="./architecture.png?v=8"
+      src="./architecture.png?v=9"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
       width="100%"
       loading="lazy"
@@ -232,7 +231,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Put **`?v=` on the `<img src>` only** (not on the wrapping `<a href>`) so taps open the correct file while the CDN still refreshes. Bump `?v=` when you replace PNG bytes (this README uses `?v=8`). Vector: [`architecture.svg`](./architecture.svg).
+Use a **canonical `https://github.com/…/blob/main/…png`** on the `<a href>` for reliable **mobile** taps (relative `./` links are flaky). Put **`?v=` only on `<img src>`** for CDN cache busting (this README uses `?v=9`). Forks: change the org/repo in those two `href`s or switch back to `./file.png`. Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 
