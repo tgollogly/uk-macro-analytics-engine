@@ -102,3 +102,25 @@ def test_portfolio_footnotes_match_mirror_disclosure() -> None:
         "privacy.html",
     ):
         assert needle in (STATIC / "portfolio" / name).read_text(encoding="utf-8"), name
+
+
+def test_heat_dome_uses_osm_tiles_not_carto() -> None:
+    """CARTO basemap now requires a key; mirror uses OSM raster tiles (no key)."""
+    hd = (STATIC / "portfolio" / "heat-dome.html").read_text(encoding="utf-8")
+    assert "basemaps.cartocdn.com" not in hd
+    assert "tile.openstreetmap.org" in hd
+
+
+def test_heat_dome_stacks_map_above_charts_on_narrow() -> None:
+    """On small viewports, map column is ordered above the readout/sparkline."""
+    hd = (STATIC / "portfolio" / "heat-dome.html").read_text(encoding="utf-8")
+    assert '.layout .col-map{order:1;}' in hd
+    assert '.layout .col-left{order:2;}' in hd
+
+
+def test_ats_matcher_parses_non_json_backend_errors() -> None:
+    """ATS must not treat HTML error pages as JSON with d.error from API."""
+    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
+    assert "readAiResponse" in ats
+    assert "formatAiHttpError" in ats
+    assert ".json()" not in ats

@@ -35,7 +35,10 @@
   .go{font-size:15px;background:var(--accent);color:var(--card);padding:0 24px;}
   .go:hover{background:var(--accent-2);}
   .chip:hover{border-color:var(--accent);color:var(--accent);}
+  /* Panel first in DOM for a11y/reading order; map appears first on narrow screens via order */
   .layout{display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start;}
+  .layout .col-left{order:1;min-width:0;}
+  .layout .col-map{order:2;min-width:0;}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-md);overflow:hidden;}
   /* WARNING BANNER */
   .warn{padding:20px 22px;color:var(--card);}
@@ -71,7 +74,12 @@
   .msg.err{color:var(--c-danger);}
   .loader{display:inline-block;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:8px;}
   @keyframes spin{to{transform:rotate(360deg);}}
-  @media(max-width:900px){.layout{grid-template-columns:1fr;}.mapwrap{height:420px;}}
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .layout .col-map{order:1;}
+    .layout .col-left{order:2;}
+    .mapwrap{height:420px;}
+  }
   @media(prefers-reduced-motion:reduce){*{animation:none!important;}}
 </style>
 </head>
@@ -92,7 +100,7 @@
   <div class="chips" id="chips"></div>
 
   <div class="layout">
-    <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="col-left" style="display:flex;flex-direction:column;gap:20px;">
       <div class="panel" id="warnPanel"><div class="msg">Search a location to begin.</div></div>
       <div class="panel">
         <div class="readbox" id="readout"><div class="msg">Live readout will appear here.</div></div>
@@ -100,7 +108,7 @@
       </div>
     </div>
 
-    <div class="mapwrap">
+    <div class="col-map mapwrap">
       <div id="map"></div>
       <div class="mapctrl">
         <div class="toggle on" id="radarToggle"><span class="sw"></span>Radar</div>
@@ -140,12 +148,12 @@
   <div class="cs-eyebrow">Case study</div>
   <h2 class="cs-h">How it's built — and why</h2>
   <div class="cs-block"><h3>The problem</h3><p>Extreme heat is the deadliest weather hazard, yet judging the real risk for a place means stitching together temperature, humidity and radar from different sources. I wanted one screen that answers &lsquo;how dangerous is the heat here right now?&rsquo; for anywhere on earth.</p></div>
-  <div class="cs-block"><h3>Stack &amp; why I chose it</h3><p>I used the <code>Open-Meteo</code> API because it's free, needs no API key, is CORS-friendly and returns apparent (&lsquo;feels-like&rsquo;) temperature directly &mdash; so the whole thing deploys as a static file with no cost or sign-up. The map is <code>MapLibre GL JS</code> (open-source, no access token, unlike Mapbox) with free AWS elevation tiles for real 3D terrain, and <code>RainViewer</code> for live radar &mdash; both also key-free. The 24-hour chart is hand-drawn SVG rather than a charting library, to avoid a dependency and keep it fast and self-contained.</p></div>
+  <div class="cs-block"><h3>Stack &amp; why I chose it</h3><p>I used the <code>Open-Meteo</code> API because it's free, needs no API key, is CORS-friendly and returns apparent (&lsquo;feels-like&rsquo;) temperature directly &mdash; so the whole thing deploys as a static file with no cost or sign-up. The map is <code>MapLibre GL JS</code> (open-source, no access token, unlike Mapbox) with <strong>OpenStreetMap</strong> raster tiles (no vendor API key; follow the <a href="https://operations.osmfoundation.org/policies/tiles/" rel="noopener">OSM tile-usage policy</a>), free AWS elevation tiles for real 3D terrain, and <code>RainViewer</code> for live radar. The 24-hour chart is hand-drawn SVG rather than a charting library, to avoid a dependency and keep it fast and self-contained.</p></div>
   <div class="cs-block"><h3>Key decisions</h3><p>Warnings are driven by apparent temperature, not raw temperature, because &lsquo;feels-like&rsquo; reflects actual human heat risk; those values map onto NWS-style categories from Comfortable to Extreme Danger. &lsquo;Auto-watch&rsquo; re-fetches every five minutes with <code>setInterval</code>. Every external call is wrapped in <code>try/catch</code>, so if the map or radar fails the readout and warning still work.</p></div>
   <div class="cs-block"><h3>Trade-offs &amp; what's next</h3><p>It's fully client-side with no persistence, and radar shows the latest frame rather than a full animation loop, to stay simple and reliable. Next: frame-by-frame radar playback and official severe-weather alert feeds.</p></div>
 </div></section>
 
-<div style="max-width:1000px;margin:26px auto 0;padding:0 24px;font-size:12px;color:var(--faint);line-height:1.5;">Data — Weather: open-meteo.com &middot; Radar: RainViewer &middot; Terrain: AWS elevation tiles &middot; Map: MapLibre GL. Heat-risk bands are indicative (apparent-temperature, NWS-style categories) — not an official public-health warning.</div>
+<div style="max-width:1000px;margin:26px auto 0;padding:0 24px;font-size:12px;color:var(--faint);line-height:1.5;">Data — Weather: open-meteo.com &middot; Radar: RainViewer &middot; Terrain: AWS elevation tiles &middot; Basemap: OpenStreetMap &copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap contributors</a> &middot; Map: MapLibre GL. Heat-risk bands are indicative (apparent-temperature, NWS-style categories) — not an official public-health warning.</div>
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script>
@@ -190,16 +198,17 @@ try{
     container:"map",
     style:{version:8,
       sources:{
-        carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png","https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"],tileSize:256,attribution:"© CARTO © OpenStreetMap"},
+        /* OSM raster tiles — no API key (honour https://operations.osmfoundation.org/policies/tiles/) */
+        osm:{type:"raster",tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],tileSize:256,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'},
         dem:{type:"raster-dem",tiles:["https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"],encoding:"terrarium",tileSize:256,maxzoom:13}
       },
       // MapLibre's style spec is parsed by its own validator, not the CSSOM, so a
       // CSS custom property like var(--line) is meaningless here — it fails paint
       // validation, invalidates the whole style, and the map's "load" event then
       // never fires at all (the actual cause of the 3D map/radar never appearing).
-      layers:[{id:"bg",type:"background",paint:{"background-color":"#e4e8ec"}},{id:"carto",type:"raster",source:"carto"}]
+      layers:[{id:"bg",type:"background",paint:{"background-color":"#e4e8ec"}},{id:"osm",type:"raster",source:"osm"}]
     },
-    center:[-5.99,37.39],zoom:4.5,minZoom:2,maxZoom:11,pitch:55,bearing:-18,maxPitch:80,attributionControl:false
+    center:[-5.99,37.39],zoom:4.5,minZoom:2,maxZoom:11,pitch:55,bearing:-18,maxPitch:80,attributionControl:{compact:true}
   });
   map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"top-right");
   map.on("load",()=>{

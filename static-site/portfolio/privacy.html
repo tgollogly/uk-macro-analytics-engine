@@ -63,7 +63,7 @@
   <ul>
     <li><strong>Beneish M-Score Screener</strong> &mdash; runs in your browser; figures you enter are not sent to our backend in the shipped script paths.</li>
     <li><strong>BundleBuilder</strong> &mdash; case details stay in the page until you close the tab.</li>
-    <li><strong>Heat Anomaly Detector</strong> and <strong>Thermal Compare</strong> &mdash; request weather and map data from third parties (e.g. Open-Meteo, radar and map tile providers). Those services receive normal HTTP requests (including IP as usual for web requests).</li>
+    <li><strong>Heat Anomaly Detector</strong> and <strong>Thermal Compare</strong> &mdash; request weather and map data from third parties (e.g. Open-Meteo, OpenStreetMap raster tiles per the <a href="https://operations.osmfoundation.org/policies/tiles/">OSM tile policy</a>, RainViewer radar). Those services receive normal HTTP requests (including IP as usual for web requests).</li>
     <li><strong>ATS Resume Matcher</strong> &mdash; when you click <em>Analyse match</em>, <em>Generate cover letter</em>, or <em>Improved CV</em>, the page POSTs JSON (<code>mode</code>, <code>cv</code>, <code>jd</code>) to <strong><code>https://tgollogly.dev/api</code></strong> (configured in <code>config.js</code>). That endpoint is intended to call <strong>Google Gemini</strong> with a server-held key. <strong>Connectivity and responses from this mirror have not been verified</strong> in every environment; do not paste sensitive text.</li>
   </ul>
 
@@ -75,7 +75,7 @@
   <ul>
     <li>Google Fonts &mdash; typefaces</li>
     <li>jsDelivr / other CDNs &mdash; JavaScript libraries</li>
-    <li>Open-Meteo, RainViewer, CARTO, AWS (or similar) &mdash; weather and maps in the heat / compare demos</li>
+    <li>Open-Meteo, OpenStreetMap (tiles), RainViewer, AWS elevation &mdash; weather and maps in the heat demo</li>
     <li><code>tgollogly.dev</code> &mdash; ATS backend only when you trigger it</li>
     <li>Google Gemini &mdash; only via that ATS backend when it succeeds</li>
   </ul>

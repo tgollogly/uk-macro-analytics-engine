@@ -155,6 +155,21 @@ Education: Relevant qualifications and training.`;
 
 const $=id=>document.getElementById(id);
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+/** Parse fetch body: backend should return JSON; HTML/challenge pages are common when blocked. */
+async function readAiResponse(r){
+  const text = await r.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (e) { /* not JSON */ }
+  const ct = (r.headers && r.headers.get("content-type")) || "";
+  return { ok: r.ok, status: r.status, contentType: ct, text, data };
+}
+function formatAiHttpError(parsed){
+  const host = (typeof window.AI_BACKEND_URL === "string") ? window.AI_BACKEND_URL : "the AI backend";
+  if (parsed.status === 403 || /just a moment|challenge|cf-mitigated/i.test(parsed.text)) {
+    return "The AI endpoint returned a block or challenge page (HTTP " + parsed.status + ") instead of JSON. That usually means the server rejected the request before your app logic ran — it is not proof that an API key is missing. Try from a normal browser session on the canonical site, or ask the host to allow this origin. Backend URL: " + host;
+  }
+  return "Unexpected response from " + host + " (HTTP " + parsed.status + "). Expected JSON; got " + (parsed.contentType || "(no Content-Type)") + ". The backend may be unreachable, blocked, or returning an error page.";
+}
 function bandColour(s){ return s>=75?"var(--ok)":s>=50?"var(--warn)":"var(--err)"; }
 function verdict(s){
   if(s>=75) return ["Strong match","Your CV lines up well with this job. Tighten the few missing keywords and apply."];
@@ -175,8 +190,10 @@ $("go").addEventListener("click", async ()=>{
   $("result").style.display="none"; $("go").disabled=true;
   try{
     const r=await fetch(window.AI_BACKEND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:"ats",cv,jd})});
-    const d=await r.json();
-    if(d.error){ msg.className="msg err"; msg.textContent="Error: "+d.error+(d.raw?(" — "+d.raw.slice(0,200)):""); return; }
+    const parsed=await readAiResponse(r);
+    const d=parsed.data;
+    if(!d||typeof d!=="object"||Array.isArray(d)){ msg.className="msg err"; msg.textContent=formatAiHttpError(parsed); return; }
+    if(d.error){ msg.className="msg err"; msg.textContent="Error: "+d.error+(d.raw?(" — "+String(d.raw).slice(0,200)):""); return; }
     const score=Math.max(0,Math.min(100,parseInt(d.score)||0));
     lastMatchScore=score;
     msg.style.display="none";
@@ -188,7 +205,7 @@ $("go").addEventListener("click", async ()=>{
     $("missing").innerHTML=(d.missing||[]).map(k=>`<span class="chip x">${esc(k)}</span>`).join("")||'<span style="color:var(--faint);font-size:14px;">Nothing major — nice.</span>';
     $("suggestions").innerHTML=(d.suggestions||[]).map(s=>`<li>${esc(s)}</li>`).join("")||"<li>No suggestions returned.</li>";
     $("result").style.display="block";
-  }catch(e){ msg.className="msg err"; msg.textContent="Couldn't reach the AI backend. Check the Worker is deployed and the URL in config.js is correct."; }
+  }catch(e){ msg.className="msg err"; msg.textContent="Network error calling "+(window.AI_BACKEND_URL||"the backend")+": "+(e&&e.message?e.message:"failed")+". If the browser blocks cross-origin requests, the host must allow this origin (CORS)."; }
   finally{ $("go").disabled=false; }
 });
 
@@ -210,7 +227,9 @@ async function generate(mode, title, kind, btn){
   document.querySelectorAll(".genbtn").forEach(b=>b.disabled=true);
   try{
     const r=await fetch(window.AI_BACKEND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,cv,jd})});
-    const d=await r.json();
+    const parsed=await readAiResponse(r);
+    const d=parsed.data;
+    if(!d||typeof d!=="object"||Array.isArray(d)){ gm.className="msg err"; gm.textContent=formatAiHttpError(parsed); return; }
     if(d.error && !d.text){ gm.className="msg err"; gm.textContent="Error: "+d.error; return; }
     gm.style.display="none";
     $("genTitle").textContent=title;
@@ -218,7 +237,7 @@ async function generate(mode, title, kind, btn){
     lastDocKind=kind;
     $("genOut").style.display="block";
     $("genOut").scrollIntoView({behavior:"smooth",block:"nearest"});
-  }catch(e){ gm.className="msg err"; gm.textContent="Couldn't reach the AI backend just now — please try again in a moment."; }
+  }catch(e){ gm.className="msg err"; gm.textContent="Network error calling "+(window.AI_BACKEND_URL||"the backend")+": "+(e&&e.message?e.message:"failed")+"."; }
   finally{ document.querySelectorAll(".genbtn").forEach(b=>b.disabled=false); }
 }
 $("genCover").addEventListener("click",()=>generate("cover","Cover letter","cover"));
