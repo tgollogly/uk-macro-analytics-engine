@@ -1,28 +1,64 @@
-# uk-macro-analytics-engine
+<h1 align="center">UK Macro Analytics Engine</h1>
 
-<picture>
-  <source srcset="./hero.webp" type="image/webp" />
-  <img
-    src="./hero.png"
-    alt="UK Macro Analytics Engine banner"
-    width="900"
-    height="300"
-    decoding="async"
-    fetchpriority="high"
-  />
-</picture>
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11+-2563eb?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+" /></a>
+  &nbsp;
+  <a href="https://duckdb.org/"><img src="https://img.shields.io/badge/DuckDB-OLAP-fbbf24?style=for-the-badge&logo=duckdb&logoColor=0f172a" alt="DuckDB" /></a>
+  &nbsp;
+  <a href="https://streamlit.io/"><img src="https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit" /></a>
+</p>
 
-A small, production-minded **Python 3.11+** pipeline that downloads **open UK macroeconomic**
-CSVs, validates shape and column names, caches **Parquet** locally, loads into **DuckDB**,
-and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation, fiscal totals).
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square" alt="MIT License" /></a>
+  <a href="./NOTICE.md"><img src="https://img.shields.io/badge/Data-OGL%20v3-0ea5e9?style=flat-square" alt="Open Government Licence" /></a>
+  <a href="./.github/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-181717?style=flat-square&logo=github" alt="CI" /></a>
+</p>
+
+<p align="center">
+  <em>Portfolio · Python · open ONS data · validation · DuckDB · dashboards</em><br/>
+  <strong>Thomas Gollogly</strong>
+</p>
+
+<p align="center">
+  <picture>
+    <source srcset="./hero.webp" type="image/webp" />
+    <img
+      src="./hero.png"
+      alt="UK Macro Analytics Engine banner"
+      width="900"
+      height="300"
+      decoding="async"
+      fetchpriority="high"
+    />
+  </picture>
+</p>
+
+> **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
+
+---
+
+## Contents
+
+| Section | What you get |
+|---------|----------------|
+| [**Architecture**](#architecture) | Flow + diagram assets |
+| [**Tech stack**](#tech-stack) | Libraries and roles |
+| [**Portfolio dashboard**](#portfolio-dashboard-streamlit--free-locally) | Streamlit + Vercel notes |
+| [**Quick start**](#getting-started) | Install & CLI |
+| [**Config**](#configuration) | URLs, DuckDB, cache |
+| [**Security & compliance**](#security--compliance) | Audit, secrets, licences |
+| [**CI & tests**](#continuous-integration) | GitHub Actions |
+| [**Legal**](#legal-licence--disclaimer) | MIT, OGL, disclaimers |
+
+---
 
 ## Architecture
 
-**Readable flow everywhere (GitHub web + mobile)** — monospace pipeline:
+**Flow** — readable everywhere (GitHub web & mobile):
 
 <pre>
 ┌──────────────────────────────────────────┐
-│ Ingest: requests → data_fetcher Parquet   │
+│ Ingest: requests → data_fetcher → Parquet │
 └───────────────────┬──────────────────────┘
                     ▼
 ┌──────────────────────────────────────────┐
@@ -30,46 +66,46 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 └───────────────────┬──────────────────────┘
                     ▼
 ┌──────────────────────────────────────────┐
-│ analytics.py: SQL, YoY, rolling, export   │
+│ analytics.py: SQL, YoY, rolling, exports  │
 └───────────────────┬──────────────────────┘
                     ▼
 ┌──────────────────────────────────────────┐
 │ Outputs: Parquet · CSV · JSON · report   │
-│ Optional: Streamlit dashboard (below)     │
+│ Optional: Streamlit · static-site/Vercel  │
 └──────────────────────────────────────────┘
 </pre>
 
-**Diagram (bitmap)** — works where PNG is supported (GitHub README may rescale on mobile):
+<p align="center">
+  <picture>
+    <source srcset="./architecture.webp" type="image/webp" />
+    <img
+      src="./architecture.png"
+      alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+      width="600"
+      height="175"
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+</p>
 
-<picture>
-  <source srcset="./architecture.webp" type="image/webp" />
-  <img
-    src="./architecture.png"
-    alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
-    width="600"
-    height="175"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-  />
-</picture>
+<p align="center"><sub>Bitmap + WebP for README; <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
 
-_Assets are exported at **~2×** the display width above (then downscaled by the browser) so they stay sharp on **Retina / high-DPI** screens; **WebP** is still the default for speed, with **full-color PNG** fallbacks._
-
-**Vector:** [`architecture.svg`](./architecture.svg) · **Mermaid source (desktop / mermaid.live):** [`docs/architecture.mmd`](./docs/architecture.mmd)
+---
 
 ## Tech stack
 
-| Layer | Choice |
-|-------|--------|
-| Language | Python **3.11+** (also tested on **3.12**) |
-| Analytics / OLAP | **DuckDB** with indexes and pragmatic PRAGMAs |
-| Tabular IO | **pandas** + **pyarrow** (Parquet) |
-| HTTP | **requests** with retries |
-| Dashboard | **Streamlit** (local / free tier Cloud) |
-| Testing | **pytest** |
-| CI | **GitHub Actions** (ruff → audit → compile → tests) |
-| Edge / Workers | No hard dependency on a specific host. Pure Python **stdlib + wheels**; for **Cloudflare Workers** use a **Python compat** or **container** pattern—this repo is CLI-first. |
+| Area | Stack |
+|------|--------|
+| **Runtime** | Python **3.11+** (CI: 3.11 & 3.12) |
+| **Storage / SQL** | **DuckDB** (views, optional indexes) |
+| **Tables** | **pandas**, **pyarrow** (Parquet) |
+| **HTTP** | **requests** (retries, timeouts) |
+| **Dashboard** | **Streamlit**, **Plotly** |
+| **Quality** | **ruff**, **pytest**, `security_audit.py` |
+| **CI** | **GitHub Actions** |
+
+---
 
 ## Portfolio dashboard (Streamlit — free locally)
 
@@ -78,74 +114,31 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-- **KPIs**, **Plotly** line charts, **tabs** (inflation vs public finances vs insights), **CSV download**.  
-- **Refresh data** pulls the latest ONS CSV from the configured URLs. “Live” = **batch refresh** on demand — ONS does not expose a streaming socket here.  
-- Host the app **free** on **Streamlit Community Cloud**: [`docs/STREAMLIT.md`](./docs/STREAMLIT.md).
+| Feature | Detail |
+|---------|--------|
+| **Charts** | Plotly line charts, dark theme |
+| **Data** | **Refresh** pulls latest ONS CSV from URLs in `src/config.py` (batch, not a socket) |
+| **Host (free)** | [Streamlit Community Cloud](https://streamlit.io/cloud) · see [**docs/STREAMLIT.md**](./docs/STREAMLIT.md) |
 
-### Landing page on Vercel (free static site)
+### Landing page on Vercel
 
-Streamlit **cannot** run on Vercel’s default serverless hosting — use a **static** brochure in `static-site/` and link to your Streamlit Cloud URL. Deploy: [`docs/VERCEL.md`](./docs/VERCEL.md).
+Streamlit needs a **long-running Python app** — not Vercel serverless by default. Use **`static-site/`** on [**Vercel**](https://vercel.com) and link to your Streamlit URL: [**docs/VERCEL.md**](./docs/VERCEL.md).
 
-Other free outputs:
+### More docs (free tooling)
 
-- **Governance:** [`docs/DATA_GOVERNANCE.md`](./docs/DATA_GOVERNANCE.md)
-- **T-SQL mapping:** [`docs/SQL_SERVER_MAPPING.md`](./docs/SQL_SERVER_MAPPING.md)
-- **Power BI Desktop:** [`docs/POWERBI_DESKTOP.md`](./docs/POWERBI_DESKTOP.md)
-- **Static HTML** (Chart.js CDN): `python -m src.report_builder`
+- [**Data governance**](./docs/DATA_GOVERNANCE.md) · [**T-SQL notes**](./docs/SQL_SERVER_MAPPING.md) · [**Power BI Desktop**](./docs/POWERBI_DESKTOP.md)
+- **Static HTML report:** `python -m src.report_builder`
 
-## Copyright
-
-Code and documentation in this portfolio repo: **© Thomas Gollogly** — see [`LICENSE`](./LICENSE). **Official statistics** remain © Crown / ONS; use and attribute under the **Open Government Licence** (see [`NOTICE.md`](./NOTICE.md)).
-
-## Project layout
-
-```
-.
-├── streamlit_app.py         # interactive dashboard
-├── static-site/             # landing page for Vercel (HTML)
-├── hero.webp
-├── hero.png
-├── architecture.webp
-├── architecture.png
-├── architecture.svg
-├── docs/
-│   ├── architecture.mmd         # Mermaid source (desktop / mermaid.live)
-│   ├── DATA_GOVERNANCE.md       # lineage, quality, licences
-│   ├── SQL_SERVER_MAPPING.md    # T-SQL interview notes
-│   ├── POWERBI_DESKTOP.md       # free BI import walkthrough
-│   └── samples/                 # optional screenshots (see docs/samples/README.md)
-├── .github/workflows/ci.yml
-├── src/
-│   ├── __init__.py
-│   ├── config.py          # URLs, paths, DuckDB settings
-│   ├── data_fetcher.py    # download + cache + validation
-│   ├── db_engine.py       # DuckDB connect, views, indexes
-│   ├── analytics.py       # queries + exports
-│   ├── report_builder.py  # static HTML KPI page from exports
-│   └── security_audit.py  # lightweight static checks
-├── tools/
-│   ├── regen_readme_images.py   # rebuild WebP + PNG README assets
-│   └── source/                  # optional high-res sources (hero.png, architecture.png)
-├── tests/
-├── requirements.txt
-├── requirements-dev.txt
-├── ruff.toml
-├── CONTRIBUTING.md
-├── LICENSE
-├── NOTICE.md
-└── README.md
-```
+---
 
 ## Getting started
 
 ### Prerequisites
 
 - **Python 3.11+**
-- Network access for dataset downloads (or use your own Parquet by wiring a custom `DatasetSpec`).
+- Network access for ONS downloads (or supply your own Parquet via `DatasetSpec`)
 
-### Install
-
-For day-to-day work (includes **ruff** for the same checks CI runs):
+### Install (with dev/lint tools)
 
 ```bash
 python -m venv .venv
@@ -153,82 +146,117 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
 ```
 
-Production-style installs can use `requirements.txt` only (no linter).
+Use **`requirements.txt`** only if you do not need **ruff** locally.
 
-### Quickstart (CLI)
+### CLI quickstart
 
-**1) Fetch one dataset to the Parquet cache**
+| Step | Command |
+|------|---------|
+| 1 · Fetch CPIH | `python -m src.data_fetcher ons_cpih_monthly` |
+| 2 · Fetch PSNB | `python -m src.data_fetcher ons_psnb_monthly` |
+| 3 · Run analytics | `python -m src.analytics` |
+| 4 · Optional HTML report | `python -m src.report_builder --open` |
 
-```bash
-python -m src.data_fetcher ons_cpih_monthly
-python -m src.data_fetcher ons_psnb_monthly
-```
+**Exports** (under `data/exports/`, gitignored): `cpih_yoy` / `psnb_monthly` as **Parquet**, **JSON**, **CSV**; `report.html` after step 4.
 
-**2) Run the full analytics pipeline** (downloads if needed, loads DuckDB, prints previews, exports)
-
-```bash
-python -m src.analytics
-```
-
-**3) Optional — static HTML dashboard** (uses [Chart.js](https://www.chartjs.org/) from a public CDN; works offline after cache)
-
-```bash
-python -m src.report_builder --open
-```
-
-Exports are written under `data/exports/`:
-
-- `cpih_yoy.parquet` / `cpih_yoy.json` / **`cpih_yoy.csv`**
-- `psnb_monthly.parquet` / `psnb_monthly.json` / **`psnb_monthly.csv`**
-- `report.html` (after report_builder)
-
-Use `--no-export` on `analytics` to skip writing files.
+---
 
 ## Configuration
 
-- **Dataset URLs and expected columns**: `src/config.py` (`DATASETS` mapping).
-- **DuckDB tuning**: `DuckDBSettings` in the same file (`threads`, `memory_limit`, etc.).
-- **Cache location**: `data/cache/parquet/` (created automatically).
+| Topic | Location |
+|-------|----------|
+| Dataset URLs & columns | `src/config.py` → `DATASETS` |
+| DuckDB tuning | `src/config.py` → `DuckDBSettings` |
+| Cache | `data/cache/parquet/` (auto-created) |
 
-If a publisher changes CSV layout, update the **`DatasetSpec`** or extend **`_alias_key_columns`** in `data_fetcher.py`.
+If a publisher changes CSV layout, update **`DatasetSpec`** or **`_alias_key_columns`** in `src/data_fetcher.py`.
+
+---
 
 ## Security & compliance
 
-- **Dependency hygiene**: requirements are **version-pinned**; CI runs `src/security_audit.py` to flag **insecure `git+http`** deps and other risky patterns.
-- **Secrets**: Do not commit API keys; the audit script flags common risky literals.
-- **Legal — software**: This codebase is released under the **MIT License** (see `LICENSE`).
-- **Legal — data**: UK public-sector datasets are often under the **Open Government Licence (OGL)**. See `NOTICE.md` and each publisher’s terms. This project does **not** grant rights to third-party data; you must attribute and comply with the relevant licence when redistributing **derived** statistics or charts.
+| Topic | Detail |
+|-------|--------|
+| **Dependencies** | Pinned in `requirements.txt`; CI runs `src/security_audit.py` |
+| **Secrets** | Do not commit keys; audit flags risky patterns |
+| **Software** | **MIT** — see [`LICENSE`](./LICENSE) |
+| **Statistics** | Often **OGL**; see [`NOTICE.md`](./NOTICE.md) |
+
+---
 
 ## Continuous integration
 
-Workflow: `.github/workflows/ci.yml`
+Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
-1. `ruff check src tests tools`
+1. `python -m ruff check src tests tools`
 2. `python src/security_audit.py`
 3. `python -m compileall -q src tests`
 4. `pytest -q --tb=short`
-
-## Tests
 
 ```bash
 pytest -q
 ```
 
+---
+
+## Project layout
+
+```
+.
+├── streamlit_app.py          # Streamlit portfolio dashboard
+├── static-site/              # Vercel-ready landing (HTML)
+├── src/                      # Pipeline package
+├── tests/
+├── docs/                     # Architecture, governance, Streamlit, Vercel, BI notes
+├── tools/regen_readme_images.py
+├── requirements.txt
+├── requirements-dev.txt
+├── LICENSE
+├── NOTICE.md
+└── README.md
+```
+
+---
+
 ## Contributing
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+See [**CONTRIBUTING.md**](./CONTRIBUTING.md).
 
-## Hero image
+---
 
-Images are built for **HiDPI**: files are **~2×** the `width`/`height` shown in the `<img>` tags so they stay sharp on Retina displays, while **WebP** stays the default for smaller transfer. **PNG** fallbacks are full-color. Regenerate after edits:
+## Hero & diagram assets (HiDPI)
+
+Images use **~2×** pixel width vs displayed `width` for sharp Retina rendering. **WebP** first, **PNG** fallback.
 
 ```bash
 pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Optional: drop a wide master banner as `tools/source/hero.png` (the script upscales to **1800px** width if your source is smaller). The architecture bitmap is redrawn in code for crisp lines; use [`architecture.svg`](./architecture.svg) for lossless vector in slides.
+Optional master: `tools/source/hero.png`. Vector slides: [`architecture.svg`](./architecture.svg).
 
-## Licence
+---
 
-Code: **MIT** — see `LICENSE`. Data: governed by publisher licences (see `NOTICE.md`).
+## Legal — licence & disclaimer
+
+### Software (this repository)
+
+Copyright **© 2025 Thomas Gollogly**. The **source code and documentation** in this repository are licensed under the [**MIT License**](./LICENSE) — use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies, subject to the conditions in that file.
+
+### Statistics and third‑party content
+
+Official UK statistics accessed via configured URLs (e.g. **Office for National Statistics**) are **© Crown copyright** and made available under the [**Open Government Licence v3.0**](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). This project **does not** grant you rights in those statistics beyond what the publisher licences; you must **attribute** and comply with the **OGL** and any publisher terms. See [**NOTICE.md**](./NOTICE.md).
+
+### No warranty / not advice
+
+The **Software** and any **outputs** (figures, exports, dashboards) are provided **“as is”**, without warranty of any kind. They are **not** official ONS releases, **not** financial, investment, tax, or legal advice, and **not** a substitute for professional judgment or the **original** publications on [ons.gov.uk](https://www.ons.gov.uk/). **ONS revises** series; always check the publisher for authoritative figures.
+
+### Trademarks
+
+Names such as **DuckDB**, **Python**, **Streamlit**, **Vercel**, and others may be trademarks of their respective owners; this project is **not** endorsed by them unless stated.
+
+---
+
+<p align="center">
+  <sub>README last structured for clarity on GitHub — coloured badges use <a href="https://shields.io">shields.io</a>. Inline HTML is limited by GitHub’s sanitizer; for custom themes use your own site or the Streamlit app.</sub>
+</p>
