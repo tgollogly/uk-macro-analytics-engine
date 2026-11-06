@@ -5,8 +5,8 @@
   <img
     src="./hero.png"
     alt="UK Macro Analytics Engine banner"
-    width="800"
-    height="266"
+    width="900"
+    height="300"
     decoding="async"
     fetchpriority="high"
   />
@@ -25,15 +25,15 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
   <img
     src="./architecture.png"
     alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
-    width="560"
-    height="163"
+    width="600"
+    height="175"
     loading="lazy"
     decoding="async"
     fetchpriority="low"
   />
 </picture>
 
-_Primary payloads are **WebP** (most browsers). Approximate sizes after `tools/regen_readme_images.py`: ~8 KB hero + ~6 KB diagram; **PNG** fallbacks are larger (hero keeps full color for gradients)._
+_Assets are exported at **~2×** the display width above (then downscaled by the browser) so they stay sharp on **Retina / high-DPI** screens; **WebP** is still the default for speed, with **full-color PNG** fallbacks._
 
 **Vector source (for decks / print):** [`architecture.svg`](./architecture.svg).
 
@@ -165,14 +165,14 @@ pytest -q
 
 ## Hero image
 
-Images at the repo root are optimized for **fast README loads**: **WebP** first (`hero.webp`, `architecture.webp`) with **palette-compressed PNG** fallbacks. To regenerate after changing artwork, run:
+Images are built for **HiDPI**: files are **~2×** the `width`/`height` shown in the `<img>` tags so they stay sharp on Retina displays, while **WebP** stays the default for smaller transfer. **PNG** fallbacks are full-color. Regenerate after edits:
 
 ```bash
 pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Optional: place high-res sources under `tools/source/` as `hero.png` and `architecture.png` before running.
+Optional: drop a wide master banner as `tools/source/hero.png` (the script upscales to **1800px** width if your source is smaller). The architecture bitmap is redrawn in code for crisp lines; use [`architecture.svg`](./architecture.svg) for lossless vector in slides.
 
 ## Licence
 
