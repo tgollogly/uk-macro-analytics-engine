@@ -12,9 +12,11 @@ from pathlib import Path
 
 import pytest
 
+from tools.regen_readme_images import README_ARCH_PNG, README_HERO_PNG
+
 ROOT = Path(__file__).resolve().parent.parent
 README = ROOT / "README.md"
-# e.g. <a href="./hero.png" ...><img src="./hero.png" ...>
+# e.g. <a href="./hero-README-v2.png" ...><img src="./hero-README-v2.png" ...>
 _LINK_IMG_PAIR = re.compile(
     r'<a\s+[^>]*href="(\.\/[^"]+\.(?:png|svg))"[^>]*>\s*<img\s+[^>]*src="(\.\/[^"]+\.(?:png|svg))"',
     re.IGNORECASE | re.DOTALL,
@@ -32,9 +34,15 @@ def test_readme_image_link_src_href_pairs_match() -> None:
         )
 
 
+def test_readme_embeds_versioned_bitmap_basenames() -> None:
+    text = README.read_text(encoding="utf-8")
+    assert f"./{README_HERO_PNG}" in text
+    assert f"./{README_ARCH_PNG}" in text
+
+
 @pytest.mark.parametrize(
     "filename",
-    ("hero.png", "architecture.png", "architecture.svg"),
+    (README_HERO_PNG, README_ARCH_PNG, "architecture.svg"),
 )
 def test_readme_references_committed_files(filename: str) -> None:
     text = README.read_text(encoding="utf-8")
