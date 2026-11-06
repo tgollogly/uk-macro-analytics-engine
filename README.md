@@ -18,7 +18,28 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 
 ## Architecture
 
-**Diagram (PNG)** — works in the GitHub web README, **mobile app**, and clients that block inline **SVG**.
+**Readable flow everywhere (GitHub web + mobile)** — monospace pipeline:
+
+<pre>
+┌──────────────────────────────────────────┐
+│ Ingest: requests → data_fetcher Parquet   │
+└───────────────────┬──────────────────────┘
+                    ▼
+┌──────────────────────────────────────────┐
+│ DuckDB: db_engine, views (CPIH / PSNB)    │
+└───────────────────┬──────────────────────┘
+                    ▼
+┌──────────────────────────────────────────┐
+│ analytics.py: SQL, YoY, rolling, export   │
+└───────────────────┬──────────────────────┘
+                    ▼
+┌──────────────────────────────────────────┐
+│ Outputs: Parquet · CSV · JSON · report   │
+│ Optional: Streamlit dashboard (below)     │
+└──────────────────────────────────────────┘
+</pre>
+
+**Diagram (bitmap)** — works where PNG is supported (GitHub README may rescale on mobile):
 
 <picture>
   <source srcset="./architecture.webp" type="image/webp" />
@@ -35,26 +56,7 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 
 _Assets are exported at **~2×** the display width above (then downscaled by the browser) so they stay sharp on **Retina / high-DPI** screens; **WebP** is still the default for speed, with **full-color PNG** fallbacks._
 
-**Vector source (for decks / print):** [`architecture.svg`](./architecture.svg).
-
-**Plain text (always renders):**
-
-```
-  [ Ingestion: config, requests, data_fetcher, Parquet cache ]
-                            |
-                            v
-  [ DuckDB: db_engine, views v_cpih_core, v_psnb_monthly ]
-                            |
-                            v
-  [ analytics.py: rolling windows, YoY, exports ]
-                            |
-                            v
-  [ data/exports: .parquet + .json ]
-```
-
-**Editable diagram (Mermaid source):** [`docs/architecture.mmd`](./docs/architecture.mmd)
-
-GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks in README files—they always show the raw text (as in your screenshot). The **PNG / WebP** diagram above is the portable diagram; use the `.mmd` file in [Mermaid Live Editor](https://mermaid.live) or a desktop IDE when you want the interactive version.
+**Vector:** [`architecture.svg`](./architecture.svg) · **Mermaid source (desktop / mermaid.live):** [`docs/architecture.mmd`](./docs/architecture.mmd)
 
 ## Tech stack
 
@@ -64,21 +66,43 @@ GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks 
 | Analytics / OLAP | **DuckDB** with indexes and pragmatic PRAGMAs |
 | Tabular IO | **pandas** + **pyarrow** (Parquet) |
 | HTTP | **requests** with retries |
+| Dashboard | **Streamlit** (local / free tier Cloud) |
 | Testing | **pytest** |
 | CI | **GitHub Actions** (ruff → audit → compile → tests) |
 | Edge / Workers | No hard dependency on a specific host. Pure Python **stdlib + wheels**; for **Cloudflare Workers** use a **Python compat** or **container** pattern—this repo is CLI-first. |
 
-## CV / portfolio (everything below is free)
+## Portfolio dashboard (Streamlit — free locally)
 
-- **Governance narrative** you can quote in interviews: [`docs/DATA_GOVERNANCE.md`](./docs/DATA_GOVERNANCE.md)
-- **SQL Server angle** — same logic as T-SQL notes: [`docs/SQL_SERVER_MAPPING.md`](./docs/SQL_SERVER_MAPPING.md)
-- **Power BI Desktop** (free) — load CSV exports: [`docs/POWERBI_DESKTOP.md`](./docs/POWERBI_DESKTOP.md)
-- **Static “dashboard” HTML** (browser only, optional CDN for Chart.js): `python -m src.report_builder` → opens `data/exports/report.html` if you pass `--open`
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+- **KPIs**, **Plotly** line charts, **tabs** (inflation vs public finances vs insights), **CSV download**.  
+- **Refresh data** pulls the latest ONS CSV from the configured URLs. “Live” = **batch refresh** on demand — ONS does not expose a streaming socket here.  
+- Host the app **free** on **Streamlit Community Cloud**: [`docs/STREAMLIT.md`](./docs/STREAMLIT.md).
+
+### Landing page on Vercel (free static site)
+
+Streamlit **cannot** run on Vercel’s default serverless hosting — use a **static** brochure in `static-site/` and link to your Streamlit Cloud URL. Deploy: [`docs/VERCEL.md`](./docs/VERCEL.md).
+
+Other free outputs:
+
+- **Governance:** [`docs/DATA_GOVERNANCE.md`](./docs/DATA_GOVERNANCE.md)
+- **T-SQL mapping:** [`docs/SQL_SERVER_MAPPING.md`](./docs/SQL_SERVER_MAPPING.md)
+- **Power BI Desktop:** [`docs/POWERBI_DESKTOP.md`](./docs/POWERBI_DESKTOP.md)
+- **Static HTML** (Chart.js CDN): `python -m src.report_builder`
+
+## Copyright
+
+Code and documentation in this portfolio repo: **© Thomas Gollogly** — see [`LICENSE`](./LICENSE). **Official statistics** remain © Crown / ONS; use and attribute under the **Open Government Licence** (see [`NOTICE.md`](./NOTICE.md)).
 
 ## Project layout
 
 ```
 .
+├── streamlit_app.py         # interactive dashboard
+├── static-site/             # landing page for Vercel (HTML)
 ├── hero.webp
 ├── hero.png
 ├── architecture.webp
