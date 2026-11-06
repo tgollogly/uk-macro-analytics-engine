@@ -1,0 +1,19 @@
+# Independent ATS API — deploy ONLY with explicit -c; do not replace static landing Worker.
+# Example: cd workers/ats-api && npx wrangler deploy -c wrangler.toml
+name = "uk-macro-ats-api"
+main = "src/index.ts"
+compatibility_date = "2025-11-06"
+
+# Secrets (set via dashboard or `wrangler secret put` — never commit values):
+#   GEMINI_API_KEY  — Google AI Studio / Gemini API key (server-side only)
+
+# Optional plain-text vars (non-secret):
+#   GEMINI_MODEL              — default model id (default: gemini-2.0-flash)
+#   ATS_ALLOWED_ORIGINS       — comma-separated exact origins; empty = allow any (dev-only)
+#   ATS_MAX_BODY_CHARS        — max total JSON body size (default: 120000)
+#   ATS_IP_WINDOW_MS          — rate-limit window (default: 60000)
+#   ATS_IP_MAX_PER_WINDOW     — max requests per IP per window (default: 30)
+
+[vars]
+# GEMINI_MODEL = "gemini-2.0-flash"
+# ATS_ALLOWED_ORIGINS = "https://example.pages.dev"

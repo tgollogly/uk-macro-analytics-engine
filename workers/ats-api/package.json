@@ -1,0 +1,17 @@
+{
+  "name": "uk-macro-ats-api-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261104.1",
+    "typescript": "~5.7.2",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.36.0"
+  }
+}
