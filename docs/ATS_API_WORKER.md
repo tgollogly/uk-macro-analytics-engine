@@ -6,7 +6,7 @@ Two Workers plus one **Durable Object (DO)** class in the **gate** script. The *
 
 | Resource | Wrangler name | Config file | Role |
 |----------|---------------|-------------|------|
-| Private backend | `uk-macro-ats-backend` | `workers/ats-api/wrangler.backend.toml` | `GEMINI_API_KEY`, HMAC verify, Gemini REST |
+| Private backend | `uk-macro-ats-backend` | `workers/ats-api/wrangler.backend.toml` | `GEMINI_API_KEY`, HMAC verify, Gemini REST; `workers_dev = false` so **`*.workers.dev` is disabled** (service binding only) |
 | Public gate | `uk-macro-ats-gate` | `workers/ats-api/wrangler.toml` | CORS + origin allowlist + DO quota + HMAC forward |
 | Quota DO class | `AtsQuota` (in gate bundle) | same as gate | Per-window counters (global + per `CF-Connecting-IP`) |
 
@@ -37,7 +37,7 @@ Two Workers plus one **Durable Object (DO)** class in the **gate** script. The *
 | `ATS_GATE_FAIL_CLOSED` | gate | Default `true` — 503 if binding/secret/quota missing |
 | `ATS_QUOTA_DISABLED` | gate | Set `1` **local/tests only** — skips DO (do not use in production) |
 
-**Durable Object:** gate must include `[[migrations]]` `new_classes = ["AtsQuota"]` (already in `wrangler.toml`). **Do not create** namespaces or bindings in this repo — Wrangler creates them on first approved deploy.
+**Durable Object:** on **Workers Free**, use `[[migrations]]` with `new_sqlite_classes = ["AtsQuota"]` so the class is created as an **SQLite-backed** Durable Object (Wrangler shows error `10097` if `new_classes` is used instead). See [Wrangler · Durable Objects migrations](https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects).
 
 ## Abuse, cost, and limits
 
@@ -60,20 +60,24 @@ Two Workers plus one **Durable Object (DO)** class in the **gate** script. The *
 
 ## Deploy order (after explicit approval)
 
-1. Deploy **backend** (creates Worker, no public CORS):
+1. Deploy **backend** (creates Worker; `workers_dev = false` keeps it **off** the public `workers.dev` hostname):
    ```bash
    cd workers/ats-api
    npm ci
-   npx wrangler secret put GEMINI_API_KEY -c wrangler.backend.toml
    npx wrangler secret put ATS_INTERNAL_HMAC_SECRET -c wrangler.backend.toml
    npx wrangler deploy -c wrangler.backend.toml
    ```
-2. Set **gate** vars + secrets (same `ATS_INTERNAL_HMAC_SECRET` value as backend):
+2. Deploy **gate** (service binding + Durable Object migration); set **same** `ATS_INTERNAL_HMAC_SECRET`:
    ```bash
    npx wrangler secret put ATS_INTERNAL_HMAC_SECRET -c wrangler.toml
    npx wrangler deploy -c wrangler.toml
    ```
-3. Add **Production** var `ATS_ALLOWED_ORIGINS` with exact hub origins (e.g. `https://….pages.dev`, `https://….workers.dev`).
+3. **`GEMINI_API_KEY` (parent machine only)** — add the key to **`uk-macro-ats-backend`** using one official path from Cloudflare docs (do not paste the value into chat or commit it):
+   - **Wrangler:** `npx wrangler secret put GEMINI_API_KEY -c wrangler.backend.toml` ([Secrets · Workers](https://developers.cloudflare.com/workers/configuration/secrets/))
+   - **Dashboard:** **Workers & Pages** → your Worker → **Settings** → **Variables and Secrets** → **Add** → type **Secret**, name **`GEMINI_API_KEY`**, value, then **Deploy** (same page describes this flow).
+
+4. **`ATS_ALLOWED_ORIGINS`** on **`uk-macro-ats-gate`**: list exact browser `Origin` values (comma-separated). For the hub preview, the deployed gate includes  
+   `https://uk-macro-analytics-landing.thomasgolloglypagesdev.workers.dev` — add production origins when you cut over. Use `wrangler vars` / dashboard **Variables** (plaintext) to update.
 
 **Always** use `-c workers/ats-api/wrangler.toml` or `-c workers/ats-api/wrangler.backend.toml` — **never** run `wrangler deploy` at repo root for this stack (that deploys `uk-macro-analytics-landing`).
 

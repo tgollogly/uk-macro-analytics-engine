@@ -87,6 +87,7 @@ def test_docs_describe_ats_worker_deploy_and_secrets() -> None:
     assert "uk-macro-ats-backend" in doc
     assert "GEMINI_API_KEY" in doc
     assert "ATS_INTERNAL_HMAC_SECRET" in doc
+    assert "new_sqlite_classes" in doc
 
 
 def test_hub_index_links_to_six_demo_routes() -> None:

@@ -6,7 +6,7 @@
  * Do NOT rename this file to config.js until user approves — keeps current hub on tgollogly.dev/api.
  */
 window.AI_BACKEND_URL =
-  "https://uk-macro-ats-gate.<YOUR_ACCOUNT_SUBDOMAIN>.workers.dev/api";
+  "https://uk-macro-ats-gate.thomasgolloglypagesdev.workers.dev/api";
 
 window.CHAT_MAINTENANCE_MODE = true;
 window.CHAT_MAINTENANCE_MESSAGE =

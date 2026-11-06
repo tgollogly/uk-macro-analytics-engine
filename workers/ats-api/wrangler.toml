@@ -7,6 +7,7 @@
 name = "uk-macro-ats-gate"
 main = "src/gate.ts"
 compatibility_date = "2025-11-06"
+account_id = "af97c3366c0a7455ffbcbcffecfebc6d"
 
 [durable_objects]
 bindings = [
@@ -15,7 +16,7 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["AtsQuota"]
+new_sqlite_classes = ["AtsQuota"]
 
 [[services]]
 binding = "ATS_SERVICE"
@@ -32,5 +33,6 @@ service = "uk-macro-ats-backend"
 #   ATS_QUOTA_GLOBAL_PER_WINDOW — default 300 (Gemini calls per window, account-wide)
 #   ATS_QUOTA_IP_PER_WINDOW — default 20 per CF-Connecting-IP per window
 
-# [vars]
-# ATS_ALLOWED_ORIGINS = "https://your-preview.pages.dev"
+[vars]
+# Hub preview (static landing Worker) — browser Origin must match exactly for CORS.
+ATS_ALLOWED_ORIGINS = "https://uk-macro-analytics-landing.thomasgolloglypagesdev.workers.dev"
