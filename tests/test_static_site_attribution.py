@@ -74,17 +74,19 @@ def test_portfolio_config_points_ats_backend_at_verified_url() -> None:
 def test_portfolio_review_ats_config_is_stub_for_independent_worker() -> None:
     """Review-only file — does not replace config.js until user approves Worker URL."""
     cfg = (STATIC / "portfolio" / "config.review-ats-worker.js").read_text(encoding="utf-8")
-    assert 'window.AI_BACKEND_URL = ""' in cfg
-    assert "uk-macro-ats-api" in cfg
+    assert "window.AI_BACKEND_URL" in cfg
+    assert "uk-macro-ats-gate" in cfg
+    assert "workers.dev/api" in cfg
 
 
 def test_docs_describe_ats_worker_deploy_and_secrets() -> None:
     doc = (Path(__file__).resolve().parent.parent / "docs" / "ATS_API_WORKER.md").read_text(
         encoding="utf-8"
     )
-    assert "uk-macro-ats-api" in doc
+    assert "uk-macro-ats-gate" in doc
+    assert "uk-macro-ats-backend" in doc
     assert "GEMINI_API_KEY" in doc
-    assert "ATS_API_BEARER_TOKEN" in doc
+    assert "ATS_INTERNAL_HMAC_SECRET" in doc
 
 
 def test_hub_index_links_to_six_demo_routes() -> None:

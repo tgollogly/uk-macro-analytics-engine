@@ -1,19 +1,36 @@
-# Independent ATS API — deploy ONLY with explicit -c; do not replace static landing Worker.
-# Example: cd workers/ats-api && npx wrangler deploy -c wrangler.toml
-name = "uk-macro-ats-api"
-main = "src/index.ts"
+# Public GATE — browser CORS + forwards to private backend via service binding.
+# Deploy order: (1) wrangler.backend.toml → uk-macro-ats-backend
+#               (2) wrangler.toml      → uk-macro-ats-gate (adds service binding to backend)
+#
+# Never use this file from repo root; always: npx wrangler deploy -c workers/ats-api/wrangler.toml
+
+name = "uk-macro-ats-gate"
+main = "src/gate.ts"
 compatibility_date = "2025-11-06"
 
-# Secrets (set via dashboard or `wrangler secret put` — never commit values):
-#   GEMINI_API_KEY  — Google AI Studio / Gemini API key (server-side only)
+[durable_objects]
+bindings = [
+  { name = "ATS_QUOTA", class_name = "AtsQuota", script_name = "uk-macro-ats-gate" },
+]
 
-# Optional plain-text vars (non-secret):
-#   GEMINI_MODEL              — default model id (default: gemini-2.0-flash)
-#   ATS_ALLOWED_ORIGINS       — comma-separated exact origins; empty = allow any (dev-only)
-#   ATS_MAX_BODY_CHARS        — max total JSON body size (default: 120000)
-#   ATS_IP_WINDOW_MS          — rate-limit window (default: 60000)
-#   ATS_IP_MAX_PER_WINDOW     — max requests per IP per window (default: 30)
+[[migrations]]
+tag = "v1"
+new_classes = ["AtsQuota"]
 
-[vars]
-# GEMINI_MODEL = "gemini-2.0-flash"
-# ATS_ALLOWED_ORIGINS = "https://example.pages.dev"
+[[services]]
+binding = "ATS_SERVICE"
+service = "uk-macro-ats-backend"
+
+# Secrets:
+#   ATS_INTERNAL_HMAC_SECRET — HMAC signing (must match backend secret exactly)
+
+# Required vars before serving traffic (fail closed when ATS_GATE_FAIL_CLOSED=true):
+#   ATS_ALLOWED_ORIGINS — comma-separated exact origins, e.g. https://….pages.dev,https://…workers.dev
+
+# Optional quota tuning (consumed by AtsQuota Durable Object):
+#   ATS_QUOTA_WINDOW_MS — default 86400000 (24h), window for counters
+#   ATS_QUOTA_GLOBAL_PER_WINDOW — default 300 (Gemini calls per window, account-wide)
+#   ATS_QUOTA_IP_PER_WINDOW — default 20 per CF-Connecting-IP per window
+
+# [vars]
+# ATS_ALLOWED_ORIGINS = "https://your-preview.pages.dev"

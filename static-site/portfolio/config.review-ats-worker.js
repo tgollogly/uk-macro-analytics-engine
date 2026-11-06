@@ -1,14 +1,12 @@
 /**
- * PROPOSED (review only — do not rename to config.js until user approves deploy).
- * After Worker `uk-macro-ats-api` is live and bearer token + origins are set:
- *   window.AI_BACKEND_URL = "https://uk-macro-ats-api.<subdomain>.workers.dev/api";
- * Add header from the static page is NOT possible with fetch alone; either:
- *   - use a Workers route + same-origin proxy, or
- *   - deploy with ATS_ALLOWED_ORIGINS only (no bearer), accepting residual abuse risk until hardened.
+ * PROPOSED — points the hub ATS demo at the public GATE Worker (not the private backend).
+ * Browser never holds ATS_INTERNAL_HMAC_SECRET or GEMINI_API_KEY.
  *
- * Current production hub still uses ./config.js → https://tgollogly.dev/api
+ * After deploy: substitute your account’s workers.dev subdomain from Cloudflare (Workers → uk-macro-ats-gate).
+ * Do NOT rename this file to config.js until user approves — keeps current hub on tgollogly.dev/api.
  */
-window.AI_BACKEND_URL = ""; // set to deployed Worker URL after approval
+window.AI_BACKEND_URL =
+  "https://uk-macro-ats-gate.<YOUR_ACCOUNT_SUBDOMAIN>.workers.dev/api";
 
 window.CHAT_MAINTENANCE_MODE = true;
 window.CHAT_MAINTENANCE_MESSAGE =

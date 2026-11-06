@@ -16,7 +16,7 @@ This repo has two **different** surfaces:
 | Resource | Suggested name | Purpose |
 |----------|----------------|---------|
 | Worker + Static Assets | `uk-macro-analytics-landing` | Serves `static-site/` |
-| **ATS API only (optional)** | `uk-macro-ats-api` | Isolated Worker for portfolio ATS demo — see **`docs/ATS_API_WORKER.md`** (separate `workers/ats-api/wrangler.toml`; never deploy with root `wrangler.toml` by mistake). |
+| **ATS gate + backend (optional)** | `uk-macro-ats-gate` + `uk-macro-ats-backend` | Isolated stack for portfolio ATS — see **`docs/ATS_API_WORKER.md`** (`workers/ats-api/wrangler.toml` + `wrangler.backend.toml`; never deploy ATS with root `wrangler.toml` by mistake). |
 | Route / hostname | Optional `*.workers.dev` preview first | No apex cutover until approved |
 | Streamlit (non-CF) | *(your Cloud app)* | Actual interactive analytics |
 

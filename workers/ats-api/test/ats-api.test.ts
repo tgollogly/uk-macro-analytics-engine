@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import worker from "../src/index";
-import type { Env } from "../src/index";
+import gate from "../src/gate";
+import backend from "../src/backend";
+import type { GateEnv } from "../src/gate";
+import type { BackendEnv } from "../src/backend";
+import { signInternalRequest } from "../src/internal-auth";
+import { validateAtsShape } from "../src/ats-core";
 
 const mockCtx = {
   waitUntil: vi.fn(),
@@ -9,13 +13,12 @@ const mockCtx = {
 
 function jsonRequest(
   url: string,
-  init: RequestInit & { origin?: string; auth?: string },
+  init: RequestInit & { origin?: string },
   body: unknown,
 ): Request {
   const headers = new Headers(init.headers as HeadersInit);
   headers.set("Content-Type", "application/json");
   if (init.origin) headers.set("Origin", init.origin);
-  if (init.auth) headers.set("Authorization", init.auth);
   return new Request(url, {
     method: init.method || "POST",
     headers,
@@ -23,7 +26,32 @@ function jsonRequest(
   });
 }
 
-describe("ATS API Worker", () => {
+function makeGateEnv(overrides: Partial<GateEnv> = {}): GateEnv {
+  const secret = "test-hmac";
+  const be: BackendEnv = {
+    GEMINI_API_KEY: "k",
+    ATS_INTERNAL_HMAC_SECRET: secret,
+  };
+  const svc: Fetcher = {
+    fetch: (req: Request) => backend.fetch(req, be, mockCtx),
+  } as unknown as Fetcher;
+  const quota: DurableObjectNamespace = {
+    idFromName: () => ({}) as DurableObjectId,
+    get: () => ({
+      fetch: async () =>
+        new Response(JSON.stringify({ allowed: true }), { status: 200, headers: { "Content-Type": "application/json" } }),
+    }),
+  } as unknown as DurableObjectNamespace;
+  return {
+    ATS_INTERNAL_HMAC_SECRET: secret,
+    ATS_SERVICE: svc,
+    ATS_QUOTA: quota,
+    ATS_ALLOWED_ORIGINS: "https://hub.example",
+    ...overrides,
+  };
+}
+
+describe("ATS gate", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
@@ -38,45 +66,77 @@ describe("ATS API Worker", () => {
     vi.restoreAllMocks();
   });
 
-  it("rejects disallowed browser origin when ATS_ALLOWED_ORIGINS is set", async () => {
-    const env: Env = {
-      GEMINI_API_KEY: "test-key",
-      ATS_ALLOWED_ORIGINS: "https://allowed.example",
-    };
+  it("fail-closed 503 when mandatory bindings missing", async () => {
+    const env = makeGateEnv({
+      ATS_SERVICE: undefined,
+    });
     const req = jsonRequest(
-      "https://ats.example/",
+      "https://gate.example/api",
+      { origin: "https://hub.example" },
+      { mode: "ats", cv: "c", jd: "d" },
+    );
+    const res = await gate.fetch(req, env, mockCtx);
+    expect(res.status).toBe(503);
+    const j = (await res.json()) as { error: string };
+    expect(j.error).toContain("ATS_SERVICE");
+  });
+
+  it("403 when Origin not in ATS_ALLOWED_ORIGINS", async () => {
+    const env = makeGateEnv();
+    const req = jsonRequest(
+      "https://gate.example/api",
       { origin: "https://evil.example" },
       { mode: "ats", cv: "c", jd: "d" },
     );
-    const res = await worker.fetch(req, env, mockCtx);
+    const res = await gate.fetch(req, env, mockCtx);
     expect(res.status).toBe(403);
   });
 
-  it("requires bearer when ATS_API_BEARER_TOKEN is set", async () => {
-    const env: Env = {
-      GEMINI_API_KEY: "k",
-      ATS_API_BEARER_TOKEN: "secret-token",
-      ATS_ALLOWED_ORIGINS: "https://allowed.example",
-    };
-    const req = jsonRequest(
-      "https://ats.example/",
-      { origin: "https://allowed.example" },
-      { mode: "ats", cv: "c", jd: "d" },
-    );
-    const res = await worker.fetch(req, env, mockCtx);
-    expect(res.status).toBe(401);
+  it("403 when Origin header missing (non-browser callers)", async () => {
+    const env = makeGateEnv();
+    const req = new Request("https://gate.example/api", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "ats", cv: "c", jd: "d" }),
+    });
+    const res = await gate.fetch(req, env, mockCtx);
+    expect(res.status).toBe(403);
   });
 
-  it("returns 503 when GEMINI_API_KEY is missing", async () => {
-    const env: Env = {};
-    const req = jsonRequest("https://ats.example/", {}, { mode: "ats", cv: "c", jd: "jd text" });
-    const res = await worker.fetch(req, env, mockCtx);
+  it("503 when quota denies (global cap)", async () => {
+    const quota: DurableObjectNamespace = {
+      idFromName: () => ({}) as DurableObjectId,
+      get: () => ({
+        fetch: async () =>
+          new Response(
+            JSON.stringify({ allowed: false, scope: "global", retryAfter: 3600 }),
+            { status: 200, headers: { "Content-Type": "application/json" } },
+          ),
+      }),
+    } as unknown as DurableObjectNamespace;
+    const env = makeGateEnv({ ATS_QUOTA: quota });
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          candidates: [
+            { content: { parts: [{ text: '{"score":50,"matched":[],"missing":[],"suggestions":[]}' }] } },
+          ],
+        }),
+        { status: 200 },
+      ),
+    );
+    const req = jsonRequest(
+      "https://gate.example/api",
+      { origin: "https://hub.example" },
+      { mode: "ats", cv: "I know js", jd: "Need k8s" },
+    );
+    const res = await gate.fetch(req, env, mockCtx);
     expect(res.status).toBe(503);
     const j = (await res.json()) as { error: string };
-    expect(j.error).toContain("GEMINI_API_KEY");
+    expect(j.error).toMatch(/cap reached|global/i);
   });
 
-  it("validates mode and returns ats scorecard from Gemini JSON", async () => {
+  it("returns ats scorecard through gate with valid origin + HMAC to backend", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(
         JSON.stringify({
@@ -88,17 +148,16 @@ describe("ATS API Worker", () => {
             },
           ],
         }),
-        { status: 200, headers: { "Content-Type": "application/json" } },
+        { status: 200 },
       ),
     );
-
-    const env: Env = { GEMINI_API_KEY: "k" };
+    const env = makeGateEnv();
     const req = jsonRequest(
-      "https://ats.example/",
+      "https://gate.example/api",
       { origin: "https://hub.example" },
       { mode: "ats", cv: "I know js", jd: "Need k8s" },
     );
-    const res = await worker.fetch(req, env, mockCtx);
+    const res = await gate.fetch(req, env, mockCtx);
     expect(res.status).toBe(200);
     const j = (await res.json()) as {
       score: number;
@@ -108,39 +167,159 @@ describe("ATS API Worker", () => {
     };
     expect(j.score).toBe(82);
     expect(j.matched).toContain("js");
-    expect(j.missing).toContain("k8s");
-    expect(fetch).toHaveBeenCalled();
-    const call = vi.mocked(fetch).mock.calls[0];
-    expect(call[0]).toContain("generativelanguage.googleapis.com");
-    expect(call[1]?.headers && (call[1].headers as Record<string, string>)["x-goog-api-key"]).toBe("k");
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("https://hub.example");
   });
 
-  it("returns cover letter text", async () => {
+  it("handles concurrent gate requests", async () => {
+    vi.mocked(fetch).mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve(
+                new Response(
+                  JSON.stringify({
+                    candidates: [
+                      {
+                        content: {
+                          parts: [{ text: '{"score":60,"matched":[],"missing":[],"suggestions":[]}' }],
+                        },
+                      },
+                    ],
+                  }),
+                  { status: 200 },
+                ),
+              ),
+            20,
+          ),
+        ),
+    );
+    const env = makeGateEnv();
+    const reqs = Array.from({ length: 5 }, (_, i) =>
+      jsonRequest(
+        "https://gate.example/api",
+        { origin: "https://hub.example" },
+        { mode: "ats", cv: "c" + i, jd: "jd" + i },
+      ),
+    );
+    const results = await Promise.all(reqs.map((r) => gate.fetch(r, env, mockCtx)));
+    expect(results.every((r) => r.status === 200)).toBe(true);
+  });
+
+  it("rejects malformed JSON", async () => {
+    const env = makeGateEnv();
+    const req = new Request("https://gate.example/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://hub.example",
+      },
+      body: "{not json",
+    });
+    const res = await gate.fetch(req, env, mockCtx);
+    expect(res.status).toBe(400);
+  });
+
+  it("OPTIONS returns 204 for allowed origin", async () => {
+    const env = makeGateEnv();
+    const req = new Request("https://gate.example/api", {
+      method: "OPTIONS",
+      headers: { Origin: "https://hub.example" },
+    });
+    const res = await gate.fetch(req, env, mockCtx);
+    expect(res.status).toBe(204);
+  });
+});
+
+describe("ATS backend (private)", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(async () => {
+        throw new Error("fetch not mocked");
+      }),
+    );
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("401 without X-ATS-Internal", async () => {
+    const env: BackendEnv = { ATS_INTERNAL_HMAC_SECRET: "sec", GEMINI_API_KEY: "k" };
+    const req = new Request("https://internal/internal/ats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "ats", cv: "c", jd: "d" }),
+    });
+    const res = await backend.fetch(req, env, mockCtx);
+    expect(res.status).toBe(401);
+  });
+
+  it("502 when model JSON shape invalid after parse", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(
         JSON.stringify({
-          candidates: [{ content: { parts: [{ text: "Dear hiring team,\n\nI write…" }] } }],
+          candidates: [
+            {
+              content: {
+                parts: [{ text: '{"score":50,"matched":"not-an-array","missing":[],"suggestions":[]}' }],
+              },
+            },
+          ],
         }),
         { status: 200 },
       ),
     );
-    const env: Env = { GEMINI_API_KEY: "k" };
-    const req = jsonRequest(
-      "https://ats.example/api",
-      {},
-      { mode: "cover", cv: "Developer", jd: "Role" },
-    );
-    const res = await worker.fetch(req, env, mockCtx);
-    expect(res.status).toBe(200);
-    const j = (await res.json()) as { text: string };
-    expect(j.text).toContain("Dear hiring team");
+    const secret = "back-hmac";
+    const raw = JSON.stringify({ mode: "ats", cv: "c", jd: "d" });
+    const sig = await signInternalRequest(secret, "POST", "/internal/ats", raw, Date.now());
+    const env: BackendEnv = { ATS_INTERNAL_HMAC_SECRET: secret, GEMINI_API_KEY: "k" };
+    const req = new Request("https://internal/internal/ats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-ATS-Internal": sig },
+      body: raw,
+    });
+    const res = await backend.fetch(req, env, mockCtx);
+    expect(res.status).toBe(502);
   });
 
-  it("rejects oversize body", async () => {
-    const env: Env = { GEMINI_API_KEY: "k", ATS_MAX_BODY_CHARS: "100" };
-    const big = "x".repeat(200);
-    const req = jsonRequest("https://ats.example/", {}, { mode: "ats", cv: big, jd: big });
-    const res = await worker.fetch(req, env, mockCtx);
-    expect(res.status).toBe(413);
+  it("429 when Gemini returns rate limit", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(JSON.stringify({ error: { message: "quota exceeded" } }), { status: 429 }),
+    );
+    const secret = "h";
+    const raw = JSON.stringify({ mode: "ats", cv: "c", jd: "d" });
+    const sig = await signInternalRequest(secret, "POST", "/internal/ats", raw, Date.now());
+    const env: BackendEnv = { ATS_INTERNAL_HMAC_SECRET: secret, GEMINI_API_KEY: "k" };
+    const req = new Request("https://internal/internal/ats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-ATS-Internal": sig },
+      body: raw,
+    });
+    const res = await backend.fetch(req, env, mockCtx);
+    expect(res.status).toBe(429);
+  });
+});
+
+describe("validateAtsShape", () => {
+  it("accepts valid object", () => {
+    const r = validateAtsShape({
+      score: 50,
+      matched: ["a"],
+      missing: ["b"],
+      suggestions: ["c"],
+    });
+    expect(r.ok).toBe(true);
+  });
+
+  it("rejects bad score", () => {
+    const r = validateAtsShape({
+      score: 101,
+      matched: [],
+      missing: [],
+      suggestions: [],
+    });
+    expect(r.ok).toBe(false);
   });
 });

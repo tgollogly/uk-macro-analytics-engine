@@ -1,72 +1,96 @@
-# Independent ATS API Worker (review / future deploy)
+# Independent ATS stack (review / pre-deploy)
 
-This repository includes a **separate** Cloudflare Worker under `workers/ats-api/` that exposes **only** the ATS endpoints used by `static-site/portfolio/ats-matcher.html`:
+Two Workers plus one **Durable Object (DO)** class in the **gate** script. The **browser never holds a shared secret**: only the **gate** (`uk-macro-ats-gate`) is exposed to CORS; the **backend** (`uk-macro-ats-backend`) accepts **only** signed `POST /internal/ats` from the gate via a [Workers service binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/).
 
-- `POST /` or `POST /api` with JSON `{ "mode": "ats"|"cover"|"cvimprove", "cv": "...", "jd": "..." }`
+## Components
 
-It does **not** include chat, job finder, or other portfolio routes. Keeping it in the same repo avoids a second clone and isolates **Gemini billing and abuse surface** from Thomas’s main `portfolio1` Worker.
+| Resource | Wrangler name | Config file | Role |
+|----------|---------------|-------------|------|
+| Private backend | `uk-macro-ats-backend` | `workers/ats-api/wrangler.backend.toml` | `GEMINI_API_KEY`, HMAC verify, Gemini REST |
+| Public gate | `uk-macro-ats-gate` | `workers/ats-api/wrangler.toml` | CORS + origin allowlist + DO quota + HMAC forward |
+| Quota DO class | `AtsQuota` (in gate bundle) | same as gate | Per-window counters (global + per `CF-Connecting-IP`) |
 
-## Why a dedicated Worker vs extending `portfolio1`
+**Browser calls:** `POST https://<gate-host>/api` (or `/`) — same JSON as today: `{ "mode": "ats"|"cover"|"cvimprove", "cv", "jd" }`.
 
-| Approach | Pros | Cons |
-|--------|------|------|
-| **Dedicated `uk-macro-ats-api`** (this package) | API key and quota isolated; deploy/rollback independent; minimal attack surface (three modes only); hub can point here without touching main site | Extra Worker name and one more secret to set |
-| **Extend existing `tgollogly.dev` Worker** | Single deployment | Couples hub demos to main site config; broader blast radius; harder to lock down |
+**Backend URL:** not used from the browser. Only the gate uses `ATS_SERVICE` → `uk-macro-ats-backend`.
 
-## Configuration (`workers/ats-api/wrangler.toml`)
+## End-to-end flow
 
-- **Worker name (proposed):** `uk-macro-ats-api` (`name` in `wrangler.toml`)
-- **Entry:** `src/index.ts`
-- **Compatibility date:** `2025-11-06` (matches root static landing Worker)
+1. Browser sends JSON to **gate** with `Origin: https://…` (must match `ATS_ALLOWED_ORIGINS`).
+2. Gate checks **fail-closed** config (binding + secret + allowlist + quota namespace).
+3. Gate asks **AtsQuota** DO (single global id) whether global and per-IP budgets allow another Gemini call.
+4. Gate signs body with **HMAC-SHA256** (`X-ATS-Internal: <timestamp>.<hexsig>`) and `fetch()`es the backend via **service binding** (not public HTTP).
+5. Backend verifies HMAC + timestamp skew, then calls Gemini. **No CV/JD text in structured logs** — only lengths and mode.
 
-### Secret and variable **names** (no values in git)
+## Secret and variable **names** (values never in git)
 
-| Name | Kind | Purpose |
-|------|------|---------|
-| `GEMINI_API_KEY` | Secret | Google AI / Gemini API key (server-side only; never sent to the browser) |
-| `ATS_API_BEARER_TOKEN` | Optional secret or plain var | If set, `Authorization: Bearer <token>` is **required** on every POST. **CORS is not authentication** — use this for any public `workers.dev` URL before a custom hostname is added. |
-| `GEMINI_MODEL` | Optional var | Model id (default `gemini-2.0-flash`; override per [Gemini API docs](https://ai.google.dev/gemini-api/docs)) |
-| `ATS_ALLOWED_ORIGINS` | Optional var | Comma-separated exact `Origin` values allowed for browser calls (e.g. preview and production hub URLs). If empty, any origin is accepted (**dev-only** — combine with bearer for staging). |
-| `ATS_MAX_BODY_CHARS` | Optional var | Max JSON body length (default `120000`) |
-| `ATS_IP_WINDOW_MS` | Optional var | In-isolate rate window in ms (default `60000`) |
-| `ATS_IP_MAX_PER_WINDOW` | Optional var | Max POSTs per IP per window (default `30`) |
+| Name | Where | Purpose |
+|------|--------|---------|
+| `GEMINI_API_KEY` | **backend only** | Gemini API |
+| `ATS_INTERNAL_HMAC_SECRET` | **gate + backend** (same value) | Request signing between Workers (never in browser) |
+| `ATS_ALLOWED_ORIGINS` | **gate** | Comma-separated exact origins (**required** for production; gate fails closed if empty) |
+| `GEMINI_MODEL` | backend (optional) | Default `gemini-2.0-flash`; see [Gemini API docs](https://ai.google.dev/gemini-api/docs) |
+| `ATS_MAX_BODY_CHARS` | gate + backend | Default `120000` |
+| `ATS_QUOTA_WINDOW_MS` | **gate** (DO reads `env` for defaults) | Default `86400000` (24h) sliding window for counters |
+| `ATS_QUOTA_GLOBAL_PER_WINDOW` | gate | Default `300` successful quota checks → Gemini calls per window (account-wide) |
+| `ATS_QUOTA_IP_PER_WINDOW` | gate | Default `20` per `CF-Connecting-IP` per window |
+| `ATS_GATE_FAIL_CLOSED` | gate | Default `true` — 503 if binding/secret/quota missing |
+| `ATS_QUOTA_DISABLED` | gate | Set `1` **local/tests only** — skips DO (do not use in production) |
 
-## Behaviour summary
+**Durable Object:** gate must include `[[migrations]]` `new_classes = ["AtsQuota"]` (already in `wrangler.toml`). **Do not create** namespaces or bindings in this repo — Wrangler creates them on first approved deploy.
 
-- **Modes:** `ats` → `{ score, matched, missing, suggestions }`; `cover` / `cvimprove` → `{ text }`.
-- **Upstream:** `generateContent` on `generativelanguage.googleapis.com` with `x-goog-api-key` ([Gemini API](https://ai.google.dev/gemini-api/docs)); ~28s fetch timeout; errors returned as JSON `error` (no CV/JD text in logs).
-- **Logging:** Structured lines with `kind: "ats_api_request"`, mode, model, **lengths only** (`cvLen`, `jdLen`), boolean `ipPresent`. **No** CV/JD content, keys, or full IP stored in log payloads. Log **retention and sampling** follow your Cloudflare account settings (Workers Logs / Logpush) — not controlled in this repo.
-- **Rate limiting:** Best-effort **per isolate** counter by `CF-Connecting-IP`; not a substitute for account-level [Google quota](https://ai.google.dev/gemini-api/docs/rate-limits) or Cloudflare [WAF / Bot Management](https://developers.cloudflare.com/bots/).
+## Abuse, cost, and limits
 
-## Abuse and cost model (honest)
+| Control | What it does | What it does **not** do |
+|---------|----------------|-------------------------|
+| `ATS_ALLOWED_ORIGINS` | Browser `fetch` from unlisted origins gets **403** | Does not stop non-browser callers — use [WAF / Bot](https://developers.cloudflare.com/bots/), [Turnstile](https://developers.cloudflare.com/turnstile/), or other server-side auth for full coverage |
+| AtsQuota DO | **Global + per-IP** caps persisted in DO storage (survives restarts) | Not a Google quota; a determined attacker can spread across IPs; still need Google billing alerts |
+| HMAC + no public backend URL | Backend ignores unsigned Internet POSTs in normal routing | Mis-routed or leaked backend URLs need **separate** review (keep backend off public routes) |
+| Body / field size caps | Reduces token bombs | Does not cap token count inside Gemini |
+| `validateAtsShape` + array checks | Rejects some malformed model output | **JSON parsing alone is insufficient** for full schema safety — model can still return misleading content; user must review AI output |
 
-- **Paid usage:** Every successful POST consumes Gemini tokens; exact cost depends on Google’s **current** pricing and model — verify in Google AI Studio / Cloud billing. This doc does **not** guarantee free tier availability.
-- **Unauthenticated public URL + `GEMINI_API_KEY` only:** Anyone who can POST can incur cost. Mitigations implemented here: body size caps, per-IP limit (per isolate), optional bearer token, optional origin allowlist, short upstream timeout.
-- **Further hardening (manual):** Turnstile or OAuth in front of the Worker, AI Gateway with budgets, WAF rate rules on the route, or serving only from an auth’d preview.
+**Paid usage:** each allowed request may call Gemini; pricing and free tier are defined by **Google** at deploy time — not guaranteed here.
 
-## Deploy / rollback (only after approval; not run in CI for this branch)
+## Observability and retention
+
+- Gate logs: `kind: ats_gate`, `mode`, `cvLen`, `jdLen`, `ipPresent` (boolean only).
+- Backend logs: `kind: ats_backend`, `mode`, `model`, `cvLen`, `jdLen`.
+- Quota DO stores **numeric counters** and hashed window keys — **not** CV text.
+- Log **retention, sampling, and export** are determined by your Cloudflare account (Workers Logs, Logpush, etc.) — configure per policy.
+
+## Deploy order (after explicit approval)
+
+1. Deploy **backend** (creates Worker, no public CORS):
+   ```bash
+   cd workers/ats-api
+   npm ci
+   npx wrangler secret put GEMINI_API_KEY -c wrangler.backend.toml
+   npx wrangler secret put ATS_INTERNAL_HMAC_SECRET -c wrangler.backend.toml
+   npx wrangler deploy -c wrangler.backend.toml
+   ```
+2. Set **gate** vars + secrets (same `ATS_INTERNAL_HMAC_SECRET` value as backend):
+   ```bash
+   npx wrangler secret put ATS_INTERNAL_HMAC_SECRET -c wrangler.toml
+   npx wrangler deploy -c wrangler.toml
+   ```
+3. Add **Production** var `ATS_ALLOWED_ORIGINS` with exact hub origins (e.g. `https://….pages.dev`, `https://….workers.dev`).
+
+**Always** use `-c workers/ats-api/wrangler.toml` or `-c workers/ats-api/wrangler.backend.toml` — **never** run `wrangler deploy` at repo root for this stack (that deploys `uk-macro-analytics-landing`).
+
+## Rollback
+
+Cloudflare dashboard → each Worker → **Deployments** → roll back to a previous version; or redeploy from an older git SHA.
+
+## Tests (no live Gemini)
 
 ```bash
 cd workers/ats-api
 npm ci
-npx wrangler deploy -c wrangler.toml
+npm test && npm run typecheck
 ```
 
-**Always** pass `-c workers/ats-api/wrangler.toml` so you never hit the repo-root `wrangler.toml` (`uk-macro-analytics-landing`).
+Vitest mocks `fetch` for Gemini; gate tests use the **real** backend + HMAC path with mocks.
 
-**Rollback:** Cloudflare dashboard → Workers → `uk-macro-ats-api` → Deployments → Roll back to previous version; or redeploy an older git SHA.
+## Frontend (review)
 
-## Proposed URL shape
-
-- **`https://<subdomain>.<account>.workers.dev/`** (or `/api`) immediately after deploy  
-- Optional later: custom hostname (e.g. `ats.example.com`) with its own route — **separate approval**.
-
-## Tests
-
-```bash
-cd workers/ats-api
-npm ci
-npm test
-```
-
-Vitest mocks `fetch` to Google — no live Gemini calls, no real CV data.
+`static-site/portfolio/config.review-ats-worker.js` sets `AI_BACKEND_URL` to the **gate** URL placeholder (`https://uk-macro-ats-gate.<account-subdomain>.workers.dev/api`). Replace subdomain after deploy. **Do not** rename to `config.js` until approved.

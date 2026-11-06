@@ -1,21 +1,28 @@
-# Proposed privacy / footnote wording (review — not applied to HTML)
+# Proposed privacy / footnote wording (review — not applied to shipped HTML)
 
-These snippets replace references to **`https://tgollogly.dev/api`** with the **independent Worker** once deployed. **Do not** paste into `ats-matcher.html` / `privacy.html` until the Worker URL is final and user approves.
+## Summary
 
-## `ats-matcher.html` — “How it works” / notice paragraph (proposed)
+After deploy, the hub ATS demo would `POST` CV and job text **JSON** to the **public gate Worker** (`uk-macro-ats-gate`) at `AI_BACKEND_URL`. The gate enforces **Origin allowlist**, **usage caps** (Durable Object counters; numeric only, no CV text), and forwards to a **private** backend Worker via **HMAC-signed** service binding. **No shared bearer token in the browser.** The backend holds `GEMINI_API_KEY` and calls Google’s Gemini API; retention follows **Google’s** terms.
 
-> The front end runs on this static site; when you click analyse or generate, the page POSTs your CV and job description as JSON to **the dedicated ATS Worker URL** configured in `config.js` (not the main portfolio site). That Worker holds the API key server-side and calls Google’s Gemini API. The key is never exposed in the browser.  
-> **Privacy:** Google’s retention and processing are governed by Google’s terms; this demo does not store your text in this repository. Do not paste confidential data. For demonstration only — not career or legal advice.
+**Logs:** Workers may emit **metadata only** (mode, string lengths, `ipPresent` boolean) — not CV/JD content. **Log retention/sampling** is account-level (Cloudflare), not set in this repo.
 
-## `ats-matcher.html` / hub footnote (proposed)
+## `ats-matcher.html` — “How it works” / notice (proposed)
 
-> … the ATS matcher sends JSON to **`AI_BACKEND_URL`** (see `config.js`) for Gemini when you click analyse or generate. Backend availability and Google quota are not guaranteed.
+Replace the sentence that names `https://tgollogly.dev/api` with:
 
-## `privacy.html` (proposed alignment)
+> When you click analyse or generate, this page POSTs your CV and job description as JSON to **the URL in `config.js`** (a Cloudflare **gate** Worker on our account). That Worker checks the page origin, applies usage limits, and forwards the request to a **private** backend that holds the API key and calls Google’s Gemini. The key is never exposed in the browser.
 
-- State that the mirror may point `AI_BACKEND_URL` at **`uk-macro-ats-api` (Workers)** instead of `tgollogly.dev`, after explicit configuration.  
-- Keep existing disclosures: chat disabled on mirror, weather third-party APIs, no audited no-cookie claim unless true.
+## `ats-matcher.html` / footnote (proposed)
 
-## Frontend limitation: bearer token
+> … the ATS matcher sends JSON to **`AI_BACKEND_URL`** (see `config.js`) **for the gate Worker** when you click analyse or generate; the gate forwards to a private Worker that calls Gemini. Data may be processed by Google per their terms. Do not paste confidential information.
 
-The current page uses **`fetch(url, { body: JSON.stringify(...) })` only**. If `ATS_API_BEARER_TOKEN` is enabled on the Worker, the browser must send **`Authorization: Bearer …`**, which requires a **small script change** (inject header) or a **same-origin route** that adds the header server-side. Document this before enabling bearer on a public demo URL.
+## `privacy.html` (proposed)
+
+- Align ATS paragraph with **gate + private backend** (not `tgollogly.dev/api` once switched).
+- State that **usage caps** are enforced server-side with **aggregated counters** (no CV storage for quota).
+
+## Limitations (disclose)
+
+- **Origin checks** apply to browsers sending `Origin`; they are not full authentication.
+- **Per-IP caps** use `CF-Connecting-IP`; VPNs and distributed traffic can dilute limits.
+- **Gate URL** if called without a browser (curl) may still consume quota unless blocked by WAF/other controls you add later.
