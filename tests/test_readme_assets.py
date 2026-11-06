@@ -7,9 +7,11 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
+from tools.regen_readme_images import README_BITMAP_PNGS
+
 ROOT = Path(__file__).resolve().parent.parent
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
-ASSETS = ("hero.png", "architecture.png")
+ASSETS = README_BITMAP_PNGS
 MIN_WIDTH_PX = 2000
 
 

@@ -21,6 +21,14 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Versioned basenames so GitHub Camo (`/.../hero-README-v2.png`) and blob/raw use one path
+# (query strings like `?v=` are stripped from the raw fetch; renames bust stale CDN keys).
+README_HERO_PNG = "hero-README-v2.png"
+README_ARCH_PNG = "architecture-README-v2.png"
+README_HERO_WEBP = "hero-README-v2.webp"
+README_ARCH_WEBP = "architecture-README-v2.webp"
+README_BITMAP_PNGS: tuple[str, ...] = (README_HERO_PNG, README_ARCH_PNG)
+
 # High-contrast “poster” palette — indigo header reads very different from earlier teal banners.
 BG = (254, 252, 232)  # amber-50 (warm canvas)
 HEADER = (49, 46, 129)  # indigo-900
@@ -450,20 +458,25 @@ def main() -> None:
     hero = render_hero(target_w)
     arch = render_architecture(2400)
 
-    _save_webp(hero, ROOT / "hero.webp", quality=94)
-    _save_png(hero, ROOT / "hero.png")
+    _save_webp(hero, ROOT / README_HERO_WEBP, quality=94)
+    _save_png(hero, ROOT / README_HERO_PNG)
 
-    _save_webp(arch, ROOT / "architecture.webp", quality=94)
-    _save_png(arch, ROOT / "architecture.png")
+    _save_webp(arch, ROOT / README_ARCH_WEBP, quality=94)
+    _save_png(arch, ROOT / README_ARCH_PNG)
 
     source_dir = ROOT / "tools" / "source"
     source_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("hero.png", "architecture.png"):
+    for name in README_BITMAP_PNGS:
         src = ROOT / name
         dst = source_dir / name
         dst.write_bytes(src.read_bytes())
 
-    for name in ("hero.webp", "hero.png", "architecture.webp", "architecture.png"):
+    for name in (
+        README_HERO_WEBP,
+        README_HERO_PNG,
+        README_ARCH_WEBP,
+        README_ARCH_PNG,
+    ):
         p = ROOT / name
         img = Image.open(p)
         print(f"{name}: {p.stat().st_size} bytes {img.size}")
