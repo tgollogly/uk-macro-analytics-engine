@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" width="1000" height="320" role="img" aria-label="Architecture pipeline: Ingestion to Exports">
-  <rect width="1000" height="320" rx="16" fill="#f8fafc" stroke="#0f766e" stroke-width="3"/>
-  <text x="40" y="46" fill="#0f172a" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="22" font-weight="700">Architecture</text>
-  <text x="40" y="74" fill="#475569" font-family="system-ui,sans-serif" font-size="14">Flat high-contrast for README &amp; mobile · matches generated PNG</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 2000" width="720" height="2000" role="img" aria-label="Architecture pipeline: Ingestion through Exports (poster layout)">
+  <rect width="720" height="2000" rx="20" fill="#fefce8" stroke="#4338ca" stroke-width="4"/>
+  <rect x="32" y="32" width="656" height="120" rx="14" fill="#312e81" stroke="#4f46e5" stroke-width="3"/>
+  <text x="60" y="88" fill="#ffffff" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="32" font-weight="700">Architecture</text>
+  <text x="60" y="122" fill="#c7d2fe" font-family="system-ui,sans-serif" font-size="18">Poster v4 · stacked pipeline · matches generated PNG</text>
 
   <!-- Ingestion -->
-  <rect x="40" y="98" width="200" height="190" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
-  <text x="140" y="126" text-anchor="middle" fill="#0f172a" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Ingestion</text>
-  <text x="140" y="152" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">config + requests</text>
-  <text x="140" y="176" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">data_fetcher</text>
-  <text x="140" y="200" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">Parquet cache</text>
-
-  <path d="M 248 180 L 278 180" stroke="#0d9488" stroke-width="4" fill="none"/>
-  <polygon points="278,180 264,170 264,190" fill="#0d9488"/>
+  <rect x="40" y="190" width="640" height="340" rx="16" fill="#f0fdfa" stroke="#312e81" stroke-width="3"/>
+  <rect x="72" y="230" width="88" height="260" rx="12" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+  <text x="116" y="375" text-anchor="middle" fill="#431407" font-family="system-ui,sans-serif" font-size="52" font-weight="700">1</text>
+  <text x="200" y="248" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="28" font-weight="700">INGESTION</text>
+  <text x="200" y="298" fill="#334155" font-family="system-ui,sans-serif" font-size="22">config + requests</text>
+  <text x="200" y="338" fill="#334155" font-family="system-ui,sans-serif" font-size="22">data_fetcher</text>
+  <text x="200" y="378" fill="#334155" font-family="system-ui,sans-serif" font-size="22">Parquet cache</text>
+  <text x="200" y="418" fill="#334155" font-family="system-ui,sans-serif" font-size="21">ONS CSV → validated Parquet</text>
+  <path d="M 360 535 L 360 575" stroke="#4f46e5" stroke-width="6" fill="none"/>
+  <polygon points="360,592 348,566 372,566" fill="#4f46e5"/>
 
   <!-- Storage -->
-  <rect x="290" y="98" width="200" height="190" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
-  <text x="390" y="126" text-anchor="middle" fill="#0f172a" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Storage</text>
-  <text x="390" y="152" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">DuckDB</text>
-  <text x="390" y="176" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="12">db_engine + views</text>
-  <text x="390" y="198" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="12">v_cpih_core</text>
-  <text x="390" y="220" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="12">v_psnb_monthly</text>
-
-  <path d="M 498 180 L 528 180" stroke="#0d9488" stroke-width="4" fill="none"/>
-  <polygon points="528,180 514,170 514,190" fill="#0d9488"/>
+  <rect x="40" y="600" width="640" height="380" rx="16" fill="#e0e7ff" stroke="#1d4ed8" stroke-width="3"/>
+  <rect x="72" y="638" width="88" height="300" rx="12" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+  <text x="116" y="805" text-anchor="middle" fill="#431407" font-family="system-ui,sans-serif" font-size="52" font-weight="700">2</text>
+  <text x="200" y="658" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="28" font-weight="700">STORAGE</text>
+  <text x="200" y="708" fill="#334155" font-family="system-ui,sans-serif" font-size="22">DuckDB</text>
+  <text x="200" y="748" fill="#334155" font-family="system-ui,sans-serif" font-size="21">db_engine + views</text>
+  <text x="200" y="788" fill="#334155" font-family="system-ui,sans-serif" font-size="21">v_cpih_core</text>
+  <text x="200" y="828" fill="#334155" font-family="system-ui,sans-serif" font-size="21">v_psnb_monthly</text>
+  <text x="200" y="868" fill="#334155" font-family="system-ui,sans-serif" font-size="21">SQL views over Parquet</text>
+  <path d="M 360 985 L 360 1025" stroke="#4f46e5" stroke-width="6" fill="none"/>
+  <polygon points="360,1042 348,1016 372,1016" fill="#4f46e5"/>
 
   <!-- Analytics -->
-  <rect x="540" y="98" width="200" height="190" rx="12" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
-  <text x="640" y="126" text-anchor="middle" fill="#0f172a" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Analytics</text>
-  <text x="640" y="155" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">analytics.py</text>
-  <text x="640" y="182" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">rolling · YoY</text>
-  <text x="640" y="209" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">Parquet + JSON</text>
-
-  <path d="M 748 180 L 778 180" stroke="#0d9488" stroke-width="4" fill="none"/>
-  <polygon points="778,180 764,170 764,190" fill="#0d9488"/>
+  <rect x="40" y="1050" width="640" height="340" rx="16" fill="#fff7ed" stroke="#c2410c" stroke-width="3"/>
+  <rect x="72" y="1088" width="88" height="270" rx="12" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+  <text x="116" y="1245" text-anchor="middle" fill="#431407" font-family="system-ui,sans-serif" font-size="52" font-weight="700">3</text>
+  <text x="200" y="1108" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="28" font-weight="700">ANALYTICS</text>
+  <text x="200" y="1158" fill="#334155" font-family="system-ui,sans-serif" font-size="22">analytics.py</text>
+  <text x="200" y="1198" fill="#334155" font-family="system-ui,sans-serif" font-size="22">rolling · YoY</text>
+  <text x="200" y="1238" fill="#334155" font-family="system-ui,sans-serif" font-size="22">Parquet + JSON</text>
+  <text x="200" y="1278" fill="#334155" font-family="system-ui,sans-serif" font-size="22">metrics for dashboards / exports</text>
+  <path d="M 360 1395 L 360 1435" stroke="#4f46e5" stroke-width="6" fill="none"/>
+  <polygon points="360,1452 348,1426 372,1426" fill="#4f46e5"/>
 
   <!-- Exports -->
-  <rect x="790" y="118" width="170" height="150" rx="12" fill="#dcfce7" stroke="#166534" stroke-width="2"/>
-  <text x="875" y="150" text-anchor="middle" fill="#0f172a" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Exports</text>
-  <text x="875" y="182" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">data/exports/</text>
-  <text x="875" y="208" text-anchor="middle" fill="#334155" font-family="system-ui,sans-serif" font-size="13">CSV · JSON · Parquet</text>
+  <rect x="40" y="1460" width="640" height="300" rx="16" fill="#dcfce7" stroke="#166534" stroke-width="3"/>
+  <rect x="72" y="1498" width="88" height="230" rx="12" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+  <text x="116" y="1625" text-anchor="middle" fill="#431407" font-family="system-ui,sans-serif" font-size="52" font-weight="700">4</text>
+  <text x="200" y="1518" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="28" font-weight="700">EXPORTS</text>
+  <text x="200" y="1568" fill="#334155" font-family="system-ui,sans-serif" font-size="22">data/exports/</text>
+  <text x="200" y="1608" fill="#334155" font-family="system-ui,sans-serif" font-size="22">CSV · JSON · Parquet</text>
+  <text x="200" y="1648" fill="#334155" font-family="system-ui,sans-serif" font-size="22">report + optional Streamlit</text>
 </svg>
