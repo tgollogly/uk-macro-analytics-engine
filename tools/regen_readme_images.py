@@ -2,13 +2,14 @@
 """
 Regenerate README hero and architecture images as high-DPI WebP + full-color PNG.
 
-Designed for **mobile GitHub**: brighter background, high contrast, larger type.
+Designed for **mobile GitHub**: flat fills, high contrast, larger type (fewer
+gradients = less softness when the CDN scales images).
 
 Requires Pillow: pip install pillow
 
   python3 tools/regen_readme_images.py
 
-Optional master: tools/source/hero.png — otherwise hero is drawn in code.
+Hero is always drawn in code for consistent, sharp README assets.
 Architecture diagram is always drawn in code (matches architecture.svg theme).
 """
 
@@ -19,17 +20,17 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "tools" / "source"
 
-# Light “portfolio” palette — readable on phone screens and in dark-mode GitHub frame
-BG_TOP = (239, 246, 255)  # blue-50
-BG_BOTTOM = (226, 232, 240)  # slate-200
-ACCENT = (37, 99, 235)  # blue-600
-ACCENT_DARK = (30, 64, 175)  # blue-800
+# Flat high-contrast palette (teal + slate) — solid fills read sharper than gradients
+# when GitHub scales images on narrow viewports.
+BG = (248, 250, 252)  # slate-50
+HEADER = (15, 118, 110)  # teal-700
+HEADER_STROKE = (13, 148, 136)  # teal-600
 TEXT = (15, 23, 42)  # slate-900
 TEXT_MUTED = (51, 65, 85)  # slate-700
 CARD = (255, 255, 255)
-OUTLINE = (59, 130, 246)  # blue-500
+OUTLINE = (13, 148, 136)  # teal-600
+SUBTITLE_ON_HEADER = (204, 251, 241)  # teal-100
 
 
 def _fonts(
@@ -55,18 +56,12 @@ def _save_png(img: Image.Image, path: Path) -> None:
     img.convert("RGB").save(path, format="PNG", optimize=True, compress_level=9)
 
 
-def render_hero(width: int = 2000) -> Image.Image:
+def render_hero(width: int = 3000) -> Image.Image:
     """Bright banner, large type, high contrast pills."""
     ar = 1200 / 400
     height = max(1, int(width / ar))
-    img = Image.new("RGB", (width, height), color=BG_TOP)
+    img = Image.new("RGB", (width, height), color=BG)
     d = ImageDraw.Draw(img)
-    for i in range(height):
-        t = i / max(height - 1, 1)
-        r = int(BG_TOP[0] + t * (BG_BOTTOM[0] - BG_TOP[0]))
-        g = int(BG_TOP[1] + t * (BG_BOTTOM[1] - BG_TOP[1]))
-        b = int(BG_TOP[2] + t * (BG_BOTTOM[2] - BG_TOP[2]))
-        d.line([(0, i), (width, i)], fill=(r, g, b))
 
     pad = int(width * 0.035)
     title_h = int(height * 0.34)
@@ -77,12 +72,12 @@ def render_hero(width: int = 2000) -> Image.Image:
         max(18, width // 85),
     )
 
-    # Title strip — solid blue for maximum contrast
+    # Title strip — solid teal for maximum contrast
     d.rounded_rectangle(
         [pad, pad, width - pad, pad + title_h],
         radius=int(height * 0.07),
-        fill=ACCENT,
-        outline=ACCENT_DARK,
+        fill=HEADER,
+        outline=HEADER_STROKE,
         width=max(3, width // 400),
     )
     title = "UK Macro Analytics Engine"
@@ -90,7 +85,7 @@ def render_hero(width: int = 2000) -> Image.Image:
 
     sub_y = pad + int(title_h * 0.52)
     subtitle = "ONS open data → Parquet → DuckDB → analytics & exports"
-    d.text((pad * 2, sub_y), subtitle, fill=(219, 234, 254), font=f_sub)
+    d.text((pad * 2, sub_y), subtitle, fill=SUBTITLE_ON_HEADER, font=f_sub)
 
     # Pipeline pills — white cards, dark text
     bx_y = pad + title_h + int(height * 0.06)
@@ -121,23 +116,17 @@ def render_hero(width: int = 2000) -> Image.Image:
     return img
 
 
-def render_architecture(width: int = 1600) -> Image.Image:
+def render_architecture(width: int = 2400) -> Image.Image:
     """Wide architecture strip: light background, coloured stage boxes, bold text."""
     height = int(width * 280 / 1200)
-    img = Image.new("RGB", (width, height), color=BG_TOP)
+    img = Image.new("RGB", (width, height), color=BG)
     d = ImageDraw.Draw(img)
-    for i in range(height):
-        t = i / max(height - 1, 1)
-        r = int(BG_TOP[0] + t * (BG_BOTTOM[0] - BG_TOP[0]))
-        g = int(BG_TOP[1] + t * (BG_BOTTOM[1] - BG_TOP[1]))
-        b = int(BG_TOP[2] + t * (BG_BOTTOM[2] - BG_TOP[2]))
-        d.line([(0, i), (width, i)], fill=(r, g, b))
 
     margin = max(20, width // 80)
     d.rounded_rectangle(
         [margin, margin, width - margin, height - margin],
         radius=24,
-        outline=ACCENT,
+        outline=HEADER,
         width=max(3, width // 320),
         fill=(255, 255, 255),
     )
@@ -162,16 +151,16 @@ def render_architecture(width: int = 1600) -> Image.Image:
     d.text((hx, hy), "Architecture", fill=TEXT, font=f_h)
     d.text(
         (hx, hy + int(36 * s)),
-        "Bright theme for README / mobile · vector: architecture.svg",
+        "Flat high-contrast theme for README / mobile · vector: architecture.svg",
         fill=TEXT_MUTED,
         font=f_t,
     )
 
-    # Stage colours (light fills, dark text)
+    # Stage colours (light fills, saturated strokes — matches architecture.svg)
     stages: list[tuple[float, float, float, float, str, list[str], tuple[int, int, int], tuple[int, int, int]]] = [
-        (28, 92, 232, 168, "Ingestion", ["config + requests", "data_fetcher", "Parquet cache"], (219, 234, 254), ACCENT),
-        (278, 92, 232, 168, "Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly"], (224, 231, 255), (67, 56, 202)),
-        (528, 92, 200, 168, "Analytics", ["analytics.py", "rolling · YoY", "Parquet + JSON"], (254, 243, 199), (180, 83, 9)),
+        (28, 92, 232, 168, "Ingestion", ["config + requests", "data_fetcher", "Parquet cache"], (240, 253, 250), HEADER),
+        (278, 92, 232, 168, "Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly"], (224, 242, 254), (3, 105, 161)),
+        (528, 92, 200, 168, "Analytics", ["analytics.py", "rolling · YoY", "Parquet + JSON"], (255, 247, 237), (194, 65, 12)),
         (748, 92, 224, 168, "Exports", ["data/exports/", "CSV · JSON · Parquet"], (220, 252, 231), (22, 101, 52)),
     ]
 
@@ -197,11 +186,11 @@ def render_architecture(width: int = 1600) -> Image.Image:
     def arrow(ax1: float, ax2: float, y: float) -> None:
         ya = y0 + y * s
         x1p, x2p = margin + ax1 * s, margin + ax2 * s
-        d.line([(x1p, ya), (x2p, ya)], fill=ACCENT, width=max(3, int(3 * s)))
+        d.line([(x1p, ya), (x2p, ya)], fill=HEADER_STROKE, width=max(3, int(3 * s)))
         ah = 12 * s
         d.polygon(
             [(x2p, ya), (x2p - ah, ya - ah * 0.45), (x2p - ah, ya + ah * 0.45)],
-            fill=ACCENT,
+            fill=HEADER_STROKE,
         )
 
     mid_y = 72.0
@@ -213,11 +202,11 @@ def render_architecture(width: int = 1600) -> Image.Image:
 
 
 def main() -> None:
-    target_w = 2000
+    target_w = 3000
     # Always draw hero in code for consistent bright, high-contrast README assets.
     hero = render_hero(target_w)
 
-    arch = render_architecture(1600)
+    arch = render_architecture(2400)
 
     _save_webp(hero, ROOT / "hero.webp", quality=94)
     _save_png(hero, ROOT / "hero.png")
