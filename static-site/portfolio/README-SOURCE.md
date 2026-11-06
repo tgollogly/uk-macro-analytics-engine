@@ -12,7 +12,7 @@ Upstream also includes `assets/chat.js` (site-wide assistant) and `assets/cv-pri
 
 **Hub adjustments (this repo only):**
 
-- `config.js` sets `AI_BACKEND_URL` to `https://tgollogly.dev/api` so the ATS matcher can call the existing Worker from this origin (server uses `Access-Control-Allow-Origin: *` in `server.js`).
+- `config.js` sets `AI_BACKEND_URL` to the public gate Worker (`uk-macro-ats-gate` on this Cloudflare account); the gate enforces origins and forwards to a private backend Worker for Gemini (see `docs/ATS_API_WORKER.md`).
 - Full `assets/chat.js` is not shipped here; `assets/chat-disabled.js` stub avoids loading the assistant on this hub.
 
 Do not commit API keys. Do not use this folder as the source of truth for portfolio — sync from upstream when updating.

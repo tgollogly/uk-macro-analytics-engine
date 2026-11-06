@@ -68,11 +68,14 @@ def test_portfolio_mirror_has_core_assets() -> None:
 
 def test_portfolio_config_points_ats_backend_at_verified_url() -> None:
     cfg = (STATIC / "portfolio" / "config.js").read_text(encoding="utf-8")
-    assert 'AI_BACKEND_URL = "https://tgollogly.dev/api"' in cfg
+    assert (
+        'AI_BACKEND_URL =\n  "https://uk-macro-ats-gate.thomasgolloglypagesdev.workers.dev/api"'
+        in cfg
+    )
 
 
 def test_portfolio_review_ats_config_is_stub_for_independent_worker() -> None:
-    """Review-only file — does not replace config.js until user approves Worker URL."""
+    """Review file kept for reference; may match shipped hub gate URL."""
     cfg = (STATIC / "portfolio" / "config.review-ats-worker.js").read_text(encoding="utf-8")
     assert "window.AI_BACKEND_URL" in cfg
     assert "uk-macro-ats-gate" in cfg
@@ -105,7 +108,8 @@ def test_mirror_privacy_discloses_static_host_and_ats_backend() -> None:
     priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
     assert "Static mirror" in priv
     assert "Optional chat (disabled on this mirror)" in priv
-    assert "https://tgollogly.dev/api" in priv
+    assert "uk-macro-ats-gate" in priv
+    assert "workers.dev/api" in priv
     assert "Open-Meteo" in priv
     assert "LICENSE-portfolio.txt" in priv
 

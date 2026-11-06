@@ -29,7 +29,7 @@ Two Workers plus one **Durable Object (DO)** class in the **gate** script. The *
 | `GEMINI_API_KEY` | **backend only** | Gemini API |
 | `ATS_INTERNAL_HMAC_SECRET` | **gate + backend** (same value) | Request signing between Workers (never in browser) |
 | `ATS_ALLOWED_ORIGINS` | **gate** | Comma-separated exact origins (**required** for production; gate fails closed if empty) |
-| `GEMINI_MODEL` | backend (optional) | Default `gemini-2.0-flash`; see [Gemini API docs](https://ai.google.dev/gemini-api/docs) |
+| `GEMINI_MODEL` | backend (optional) | Default `gemini-3.8-flash`; see [Gemini API docs](https://ai.google.dev/gemini-api/docs) |
 | `ATS_MAX_BODY_CHARS` | gate + backend | Default `120000` |
 | `ATS_QUOTA_WINDOW_MS` | **gate** (DO reads `env` for defaults) | Default `86400000` (24h) sliding window for counters |
 | `ATS_QUOTA_GLOBAL_PER_WINDOW` | gate | Default `300` successful quota checks → Gemini calls per window (account-wide) |
@@ -97,4 +97,4 @@ Vitest mocks `fetch` for Gemini; gate tests use the **real** backend + HMAC path
 
 ## Frontend (review)
 
-`static-site/portfolio/config.review-ats-worker.js` sets `AI_BACKEND_URL` to the **gate** URL placeholder (`https://uk-macro-ats-gate.<account-subdomain>.workers.dev/api`). Replace subdomain after deploy. **Do not** rename to `config.js` until approved.
+Hub preview: `static-site/portfolio/config.js` and `config.review-ats-worker.js` both set `AI_BACKEND_URL` to the deployed gate URL (`https://uk-macro-ats-gate.<account-subdomain>.workers.dev/api`). Canonical `tgollogly.dev` portfolio is unchanged.

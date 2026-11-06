@@ -21,7 +21,8 @@ export interface BackendEnv {
   ATS_MAX_BODY_CHARS?: string;
 }
 
-const DEFAULT_MODEL = "gemini-2.0-flash";
+/** Default must match a currently served model id from the Gemini API (rotate via `GEMINI_MODEL` var if Google deprecates). */
+const DEFAULT_MODEL = "gemini-3.8-flash";
 const DEFAULT_MAX_BODY = 120_000;
 const INTERNAL_PATH = "/internal/ats";
 

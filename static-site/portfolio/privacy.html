@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="color-scheme" content="light">
 <title>Privacy &amp; AI notice (static mirror) | Thomas Gollogly</title>
-<meta name="description" content="How mirrored portfolio demos handle data on this static host: ATS to tgollogly.dev/api and Gemini, weather APIs, chat disabled."/>
+<meta name="description" content="How mirrored portfolio demos handle data on this static host: ATS via config.js to the Cloudflare gate Worker and Gemini, weather APIs, chat disabled."/>
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
 <meta name="googlebot" content="noindex,nofollow"/>
 <link rel="canonical" href="https://tgollogly.dev/privacy.html"/>
@@ -64,7 +64,7 @@
     <li><strong>Beneish M-Score Screener</strong> &mdash; runs in your browser; figures you enter are not sent to our backend in the shipped script paths.</li>
     <li><strong>BundleBuilder</strong> &mdash; case details stay in the page until you close the tab.</li>
     <li><strong>Heat Anomaly Detector</strong> and <strong>Thermal Compare</strong> &mdash; request weather and map data from third parties (e.g. Open-Meteo, OpenStreetMap raster tiles per the <a href="https://operations.osmfoundation.org/policies/tiles/">OSM tile policy</a>, RainViewer radar). Those services receive normal HTTP requests (including IP as usual for web requests).</li>
-    <li><strong>ATS Resume Matcher</strong> &mdash; when you click <em>Analyse match</em>, <em>Generate cover letter</em>, or <em>Improved CV</em>, the page POSTs JSON (<code>mode</code>, <code>cv</code>, <code>jd</code>) to <strong><code>https://tgollogly.dev/api</code></strong> (configured in <code>config.js</code>). That endpoint is intended to call <strong>Google Gemini</strong> with a server-held key. <strong>Connectivity and responses from this mirror have not been verified</strong> in every environment; do not paste sensitive text.</li>
+    <li><strong>ATS Resume Matcher</strong> &mdash; when you click <em>Analyse match</em>, <em>Generate cover letter</em>, or <em>Improved CV</em>, the page POSTs JSON (<code>mode</code>, <code>cv</code>, <code>jd</code>) to <strong>the URL in <code>config.js</code></strong> (the public <code>uk-macro-ats-gate</code> Worker at <code>https://uk-macro-ats-gate.thomasgolloglypagesdev.workers.dev/api</code>). The gate checks your browser&rsquo;s origin, enforces server-side usage caps (aggregated counters only; no CV storage for quota), and forwards to a <strong>private</strong> Worker that holds the API key and calls <strong>Google Gemini</strong>. <strong>Connectivity and responses from this mirror have not been verified</strong> in every environment; do not paste sensitive text.</li>
   </ul>
 
   <h2>UK Macro interactive charts (<code>../demo.html</code>)</h2>
@@ -76,7 +76,7 @@
     <li>Google Fonts &mdash; typefaces</li>
     <li>jsDelivr / other CDNs &mdash; JavaScript libraries</li>
     <li>Open-Meteo, OpenStreetMap (tiles), RainViewer, AWS elevation &mdash; weather and maps in the heat demo</li>
-    <li><code>tgollogly.dev</code> &mdash; ATS backend only when you trigger it</li>
+    <li>Cloudflare Workers (gate + private ATS backend on this account) &mdash; only when you trigger ATS from this hub</li>
     <li>Google Gemini &mdash; only via that ATS backend when it succeeds</li>
   </ul>
 
@@ -106,7 +106,7 @@
   </span>
 </div>
 <div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <strong>the URL in <code>config.js</code></strong> (gate Worker) when you click analyse or generate; the gate forwards to a private Worker that calls Gemini (availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
 </div></div>
 
 <script src="./config.js"></script>

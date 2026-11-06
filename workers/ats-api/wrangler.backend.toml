@@ -11,5 +11,5 @@ workers_dev = false
 #   ATS_INTERNAL_HMAC_SECRET   — shared with gate Worker (same secret both sides)
 
 # Optional vars:
-#   GEMINI_MODEL        — default gemini-2.0-flash
+#   GEMINI_MODEL        — default gemini-3.8-flash
 #   ATS_MAX_BODY_CHARS  — default 120000

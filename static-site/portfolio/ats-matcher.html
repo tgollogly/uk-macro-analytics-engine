@@ -125,7 +125,7 @@
     <h3>How it works</h3>
     <p>The front end runs on this static site; the CV and job description are sent to a small serverless function (a Cloudflare Worker) that holds the AI key securely and calls Google's Gemini model. Keeping the key server-side is the correct, safe pattern — it's never exposed in the browser.</p>
     <p>Stack: vanilla JavaScript front end · Cloudflare Worker backend · Google Gemini API · deployed free.</p>
-    <p style="margin-top:10px;color:var(--faint);font-size:13px;"><b>Privacy &amp; AI notice:</b> When you click analyse or generate, this page POSTs your CV and job text JSON to <code>https://tgollogly.dev/api</code> (see <code>config.js</code>), intended for a Worker that calls Google&rsquo;s Gemini API. Responses are not verified from every host; third-party retention follows Google&rsquo;s terms. Do not paste confidential information. For demonstration only — not career, legal or professional advice.</p>
+    <p style="margin-top:10px;color:var(--faint);font-size:13px;"><b>Privacy &amp; AI notice:</b> When you click analyse or generate, this page POSTs your CV and job text JSON to <strong>the URL in <code>config.js</code></strong> (a Cloudflare <strong>gate</strong> Worker). That Worker checks this page&rsquo;s origin, applies usage limits, and forwards the request to a <strong>private</strong> Worker that holds the API key and calls Google&rsquo;s Gemini API. The key is never exposed in the browser. Responses are not verified from every host; third-party retention follows Google&rsquo;s terms. Do not paste confidential information. For demonstration only — not career, legal or professional advice.</p>
   </div>
 </div>
 
@@ -318,7 +318,7 @@ $("dlBtn").addEventListener("click",()=>{
   </span>
 </div>
 <div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <strong>the URL in <code>config.js</code></strong> (gate Worker) when you click analyse or generate; the gate forwards to a private Worker that calls Gemini (availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
 </div></div>
 
 <script>document.querySelectorAll(".footyr").forEach(e=>e.textContent=new Date().getFullYear());</script>

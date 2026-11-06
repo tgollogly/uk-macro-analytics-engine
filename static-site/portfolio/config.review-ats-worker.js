@@ -3,7 +3,7 @@
  * Browser never holds ATS_INTERNAL_HMAC_SECRET or GEMINI_API_KEY.
  *
  * After deploy: substitute your account’s workers.dev subdomain from Cloudflare (Workers → uk-macro-ats-gate).
- * Do NOT rename this file to config.js until user approves — keeps current hub on tgollogly.dev/api.
+ * Shipped hub uses `config.js` with the same URL; this file remains as a documented template.
  */
 window.AI_BACKEND_URL =
   "https://uk-macro-ats-gate.thomasgolloglypagesdev.workers.dev/api";
