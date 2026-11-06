@@ -28,6 +28,8 @@ HEADER_STROKE = (67, 56, 202)  # indigo-700
 ACCENT_BADGE = (251, 191, 36)  # amber-400 (step numbers)
 TEXT = (15, 23, 42)  # slate-900
 TEXT_MUTED = (51, 65, 85)  # slate-700
+# Slightly darker for long lines on pale card fills (mobile readability)
+TEXT_BODY = (30, 41, 59)  # slate-800
 CARD = (255, 255, 255)
 OUTLINE = (79, 70, 229)  # indigo-600
 SUBTITLE_ON_HEADER = (224, 231, 255)  # indigo-100
@@ -219,23 +221,23 @@ def render_hero(width: int = 2400) -> Image.Image:
     return img
 
 
-def render_architecture(width: int = 1440) -> Image.Image:
+def render_architecture(width: int = 2400) -> Image.Image:
     """Tall poster: numbered stages + arrows; height grows so wrapped text fits inside cards."""
-    margin = max(26, width // 22)
+    margin = max(40, width // 22)
     inner_l = margin + int(width * 0.044)
     inner_r = width - margin - int(width * 0.044)
     iw = inner_r - inner_l
 
     try:
-        f_banner_title = _font_bold(max(40, int(width * 0.026)))
+        f_banner_title = _font_bold(max(56, int(width * 0.03)))
         f_banner_sub = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(22, int(width * 0.014))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, int(width * 0.017))
         )
-        f_head = _font_bold(max(36, int(width * 0.024)))
+        f_head = _font_bold(max(48, int(width * 0.028)))
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(30, int(width * 0.02))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(38, int(width * 0.024))
         )
-        f_step = _font_bold(max(56, int(width * 0.042)))
+        f_step = _font_bold(max(72, int(width * 0.048)))
     except OSError:
         f_banner_title = f_head = f_step = ImageFont.load_default()
         f_banner_sub = f_line = ImageFont.load_default()
@@ -250,7 +252,7 @@ def render_architecture(width: int = 1440) -> Image.Image:
     sd = ImageDraw.Draw(scratch)
     banner_sub_lines = _wrap_lines(
         sd,
-        "Poster v5 · wrapped body text · vector: architecture.svg",
+        "Diagram v6 · large type · vector: architecture.svg",
         f_banner_sub,
         tw_banner,
     )
@@ -277,9 +279,9 @@ def render_architecture(width: int = 1440) -> Image.Image:
     ]
 
     pad_x = int(iw * 0.04)
-    badge_w = int(iw * 0.11)
-    gap_after_badge = int(iw * 0.03)
-    card_inset = int(width * 0.018)
+    badge_w = int(iw * 0.1)
+    gap_after_badge = int(iw * 0.032)
+    card_inset = int(width * 0.024)
     tw_text = max(100, iw - 2 * pad_x - badge_w - gap_after_badge)
 
     arrow_h = int(width * 0.028)
@@ -289,10 +291,10 @@ def render_architecture(width: int = 1440) -> Image.Image:
         body_lines: list[str] = []
         for L in lines:
             body_lines.extend(_wrap_lines(sd, L, f_line, tw_text))
-        title_h = len(title_lines) * int(lh_head * 1.18)
-        body_h = len(body_lines) * int(lh_line * 1.3)
-        text_stack_h = title_h + int(lh_line * 0.45) + body_h
-        min_pill_h = int(width * 0.2)
+        title_h = len(title_lines) * int(lh_head * 1.22)
+        body_h = len(body_lines) * int(lh_line * 1.42)
+        text_stack_h = title_h + int(lh_line * 0.55) + body_h
+        min_pill_h = int(width * 0.22)
         inner_h = max(text_stack_h, min_pill_h)
         block_heights.append(inner_h + 2 * card_inset)
 
@@ -319,8 +321,8 @@ def render_architecture(width: int = 1440) -> Image.Image:
         width=max(2, width // 300),
     )
     bx = inner_l + banner_pad_x
-    d.text((bx, banner_top + int(banner_line_h * 0.6)), "Architecture", fill=(255, 255, 255), font=f_banner_title)
-    sy = banner_top + int(banner_line_h * 1.65)
+    d.text((bx, banner_top + int(banner_line_h * 0.75)), "Architecture", fill=(255, 255, 255), font=f_banner_title)
+    sy = banner_top + int(banner_line_h * 1.95)
     for sl in banner_sub_lines:
         d.text((bx, sy), sl, fill=(199, 210, 254), font=f_banner_sub)
         sy += int(banner_line_h * 1.22)
@@ -362,12 +364,12 @@ def render_architecture(width: int = 1440) -> Image.Image:
         ty = int(y) + card_inset + int(lh_head * 0.1)
         for hl in _wrap_lines(d, title, f_head, tw_text):
             d.text((tx, ty), hl, fill=HEADER, font=f_head)
-            ty += int(lh_head * 1.18)
-        ty += int(lh_line * 0.35)
+            ty += int(lh_head * 1.22)
+        ty += int(lh_line * 0.4)
         for L in lines:
             for wl in _wrap_lines(d, L, f_line, tw_text):
-                d.text((tx, ty), wl, fill=TEXT_MUTED, font=f_line)
-                ty += int(lh_line * 1.3)
+                d.text((tx, ty), wl, fill=TEXT_BODY, font=f_line)
+                ty += int(lh_line * 1.42)
 
         y += blk_h
         if i < len(stages) - 1:
@@ -382,7 +384,7 @@ def main() -> None:
     # Always draw hero in code for consistent bright, high-contrast README assets.
     hero = render_hero(target_w)
 
-    arch = render_architecture(1440)
+    arch = render_architecture(2400)
 
     _save_webp(hero, ROOT / "hero.webp", quality=94)
     _save_png(hero, ROOT / "hero.png")

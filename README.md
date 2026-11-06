@@ -22,9 +22,10 @@
 <p align="center">
   <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
   <!-- ?v= bumps GitHub’s image CDN when the PNG bytes change (otherwise it can look “stuck”). -->
-  <a href="./hero.png?v=6" title="hero.png (this branch)">
+  <!-- href has no ?v= so mobile “open image” matches this file; ?v= on src only busts CDN cache. -->
+  <a href="./hero.png" title="hero.png (this branch)">
     <img
-      src="./hero.png?v=6"
+      src="./hero.png?v=7"
       alt="UK Macro Analytics Engine banner"
       width="100%"
       decoding="async"
@@ -76,9 +77,9 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png?v=6" title="architecture.png (this branch)">
+  <a href="./architecture.png" title="architecture.png (this branch)">
     <img
-      src="./architecture.png?v=6"
+      src="./architecture.png?v=7"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
       width="100%"
       loading="lazy"
@@ -231,7 +232,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Wrap README images in `<a href="./hero.png?v=…">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Bump `?v=` when you replace PNG bytes so the mobile app does not show a cached copy (this README uses `?v=6`). Vector: [`architecture.svg`](./architecture.svg).
+Put **`?v=` on the `<img src>` only** (not on the wrapping `<a href>`) so taps open the correct file while the CDN still refreshes. Bump `?v=` when you replace PNG bytes (this README uses `?v=7`). Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 
