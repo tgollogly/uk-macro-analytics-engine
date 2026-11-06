@@ -55,6 +55,38 @@ def _font_bold(px: int) -> ImageFont.FreeTypeFont:
         return ImageFont.load_default()
 
 
+def _text_line_height(font: ImageFont.ImageFont) -> int:
+    ascent, descent = font.getmetrics()
+    return ascent + descent
+
+
+def _wrap_lines(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.ImageFont,
+    max_width: int,
+) -> list[str]:
+    """Word-wrap to max_width in pixels; keeps words intact where possible."""
+    text = text.strip()
+    if not text:
+        return []
+    words = text.split()
+    lines: list[str] = []
+    current: list[str] = []
+    for w in words:
+        trial = " ".join(current + [w]) if current else w
+        bbox = draw.textbbox((0, 0), trial, font=font)
+        tw = bbox[2] - bbox[0]
+        if tw <= max_width or not current:
+            current.append(w)
+        else:
+            lines.append(" ".join(current))
+            current = [w]
+    if current:
+        lines.append(" ".join(current))
+    return lines
+
+
 def _save_webp(img: Image.Image, path: Path, quality: int = 93) -> None:
     img.save(path, format="WEBP", quality=quality, method=6)
 
@@ -64,49 +96,33 @@ def _save_png(img: Image.Image, path: Path) -> None:
 
 
 def render_hero(width: int = 2400) -> Image.Image:
-    """Tall poster: indigo header + numbered vertical stack (unmistakable vs old 4-pill row)."""
-    height = int(width * 5 / 3)
-    img = Image.new("RGB", (width, height), color=BG)
-    d = ImageDraw.Draw(img)
-
+    """Tall poster: indigo header + numbered stack; row height follows wrapped body text."""
     pad = int(width * 0.055)
-    title_h = int(height * 0.16)
-    f_title, f_sub, f_big, f_line = _fonts(
-        max(72, width // 16),
-        max(36, width // 42),
+    title_h = int(width * 0.26)
+    f_title, f_sub, _, _ = _fonts(
+        max(76, width // 15),
+        max(38, width // 38),
         max(44, width // 32),
         max(30, width // 48),
     )
-    f_step = _font_bold(max(110, width // 9))
+    f_big = _font_bold(max(56, width // 22))
+    try:
+        f_line = ImageFont.truetype(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(42, width // 34)
+        )
+        f_tag = ImageFont.truetype(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, width // 52)
+        )
+    except OSError:
+        f_line = f_tag = ImageFont.load_default()
+    f_step = _font_bold(max(96, width // 11))
 
-    d.rounded_rectangle(
-        [pad, pad, width - pad, pad + title_h],
-        radius=int(height * 0.022),
-        fill=HEADER,
-        outline=HEADER_STROKE,
-        width=max(4, width // 380),
-    )
-    title = "UK Macro Analytics Engine"
-    d.text((pad * 2, pad + int(title_h * 0.2)), title, fill=(255, 255, 255), font=f_title)
-
-    sub_y = pad + int(title_h * 0.58)
-    subtitle = "ONS open data → Parquet → DuckDB → analytics & exports"
-    d.text((pad * 2, sub_y), subtitle, fill=SUBTITLE_ON_HEADER, font=f_sub)
-    d.text(
-        (pad * 2, sub_y + int(title_h * 0.28)),
-        "README poster v4 · vertical stack (not the old 4-box row)",
-        fill=(199, 210, 254),
-        font=f_line,
-    )
-
-    gap = int(height * 0.018)
-    stack_top = pad + title_h + int(height * 0.035)
-    stack_h = height - stack_top - pad
-    n = 4
-    row_h = (stack_h - gap * (n - 1)) // n
     inner_x = pad * 2
     inner_w = width - pad * 4
-    badge_w = int(inner_w * 0.14)
+    badge_w = int(inner_w * 0.11)
+    gap = int(width * 0.022)
+    card_inset = int(width * 0.022)
+    tw_body = max(80, inner_w - badge_w - int(inner_w * 0.09))
 
     stages: list[tuple[str, str, list[str]]] = [
         ("1", "INGEST", ["config + requests", "data_fetcher → Parquet cache"]),
@@ -115,102 +131,131 @@ def render_hero(width: int = 2400) -> Image.Image:
         ("4", "EXPORTS", ["data/exports/", "CSV · JSON · Parquet"]),
     ]
 
+    # Measure row heights with wrapping (scratch draw)
+    scratch = Image.new("RGB", (width, 50), color=BG)
+    sd = ImageDraw.Draw(scratch)
+    lh_big = _text_line_height(f_big)
+    lh_line = _text_line_height(f_line)
+    row_heights: list[int] = []
+    for _num, head, lines in stages:
+        head_wrapped = _wrap_lines(sd, head, f_big, tw_body)
+        body_wrapped: list[str] = []
+        for L in lines:
+            body_wrapped.extend(_wrap_lines(sd, L, f_line, tw_body))
+        head_h = len(head_wrapped) * int(lh_big * 1.2) + int(lh_line * 0.35)
+        body_h = len(body_wrapped) * int(lh_line * 1.28)
+        rh = max(int(width * 0.14), card_inset * 2 + head_h + body_h)
+        row_heights.append(rh)
+
+    stack_top = pad + title_h + int(width * 0.04)
+    stack_h_total = sum(row_heights) + gap * (len(stages) - 1)
+    height = stack_top + stack_h_total + pad
+
+    img = Image.new("RGB", (width, height), color=BG)
+    d = ImageDraw.Draw(img)
+
+    d.rounded_rectangle(
+        [pad, pad, width - pad, pad + title_h],
+        radius=int(width * 0.018),
+        fill=HEADER,
+        outline=HEADER_STROKE,
+        width=max(4, width // 380),
+    )
+    d.text((pad * 2, pad + int(title_h * 0.18)), "UK Macro Analytics Engine", fill=(255, 255, 255), font=f_title)
+
+    sub_y = pad + int(title_h * 0.55)
+    d.text(
+        (pad * 2, sub_y),
+        "ONS open data → Parquet → DuckDB → analytics & exports",
+        fill=SUBTITLE_ON_HEADER,
+        font=f_sub,
+    )
+    d.text(
+        (pad * 2, sub_y + int(title_h * 0.28)),
+        "README poster v5 · wrapped text so labels stay inside cards",
+        fill=(199, 210, 254),
+        font=f_tag,
+    )
+
     y = stack_top
-    for num, head, lines in stages:
+    for (_idx, (num, head, lines)) in enumerate(stages):
+        row_h = row_heights[_idx]
         x1 = inner_x
         x2 = x1 + inner_w
         d.rounded_rectangle(
             [x1, y, x2, y + row_h],
-            radius=int(row_h * 0.14),
+            radius=int(min(row_h, width) * 0.06),
             fill=CARD,
             outline=OUTLINE,
             width=max(3, width // 420),
         )
-        bx2 = x1 + badge_w
+        bx1 = x1 + card_inset
+        bx2 = bx1 + badge_w
+        by1 = y + card_inset
+        by2 = y + row_h - card_inset
         d.rounded_rectangle(
-            [x1 + int(row_h * 0.08), y + int(row_h * 0.1), bx2, y + row_h - int(row_h * 0.1)],
-            radius=int(row_h * 0.12),
+            [bx1, by1, bx2, by2],
+            radius=int((by2 - by1) * 0.14),
             fill=ACCENT_BADGE,
             outline=(217, 119, 6),
             width=max(2, width // 500),
         )
-        d.text(
-            ((x1 + bx2) / 2, y + row_h // 2),
-            num,
-            fill=(67, 20, 7),
-            font=f_step,
-            anchor="mm",
-        )
-        tx = bx2 + int(inner_w * 0.04)
-        ty = y + int(row_h * 0.18)
-        d.text((tx, ty), head, fill=HEADER, font=f_big)
-        ly = ty + int(row_h * 0.28)
-        for line in lines:
-            d.text((tx, ly), line, fill=TEXT_MUTED, font=f_line)
-            ly += int(row_h * 0.2)
+        d.text(((bx1 + bx2) / 2, (by1 + by2) / 2), num, fill=(67, 20, 7), font=f_step, anchor="mm")
+
+        tx = bx2 + int(inner_w * 0.035)
+        ty = y + card_inset + int(lh_big * 0.15)
+        head_wrapped = _wrap_lines(d, head, f_big, tw_body)
+        ly = ty
+        for hl in head_wrapped:
+            d.text((tx, ly), hl, fill=HEADER, font=f_big)
+            ly += int(lh_big * 1.2)
+        ly += int(lh_line * 0.25)
+        for L in lines:
+            for wl in _wrap_lines(d, L, f_line, tw_body):
+                d.text((tx, ly), wl, fill=TEXT_MUTED, font=f_line)
+                ly += int(lh_line * 1.28)
         y += row_h + gap
 
     return img
 
 
 def render_architecture(width: int = 1440) -> Image.Image:
-    """Tall poster: numbered stages + down arrows (matches architecture.svg)."""
-    height = int(width * 2000 / 720)
-    img = Image.new("RGB", (width, height), color=BG)
-    d = ImageDraw.Draw(img)
-
+    """Tall poster: numbered stages + arrows; height grows so wrapped text fits inside cards."""
     margin = max(26, width // 22)
-    outer_r = int(width * 0.028)
-    d.rounded_rectangle(
-        [margin, margin, width - margin, height - margin],
-        radius=outer_r,
-        outline=HEADER_STROKE,
-        width=max(4, width // 200),
-        fill=BG,
-    )
-
     inner_l = margin + int(width * 0.044)
     inner_r = width - margin - int(width * 0.044)
     iw = inner_r - inner_l
 
     try:
-        f_banner_title = _font_bold(max(34, int(width * 0.022)))
+        f_banner_title = _font_bold(max(40, int(width * 0.026)))
         f_banner_sub = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(18, int(width * 0.012))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(22, int(width * 0.014))
         )
-        f_head = _font_bold(max(28, int(width * 0.019)))
+        f_head = _font_bold(max(36, int(width * 0.024)))
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(22, int(width * 0.015))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(30, int(width * 0.02))
         )
-        f_step = _font_bold(max(72, int(width * 0.052)))
+        f_step = _font_bold(max(56, int(width * 0.042)))
     except OSError:
         f_banner_title = f_head = f_step = ImageFont.load_default()
         f_banner_sub = f_line = ImageFont.load_default()
 
-    banner_h = int(height * 0.075)
-    banner_top = margin + int(height * 0.02)
-    d.rounded_rectangle(
-        [inner_l, banner_top, inner_r, banner_top + banner_h],
-        radius=int(banner_h * 0.12),
-        fill=HEADER,
-        outline=HEADER_STROKE,
-        width=max(2, width // 300),
-    )
-    d.text(
-        (inner_l + int(iw * 0.04), banner_top + int(banner_h * 0.32)),
-        "Architecture",
-        fill=(255, 255, 255),
-        font=f_banner_title,
-    )
-    d.text(
-        (inner_l + int(iw * 0.04), banner_top + int(banner_h * 0.68)),
-        "Poster v4 · stacked pipeline · vector: architecture.svg",
-        fill=(199, 210, 254),
-        font=f_banner_sub,
-    )
+    lh_head = _text_line_height(f_head)
+    lh_line = _text_line_height(f_line)
 
-    content_top = banner_top + banner_h + int(height * 0.028)
-    content_bottom = height - margin - int(height * 0.022)
+    banner_top = margin + int(width * 0.02)
+    banner_pad_x = int(iw * 0.04)
+    tw_banner = iw - 2 * banner_pad_x
+    scratch = Image.new("RGB", (width, 50), color=BG)
+    sd = ImageDraw.Draw(scratch)
+    banner_sub_lines = _wrap_lines(
+        sd,
+        "Poster v5 · wrapped body text · vector: architecture.svg",
+        f_banner_sub,
+        tw_banner,
+    )
+    banner_line_h = _text_line_height(f_banner_sub)
+    banner_h = int(banner_line_h * 1.5) + len(banner_sub_lines) * int(banner_line_h * 1.25) + int(width * 0.02)
 
     stages = [
         ("1", "INGESTION", ["config + requests", "data_fetcher", "Parquet cache", "ONS CSV → validated Parquet"], (240, 253, 250), HEADER),
@@ -231,9 +276,54 @@ def render_architecture(width: int = 1440) -> Image.Image:
         ("4", "EXPORTS", ["data/exports/", "CSV · JSON · Parquet", "report + optional Streamlit"], (220, 252, 231), (22, 101, 52)),
     ]
 
-    fracs = (0.195, 0.22, 0.195, 0.175)
-    arrow_h = int((content_bottom - content_top) * 0.026)
-    total_body = content_bottom - content_top - arrow_h * (len(stages) - 1)
+    pad_x = int(iw * 0.04)
+    badge_w = int(iw * 0.11)
+    gap_after_badge = int(iw * 0.03)
+    card_inset = int(width * 0.018)
+    tw_text = max(100, iw - 2 * pad_x - badge_w - gap_after_badge)
+
+    arrow_h = int(width * 0.028)
+    block_heights: list[int] = []
+    for _num, title, lines, _fill, _stroke in stages:
+        title_lines = _wrap_lines(sd, title, f_head, tw_text)
+        body_lines: list[str] = []
+        for L in lines:
+            body_lines.extend(_wrap_lines(sd, L, f_line, tw_text))
+        title_h = len(title_lines) * int(lh_head * 1.18)
+        body_h = len(body_lines) * int(lh_line * 1.3)
+        text_stack_h = title_h + int(lh_line * 0.45) + body_h
+        min_pill_h = int(width * 0.2)
+        inner_h = max(text_stack_h, min_pill_h)
+        block_heights.append(inner_h + 2 * card_inset)
+
+    content_top = banner_top + banner_h + int(width * 0.028)
+    height = content_top + sum(block_heights) + arrow_h * (len(stages) - 1) + margin
+
+    img = Image.new("RGB", (width, height), color=BG)
+    d = ImageDraw.Draw(img)
+
+    outer_r = int(width * 0.028)
+    d.rounded_rectangle(
+        [margin, margin, width - margin, height - margin],
+        radius=outer_r,
+        outline=HEADER_STROKE,
+        width=max(4, width // 200),
+        fill=BG,
+    )
+
+    d.rounded_rectangle(
+        [inner_l, banner_top, inner_r, banner_top + banner_h],
+        radius=int(banner_h * 0.12),
+        fill=HEADER,
+        outline=HEADER_STROKE,
+        width=max(2, width // 300),
+    )
+    bx = inner_l + banner_pad_x
+    d.text((bx, banner_top + int(banner_line_h * 0.6)), "Architecture", fill=(255, 255, 255), font=f_banner_title)
+    sy = banner_top + int(banner_line_h * 1.65)
+    for sl in banner_sub_lines:
+        d.text((bx, sy), sl, fill=(199, 210, 254), font=f_banner_sub)
+        sy += int(banner_line_h * 1.22)
 
     cx = (inner_l + inner_r) / 2
     y = float(content_top)
@@ -246,38 +336,38 @@ def render_architecture(width: int = 1440) -> Image.Image:
         d.polygon([(cx, y_top + arrow_h), (cx - ah, yb), (cx + ah, yb)], fill=HEADER_STROKE)
 
     for i, (num, title, lines, fill, stroke) in enumerate(stages):
-        blk_h = int(total_body * fracs[i])
+        blk_h = block_heights[i]
         x1, x2 = inner_l, inner_r
         d.rounded_rectangle(
             [x1, int(y), x2, int(y) + blk_h],
-            radius=int(width * 0.022),
+            radius=int(width * 0.02),
             fill=fill,
             outline=stroke,
             width=max(3, width // 280),
         )
-        pad_x = int(iw * 0.045)
-        badge_w = int(iw * 0.13)
         bx1 = x1 + pad_x
         bx2 = bx1 + badge_w
-        by1 = int(y) + int(blk_h * 0.12)
-        by2 = int(y) + blk_h - int(blk_h * 0.12)
+        by1 = int(y) + card_inset
+        by2 = int(y) + blk_h - card_inset
         d.rounded_rectangle(
             [bx1, by1, bx2, by2],
-            radius=int(blk_h * 0.08),
+            radius=int((by2 - by1) * 0.12),
             fill=ACCENT_BADGE,
             outline=(180, 83, 9),
             width=max(2, width // 400),
         )
         d.text(((bx1 + bx2) / 2, (by1 + by2) / 2), num, fill=(67, 20, 7), font=f_step, anchor="mm")
 
-        tx = bx2 + int(iw * 0.035)
-        ty = int(y) + int(blk_h * 0.16)
-        d.text((tx, ty), title, fill=HEADER, font=f_head)
-        ly = ty + int(blk_h * 0.2)
-        step = int(blk_h * 0.14)
-        for line in lines:
-            d.text((tx, ly), line, fill=TEXT_MUTED, font=f_line)
-            ly += step
+        tx = bx2 + gap_after_badge
+        ty = int(y) + card_inset + int(lh_head * 0.1)
+        for hl in _wrap_lines(d, title, f_head, tw_text):
+            d.text((tx, ty), hl, fill=HEADER, font=f_head)
+            ty += int(lh_head * 1.18)
+        ty += int(lh_line * 0.35)
+        for L in lines:
+            for wl in _wrap_lines(d, L, f_line, tw_text):
+                d.text((tx, ty), wl, fill=TEXT_MUTED, font=f_line)
+                ty += int(lh_line * 1.3)
 
         y += blk_h
         if i < len(stages) - 1:

@@ -22,9 +22,9 @@
 <p align="center">
   <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
   <!-- ?v= bumps GitHub’s image CDN when the PNG bytes change (otherwise it can look “stuck”). -->
-  <a href="./hero.png?v=5" title="hero.png (this branch)">
+  <a href="./hero.png?v=6" title="hero.png (this branch)">
     <img
-      src="./hero.png?v=5"
+      src="./hero.png?v=6"
       alt="UK Macro Analytics Engine banner"
       width="100%"
       decoding="async"
@@ -76,9 +76,9 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png?v=5" title="architecture.png (this branch)">
+  <a href="./architecture.png?v=6" title="architecture.png (this branch)">
     <img
-      src="./architecture.png?v=5"
+      src="./architecture.png?v=6"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
       width="100%"
       loading="lazy"
@@ -224,14 +224,14 @@ See [**CONTRIBUTING.md**](./CONTRIBUTING.md).
 
 ## Hero & diagram assets (HiDPI)
 
-Bitmaps use a **tall poster** aspect (hero 3∶4, architecture vertical stack) so body text is large when scaled with **`width="100%"`** in the README column. **PNG** is what the README loads; the script also writes **WebP** beside it if you want to use `<picture>` elsewhere.
+README diagrams are **PNGs**: they always fill the GitHub content column (`width="100%"`), but GitHub does not reflow text inside an image — the generator uses **larger fonts**, **word-wrapping**, and **extra height** so lines stay **inside** each card on phones. For a **truly responsive** layout (text that reflows with CSS), open the **`static-site/`** landing page or the **Streamlit** app. **PNG** is what the README loads; the script also writes **WebP** beside it.
 
 ```bash
 pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Wrap README images in `<a href="./hero.png?v=…">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Bump `?v=` when you replace PNG bytes so the mobile app does not show a cached copy (this README uses `?v=5`). Vector: [`architecture.svg`](./architecture.svg).
+Wrap README images in `<a href="./hero.png?v=…">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Bump `?v=` when you replace PNG bytes so the mobile app does not show a cached copy (this README uses `?v=6`). Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 
