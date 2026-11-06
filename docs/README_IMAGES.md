@@ -6,7 +6,8 @@ Hero and architecture bitmaps live at the repository root: `hero.png`, `architec
 
 1. **`?v=` cache busting** — Many READMEs use `hero.png?v=3`. GitHub’s Camo layer requests **`raw.githubusercontent.com/.../hero.png`** — the **query string is not part of the raw path**, so `?v=` does **not** change the fetched bytes or the ETag. If the image looked “stuck”, the real fix is **new PNG bytes in git** (or a **renamed file**), not a query param.
 2. **“Open image” / wrong branch** — A bare `<img src="./hero.png">` (no parent `<a>`) opens via Camo or defaults in ways people find confusing on mobile. Wrapping with `<a href="./hero.png">` opens the **blob viewer on the current branch or PR** (same `./` resolution as the README). **Do not** use `https://github.com/ORG/REPO/blob/main/hero.png` while developing on another branch — that always jumps to `main`.
-3. **Legibility** — README content column is ~**900px** wide on desktop; a 2400px-wide poster is scaled down ~2.6×. If labels are too small in the generator, text looks mushy. Increase font sizes in `tools/regen_readme_images.py` (this repo targets “v7” scale).
+3. **Legibility** — README content column is ~**900px** wide on desktop; a 2400px-wide poster is scaled down ~2.6×. The hero **header** uses **measured wrapping + dynamic font scaling** so title and subtitle stay inside the purple box (no drawn-text overflow).
+4. **Preview files** — CI/agents may write `/opt/cursor/artifacts/readme-hero-{375,900,2400}px.png` for full-frame review (not committed).
 
 ## Common pitfalls
 

@@ -1,5 +1,11 @@
-# Cloudflare Pages — static output only (see docs/CLOUDFLARE_PAGES.md).
-# Deploy: npx wrangler pages deploy static-site --project-name=<name>
-# Rename `name` if it conflicts with an existing Pages project in your account.
+# Cloudflare Workers + Static Assets — serves static-site/ (see docs/CLOUDFLARE_STATIC.md).
+# New project name (do not reuse an existing Worker): deploy with
+#   npx wrangler deploy
+# Preview URL is assigned by Cloudflare; custom hostname is optional and separate.
 name = "uk-macro-analytics-landing"
-pages_build_output_dir = "static-site"
+main = "workers/static-landing.js"
+compatibility_date = "2025-11-06"
+
+[assets]
+directory = "static-site"
+binding = "ASSETS"

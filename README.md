@@ -21,10 +21,8 @@
 
 <p align="center">
   <!--
-    GitHub README gotcha: `?v=` on <img src> does **not** bust Camo’s cache — the query is stripped
-    before raw.githubusercontent.com is fetched (same ETag as without ?v=). “Stuck old image” fixes
-    require a new commit (new bytes) or a filename change — not a query string.
-    Clicks: <a href="./file"> opens the blob page for the **current branch/PR** (not default branch).
+    Camo fetches raw.githubusercontent.com without the query string — `?v=` does not bust cache.
+    Branch/PR: use ./ so image and tap target resolve to this ref (not pinned to main).
   -->
   <a href="./hero.png" title="Open hero.png on this branch (full resolution)">
     <img
@@ -130,9 +128,9 @@ streamlit run streamlit_app.py
 
 Streamlit needs a **long-running Python app** — not Vercel serverless by default. Use **`static-site/`** on [**Vercel**](https://vercel.com) and link to your Streamlit URL: [**docs/VERCEL.md**](./docs/VERCEL.md).
 
-### Landing page on Cloudflare Pages
+### Landing page on Cloudflare (Workers Static Assets)
 
-The same **`static-site/`** folder can be published as **Cloudflare Pages** (static assets only — **no** Streamlit process on Pages). Use a **new** project name and `*.pages.dev` preview until a custom hostname is explicitly approved: [**docs/CLOUDFLARE_PAGES.md**](./docs/CLOUDFLARE_PAGES.md).
+The same **`static-site/`** folder can be published with **Workers Static Assets** (recommended for a **new** Worker name — does not replace existing production). **Streamlit** still needs [Streamlit Community Cloud](https://streamlit.io/cloud) or local run — **not** inside a Worker. See [**docs/CLOUDFLARE_STATIC.md**](./docs/CLOUDFLARE_STATIC.md). **Pages** remains an alternative: [**docs/CLOUDFLARE_PAGES.md**](./docs/CLOUDFLARE_PAGES.md).
 
 ### More docs (free tooling)
 
@@ -219,7 +217,8 @@ pytest -q
 ├── src/                      # Pipeline package
 ├── tests/
 ├── docs/                     # Architecture, governance, Streamlit, Vercel, Cloudflare, BI notes
-├── wrangler.toml             # Optional Cloudflare Pages deploy config (static-site/)
+├── wrangler.toml             # Optional Cloudflare Workers + static-site/ (see docs/CLOUDFLARE_STATIC.md)
+├── workers/                  # Minimal Worker that serves static-site/ assets
 ├── tools/regen_readme_images.py
 ├── requirements.txt
 ├── requirements-dev.txt
@@ -245,7 +244,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-After regenerating bitmaps, commit the updated **`hero.png`** / **`architecture.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s CDN updates from file content — **query strings on `src=` are not required** and are stripped by `raw.githubusercontent.com` anyway. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for reproducible checks.
+After regenerating bitmaps, commit the updated **`hero.png`** / **`architecture.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s Camo proxy strips **`?v=`** from the underlying raw URL — cache refresh comes from **new file bytes**, not query strings. Use **`./` links** so taps match the **current branch/PR** blob. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for checks and manual verification.
 
 ---
 
