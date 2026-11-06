@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from tools.regen_readme_images import render_hero
+from tools.regen_readme_images import README_HERO_PNG, render_hero
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -21,10 +21,10 @@ def test_hero_renders_without_header_overflow(width: int) -> None:
 
 
 def test_committed_hero_png_matches_generator() -> None:
-    path = ROOT / "hero.png"
+    path = ROOT / README_HERO_PNG
     assert path.is_file()
     gen = render_hero(2400)
     disk = Image.open(path)
     assert disk.size == gen.size and disk.tobytes() == gen.tobytes(), (
-        "hero.png out of sync — run: python3 tools/regen_readme_images.py"
+        f"{README_HERO_PNG} out of sync — run: python3 tools/regen_readme_images.py"
     )

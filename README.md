@@ -24,9 +24,9 @@
     Camo fetches raw.githubusercontent.com without the query string — `?v=` does not bust cache.
     Branch/PR: use ./ so image and tap target resolve to this ref (not pinned to main).
   -->
-  <a href="./hero.png" title="Open hero.png on this branch (full resolution)">
+  <a href="./hero-README-v2.png" title="Open hero-README-v2.png on this branch (full resolution)">
     <img
-      src="./hero.png"
+      src="./hero-README-v2.png"
       alt="UK Macro Analytics Engine — pipeline summary poster (hi-res PNG)"
       width="100%"
       decoding="async"
@@ -34,7 +34,7 @@
     />
   </a>
   <br/>
-  <sub><a href="./hero.png">Open full-size hero.png</a> (tap image or link — same branch)</sub>
+  <sub><a href="./hero-README-v2.png">Open full-size hero-README-v2.png</a> (tap image or link — same branch)</sub>
 </p>
 
 > **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
@@ -80,9 +80,9 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png" title="Open architecture.png on this branch (full resolution)">
+  <a href="./architecture-README-v2.png" title="Open architecture-README-v2.png on this branch (full resolution)">
     <img
-      src="./architecture.png"
+      src="./architecture-README-v2.png"
       alt="Architecture diagram — Ingestion, DuckDB, Analytics, Exports (hi-res PNG)"
       width="100%"
       loading="lazy"
@@ -90,7 +90,7 @@
     />
   </a>
   <br/>
-  <sub><a href="./architecture.png">Open full-size architecture.png</a></sub>
+  <sub><a href="./architecture-README-v2.png">Open full-size architecture-README-v2.png</a></sub>
 </p>
 
 <p align="center"><sub>PNG bitmap for README (<code>python3 tools/regen_readme_images.py</code> also writes WebP); <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
@@ -223,6 +223,8 @@ pytest -q
 ├── docs/                     # Architecture, governance, Streamlit, Vercel, Cloudflare, BI notes
 ├── wrangler.toml             # Optional Cloudflare Workers + static-site/ (see docs/CLOUDFLARE_STATIC.md)
 ├── workers/                  # Minimal Worker that serves static-site/ assets
+├── hero-README-v2.png        # README hero (regen: tools/regen_readme_images.py)
+├── architecture-README-v2.png
 ├── tools/regen_readme_images.py
 ├── requirements.txt
 ├── requirements-dev.txt
@@ -248,7 +250,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-After regenerating bitmaps, commit the updated **`hero.png`** / **`architecture.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s Camo proxy strips **`?v=`** from the underlying raw URL — cache refresh comes from **new file bytes**, not query strings. Use **`./` links** so taps match the **current branch/PR** blob. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for checks and manual verification.
+After regenerating bitmaps, commit the updated **`hero-README-v2.png`** / **`architecture-README-v2.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s Camo proxy strips **`?v=`** from the underlying raw URL — cache refresh comes from **new file bytes** or a **renamed path** (both `<img>` and `<a href>` must use the same filename). Use **`./` links** so taps match the **current branch/PR** blob. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for checks and manual verification.
 
 ---
 

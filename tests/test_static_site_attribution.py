@@ -28,6 +28,14 @@ def test_static_pages_include_attribution_and_legal(rel: str) -> None:
             assert needle in text, f"{rel} must mention {needle!r}"
 
 
+def test_hub_index_narrow_layout_constraints() -> None:
+    """Cards and wraps avoid flex/grid min-content blowout (overflow) on narrow viewports."""
+    idx = (STATIC / "index.html").read_text(encoding="utf-8")
+    assert "min-width: 0" in idx
+    assert "minmax(min(100%" in idx
+    assert "overflow-wrap: anywhere" in idx
+
+
 def test_static_site_documents_readme_palette_comment() -> None:
     """Both HTML pages include the regen_readme_images palette comment marker."""
     marker = "README generator palette (tools/regen_readme_images.py)"
@@ -71,3 +79,26 @@ def test_hub_index_links_to_six_demo_routes() -> None:
     assert 'href="./portfolio/thermal-compare.html"' in idx
     assert 'href="./portfolio/ats-matcher.html"' in idx
     assert 'href="./portfolio/bundlebuilder.html"' in idx
+
+
+def test_mirror_privacy_discloses_static_host_and_ats_backend() -> None:
+    """Mirrored privacy page describes hub host, chat off, ATS POST, no audited no-cookie claim."""
+    priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
+    assert "Static mirror" in priv
+    assert "Optional chat (disabled on this mirror)" in priv
+    assert "https://tgollogly.dev/api" in priv
+    assert "Open-Meteo" in priv
+    assert "LICENSE-portfolio.txt" in priv
+
+
+def test_portfolio_footnotes_match_mirror_disclosure() -> None:
+    needle = "Portfolio demos on this mirror are for demonstration only"
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "ats-matcher.html",
+        "privacy.html",
+    ):
+        assert needle in (STATIC / "portfolio" / name).read_text(encoding="utf-8"), name

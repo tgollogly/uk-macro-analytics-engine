@@ -227,14 +227,14 @@
       </div>
       <p class="note">
         <strong>UK Macro Analytics Engine:</strong> open <code>./demo.html</code> for Chart.js dashboards fed by committed pipeline exports.
-        <strong>Other CV demos</strong> below are mirrored from the <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">portfolio</a> repository (MIT) — same static front-end files. The AI ATS matcher calls the existing portfolio Worker API at <code>https://tgollogly.dev/api</code> only when you click analyse / generate (see <code>./portfolio/ats-matcher.html</code> and <code>./portfolio/config.js</code>).
+        <strong>Other CV demos</strong> below are mirrored from the <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">portfolio</a> repository (MIT) — same static front-end files. The AI ATS matcher sends requests to <code>https://tgollogly.dev/api</code> only when you click analyse or generate (see <code>./portfolio/ats-matcher.html</code> and <code>./portfolio/config.js</code>). Optional chat is disabled on this mirror.
       </p>
     </div>
   </header>
   <main class="wrap">
     <div class="site-notice" id="hub">
       <strong>Portfolio demos (mirrored).</strong>
-      The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). Upstream README states they are real deployed applications; this hub serves the same HTML/JS/CSS from disk. For <strong>AI ATS Resume Matcher</strong>, the page calls <code>https://tgollogly.dev/api</code> only after you click the action buttons; the backend is described in portfolio <code>server.js</code> (CORS allows any origin). Read the in-page notice and <a href="./portfolio/privacy.html" style="color:var(--link)">portfolio privacy &amp; AI notice</a> before pasting personal text.
+      The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). This host serves those files from disk. Data handling differs by demo (see each page and <a href="./portfolio/privacy.html" style="color:var(--link)">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <code>https://tgollogly.dev/api</code> on button clicks only; connectivity from this preview has not been verified.
     </div>
     <div class="grid">
       <article class="card hub-card">
@@ -245,38 +245,47 @@
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
-        <p>Eight-factor model in the browser; upstream README: figures stay on device.</p>
+        <p>Eight-factor model in the browser; figures stay on device (see portfolio notice).</p>
         <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
-        <p>Open-Meteo, MapLibre, RainViewer — keyless public APIs in upstream stack.</p>
+        <p>Open-Meteo, MapLibre, RainViewer — third-party APIs (see privacy notice).</p>
         <a class="btn btn-primary" href="./portfolio/heat-dome.html" style="margin-top:0.75rem;display:inline-flex">Open heat dashboard</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
-        <p>Multi-location feels-like compare; Open-Meteo (upstream: no key).</p>
+        <p>Multi-location compare using Open-Meteo (third-party; see notice).</p>
         <a class="btn btn-primary" href="./portfolio/thermal-compare.html" style="margin-top:0.75rem;display:inline-flex">Open thermal compare</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
-        <p>Full static UI; AI calls go to <code>tgollogly.dev/api</code> on button click only. In-page privacy notice is bundled with the mirror.</p>
+        <p>Static UI; POST to <code>tgollogly.dev/api</code> on button click. Backend/Gemini path described in <code>./portfolio/privacy.html</code>.</p>
         <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
-        <p>Court bundle structure and print layout; upstream: processing in browser.</p>
+        <p>Court bundle structure and print layout; processing in browser (see notice).</p>
         <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
       </article>
     </div>
     <div class="grid" style="margin-top:1rem">
       <article class="card">
-        <h2><span class="pill">Engineering</span> This repository</h2>
+        <h2><span class="pill">Interactive</span> Streamlit dashboard</h2>
+        <p>Plotly charts, downloadable CSV exports, rolling windows, and a plain-language read of the latest pull. Data refreshes when you run a fresh pipeline pull from ONS URLs in the repo config.</p>
+        <ul class="list-clean">
+          <li>Run locally: <code>streamlit run streamlit_app.py</code></li>
+          <li>Host (free): <a href="https://share.streamlit.io/" style="color:var(--link)">Streamlit Community Cloud</a></li>
+          <li>Requires network access to ONS for a fresh pull</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2><span class="pill">Pipeline</span> Engineering</h2>
         <p>Parquet cache, DuckDB, tests and CI — see the GitHub README and architecture diagram.</p>
         <ul class="list-clean">
           <li>Tests: <code>pytest -q</code></li>
@@ -284,8 +293,16 @@
         </ul>
       </article>
       <article class="card">
-        <h2><span class="pill">Legal</span> Portfolio disclaimer (upstream)</h2>
-        <p style="font-size:0.88rem;color:var(--muted)">From portfolio <code>README.md</code>: demos are for <strong>demonstration only</strong> and must not be relied on for legal, financial, medical, career or other professional decisions. See <a href="./portfolio/privacy.html" style="color:var(--link)">mirrored privacy notice</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/README.md" style="color:var(--link)">full README</a>.</p>
+        <h2><span class="pill">This page</span> Static + CDN</h2>
+        <p>Deploy this folder on Vercel with root <code>static-site/</code> or via Workers Static Assets (see repo docs). It complements Streamlit (long-running Python — not edge Workers).</p>
+        <ul class="list-clean">
+          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/VERCEL.md" style="color:var(--link)">docs/VERCEL.md</a></li>
+          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CLOUDFLARE_STATIC.md" style="color:var(--link)">docs/CLOUDFLARE_STATIC.md</a></li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2><span class="pill">Legal</span> Portfolio (mirrored)</h2>
+        <p style="font-size:0.88rem;color:var(--muted)">Upstream portfolio README: demos are for <strong>demonstration only</strong>. See <a href="./portfolio/privacy.html" style="color:var(--link)">Privacy &amp; AI notice (mirror)</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/LICENSE" style="color:var(--link)">portfolio MIT licence</a> (copyright year as in that file).</p>
       </article>
     </div>
   </main>

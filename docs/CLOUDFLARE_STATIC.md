@@ -22,7 +22,7 @@ This repo has two **different** surfaces:
 ## Deploy (CLI)
 
 1. Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) and authenticate on **your** machine (not this agent).
-2. (Optional) Refresh **demo** JSON from the Python pipeline — **real ONS data**, committed for static hosting:
+2. (Optional) Refresh **demo** JSON from the Python pipeline — **real ONS-derived exports**, committed for static hosting:
    ```bash
    python -m src.analytics
    python tools/export_demo_assets.py --from-exports
@@ -31,7 +31,8 @@ This repo has two **different** surfaces:
    ```bash
    npx wrangler deploy
    ```
-4. Interactive **browser demo**: open **`/demo.html`** on the deployed Worker URL (Chart.js loads from jsDelivr CDN). **`index.html`** remains the brochure; link between them.
+4. Interactive **browser demo**: open **`/demo.html`** on the deployed Worker URL (Chart.js loads from jsDelivr CDN). **`index.html`** is the hub; link between them.
+5. If you use Streamlit Community Cloud, point visitors to your deployed Streamlit URL from the hub or README (the Worker does **not** run Python).
 
 Configuration: root `wrangler.toml` + `workers/static-landing.js` — assets directory **`static-site`**. See Cloudflare [Static Assets](https://developers.cloudflare.com/workers/static-assets/).
 

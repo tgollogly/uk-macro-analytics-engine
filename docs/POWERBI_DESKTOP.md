@@ -19,7 +19,7 @@
 
 4. Add a **slicer** for date range and a **card** for latest YoY %.
 
-5. Save as `.pbix` locally. For GitHub, export a **PNG** of the report page and add it to `tools/source/hero.png` or a `docs/screenshots/` folder (optional).
+5. Save as `.pbix` locally. For GitHub, export a **PNG** of the report page and add it to `tools/source/hero-README-v2.png` or a `docs/screenshots/` folder (optional).
 
 ## Licensing
 
