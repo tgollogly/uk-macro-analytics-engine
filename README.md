@@ -194,14 +194,6 @@ pytest -q
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-## A4 one-pager (portfolio)
-
-Print or attach to applications (**A4 portrait** aspect, ~1240×1754 px):
-
-![A4 macro pipeline one-pager](./a4_macro_poster.png)
-
-Same file lives under [`docs/a4_macro_poster.png`](./docs/a4_macro_poster.png).
-
 ## Hero image
 
 Images are built for **HiDPI**: files are **~2×** the `width`/`height` shown in the `<img>` tags so they stay sharp on Retina displays, while **WebP** stays the default for smaller transfer. **PNG** fallbacks are full-color. Regenerate after edits:
