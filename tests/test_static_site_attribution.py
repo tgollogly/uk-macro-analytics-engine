@@ -40,3 +40,34 @@ def test_demo_charts_use_architecture_stage_stroke_hex() -> None:
     app = (STATIC / "demo" / "app.js").read_text(encoding="utf-8")
     assert "CPIH_LINE" in app and "#c2410c" in app  # ANALYTICS stroke (194, 65, 12)
     assert "PSNB_LINE" in app and "#166534" in app  # EXPORTS stroke (22, 101, 52)
+
+
+def test_portfolio_mirror_has_core_assets() -> None:
+    """Mirrored portfolio demos ship CSS + config + five demo HTML files."""
+    p = STATIC / "portfolio"
+    assert (p / "assets" / "site.css").is_file()
+    assert (p / "config.js").is_file()
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "ats-matcher.html",
+        "privacy.html",
+    ):
+        assert (p / name).is_file(), f"missing mirrored {name}"
+
+
+def test_portfolio_config_points_ats_backend_at_verified_url() -> None:
+    cfg = (STATIC / "portfolio" / "config.js").read_text(encoding="utf-8")
+    assert 'AI_BACKEND_URL = "https://tgollogly.dev/api"' in cfg
+
+
+def test_hub_index_links_to_six_demo_routes() -> None:
+    idx = (STATIC / "index.html").read_text(encoding="utf-8")
+    assert 'href="./demo.html"' in idx
+    assert 'href="./portfolio/beneish.html"' in idx
+    assert 'href="./portfolio/heat-dome.html"' in idx
+    assert 'href="./portfolio/thermal-compare.html"' in idx
+    assert 'href="./portfolio/ats-matcher.html"' in idx
+    assert 'href="./portfolio/bundlebuilder.html"' in idx

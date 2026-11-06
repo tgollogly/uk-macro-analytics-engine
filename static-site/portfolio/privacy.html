@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="light">
+<title>Privacy &amp; AI notice | Thomas Gollogly</title>
+<meta name="description" content="What this site does and does not collect: no cookies, no analytics, no tracking. What happens to text you enter into the AI tools."/>
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
+<meta name="googlebot" content="noindex,nofollow"/>
+<link rel="canonical" href="https://tgollogly.dev/privacy.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://tgollogly.dev/privacy.html"/>
+<meta property="og:title" content="Privacy &amp; AI notice | Thomas Gollogly"/>
+<meta property="og:description" content="No cookies, no analytics, no tracking. What happens to text you enter into the AI tools."/>
+<meta property="og:image" content="https://tgollogly.dev/og-preview.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Privacy &amp; AI notice | Thomas Gollogly"/>
+<meta name="twitter:description" content="No cookies, no analytics, no tracking. What happens to text you enter into the AI tools."/>
+<meta name="twitter:image" content="https://tgollogly.dev/og-preview.png"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/site.css"/>
+
+<style>
+  .doc{max-width:760px;margin:0 auto;padding:0 24px 60px;}
+  .doc h2{font-size:20px;margin:30px 0 10px;}
+  .doc p{color:var(--muted);margin:0 0 12px;}
+  .doc ul{color:var(--muted);margin:0 0 12px;padding-left:20px;}
+  .doc li{margin:5px 0;}
+  .doc .updated{font-size:12.5px;color:var(--faint);}
+  @media(max-width:640px){ .doc{padding:0 16px 44px;} .doc h2{font-size:18px;} }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="in">
+  <a class="brand" href="../index.html"><svg class="tg-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+  <a class="back" href="../index.html">&larr; Back to portfolio</a>
+</div></div>
+
+<div class="wrap head">
+  <span class="eyebrow">Site information</span>
+  <h1>Privacy &amp; AI notice</h1>
+  <p>This is a personal portfolio site. It is deliberately simple about data: it doesn&rsquo;t track you, and it doesn&rsquo;t want your personal information.</p>
+</div>
+
+<div class="doc">
+
+  <h2>Cookies and tracking</h2>
+  <p>Under normal browsing this site sets <strong>no analytics cookies</strong> and does not use visitor tracking pixels.</p>
+  <p>If you arrive from Facebook or from the Belfast / Northern Ireland area you may see a short <strong>access check</strong> first. VPNs, proxies and similar relays are blocked until disconnected. When you pass the check, the site sets one functional cookie:</p>
+  <ul>
+    <li><strong><code>tg_gate</code></strong> &mdash; proves you passed the access check. HttpOnly, about 7 days, then it expires. Required to continue browsing after the check.</li>
+  </ul>
+  <p>That check uses <a href="https://www.cloudflare.com/products/turnstile/" rel="noopener">Cloudflare Turnstile</a> (captcha) when configured. The server logs your IP address, approximate connection location (country/region/city from Cloudflare and ip-api.com), ISP/network name, browser user-agent, referer, optional reason you type, and optional GPS if you choose to share it. VPN/proxy connections are blocked and also logged. Logs are kept for site security only and are visible to the site owner in Cloudflare; they are not sold or used for advertising.</p>
+  <p>Most demos still do not write to local storage. There is no tag manager and no advertising pixel.</p>
+
+  <h2>What the demos do with what you type</h2>
+  <p>Most of the demos run entirely in your browser and send nothing anywhere:</p>
+  <ul>
+    <li><strong>Beneish M-Score Screener</strong> &mdash; the figures you enter never leave your device.</li>
+    <li><strong>BundleBuilder</strong> &mdash; case details stay in the page and are gone when you close the tab.</li>
+    <li><strong>SQL Lab</strong> &mdash; the database runs in your browser; queries are not sent to a server.</li>
+    <li><strong>Test Bench</strong> &mdash; code and tests execute locally.</li>
+    <li><strong>BOM Desk</strong> &mdash; all data is invented sample data held in the page only.</li>
+  </ul>
+
+  <h2>The two features that do use AI</h2>
+  <p>The <strong>AI assistant</strong> (the chat bubble) and the <strong>AI ATS Resume Matcher</strong> send what you type to Google&rsquo;s Gemini API to generate a response. The request passes through a Cloudflare Worker that holds the API key, so the key is never exposed in your browser.</p>
+  <p>This site does not store, log or retain what you send. Once the response is generated it exists only in your browser window. However, the text is processed by Google under their own terms, so <strong>please don&rsquo;t paste anything confidential</strong> &mdash; other people&rsquo;s personal details, medical or financial information, or anything covered by an NDA. A CV and a job advert are fine; a client file is not.</p>
+  <p>AI-generated output can be wrong. Treat the match score, the cover letter and the CV rewrite as drafts to check, not as finished documents.</p>
+
+  <h2>Third-party services</h2>
+  <p>Loading a page here may involve requests to these services, which will see your IP address as a normal part of serving a request:</p>
+  <ul>
+    <li>Cloudflare &mdash; hosting and the serverless backend</li>
+    <li>Google Fonts &mdash; typefaces</li>
+    <li>cdnjs and unpkg &mdash; JavaScript libraries used by some demos</li>
+    <li>Open-Meteo &mdash; weather and climate data (Heat Anomaly Detector, Thermal Compare)</li>
+    <li>RainViewer &mdash; precipitation radar; CARTO and AWS elevation tiles &mdash; map imagery (Heat Anomaly Detector)</li>
+    <li>Google Gemini &mdash; only for the two AI features described above</li>
+    <li>Cloudflare Turnstile &mdash; only on the optional access-check screen for some visitors</li>
+  </ul>
+
+  <h2>Not professional advice</h2>
+  <p>Everything here is a portfolio demonstration. The Beneish screener is not financial or accounting advice; BundleBuilder is a document-organising tool and not legal advice; the Heat Anomaly Detector is indicative and not an official public-health warning; BOM Desk uses invented data and is not a deployment of any live system. Don&rsquo;t rely on any of it for a real decision.</p>
+
+  <h2>Contact</h2>
+  <p>Questions, or want something removed? Email <a href="mailto:thomas@tgollogly.dev">thomas@tgollogly.dev</a>.</p>
+
+  <p class="updated">This notice describes how the site works today. If the site changes, this page changes with it.</p>
+</div>
+
+<div class="sitefoot"><div class="in">
+  <span>&copy; <span class="footyr"></span> Thomas Gollogly &middot; Northern Ireland</span>
+  <span class="footlinks">
+    <a class="ico" href="../index.html" aria-label="Home"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.69 3.5 9.5V21a1 1 0 0 0 1 1H9v-7h6v7h4.5a1 1 0 0 0 1-1V9.5L12 2.69z"/></svg><span>Home</span></a>
+    <a class="ico" href="../index.html" aria-label="CV"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM7 13h10v1.5H7V13zm0 4h10v1.5H7V17zm0-8h5v1.5H7V9z"/></svg><span>CV</span></a>
+    <a class="ico" href="mailto:thomas@tgollogly.dev" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13zm2.2.5 7.15 5.72a1 1 0 0 0 1.3 0L19.8 6H4.2zM4 8.1V18h16V8.1l-6.86 5.5a3 3 0 0 1-3.78 0L4 8.1z"/></svg><span>Email</span></a>
+    <a class="ico" href="https://github.com/tgollogly/portfolio" target="_blank" rel="noopener me" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.28 5.69.42.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg><span>GitHub</span></a>
+    <a class="ico" href="https://www.linkedin.com/in/thomasgollogly" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg><span>LinkedIn</span></a>
+  </span>
+</div>
+<div class="in footnote">
+  <span>All demos use invented sample data and are for demonstration only &mdash; not professional, legal, financial or medical advice. This site sets no cookies and uses no analytics or tracking. The AI assistant and the CV tool send what you type to Google&rsquo;s Gemini API to generate a reply; nothing is stored by this site, so please don&rsquo;t enter confidential information. <a href="./privacy.html">Privacy &amp; AI notice</a></span>
+</div></div>
+
+<script src="./config.js"></script>
+<script src="./assets/chat-disabled.js" defer></script>
+</body>
+</html>

@@ -147,6 +147,34 @@
       font-size: 0.88rem;
     }
     .list-clean li { margin-bottom: 0.35rem; }
+    .hub-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      background: rgba(79, 70, 229, 0.2);
+      color: var(--link);
+    }
+    .hub-card .src {
+      font-size: 0.78rem;
+      color: var(--palette-text-muted);
+      margin-top: 0.75rem;
+    }
+    .hub-card .src a { color: var(--link); }
+    .site-notice {
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: rgba(30, 27, 75, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.55;
+    }
+    .site-notice strong { color: #e2e8f0; }
     .site-footer {
       padding: 2rem 0;
       border-top: 1px solid var(--border);
@@ -184,46 +212,80 @@
 <body>
   <header class="site-header">
     <div class="wrap">
-      <p class="eyebrow">Portfolio · reproducible macro pipeline</p>
-      <h1>UK Macro Analytics Engine</h1>
+      <p class="eyebrow">Portfolio demo hub · static assets</p>
+      <h1>Thomas Gollogly — project demos</h1>
       <p class="lead">
         Pulls <strong>official ONS CSVs</strong> (inflation &amp; public borrowing), validates structure,
         caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong>, and visualises results in a
         <strong>Streamlit</strong> dashboard — with <strong>pytest</strong> and <strong>CI</strong> on GitHub.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="./demo.html">Open interactive demo (browser charts)</a>
-        <a class="btn btn-secondary" href="https://share.streamlit.io/">Streamlit Community Cloud</a>
-        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">View on GitHub</a>
+        <a class="btn btn-primary" href="#hub">Open project hub (six demos)</a>
+        <a class="btn btn-primary" href="./demo.html">UK macro — interactive charts</a>
+        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">This engine on GitHub</a>
+        <a class="btn btn-secondary" href="https://github.com/tgollogly/portfolio">Portfolio source on GitHub</a>
       </div>
       <p class="note">
-        <strong>Interactive on Cloudflare:</strong> deploy <code>static-site/</code> with Workers Static Assets — open
-        <code>/demo.html</code> for Chart.js dashboards fed by committed pipeline exports (see <code>docs/CLOUDFLARE_STATIC.md</code>).
-        <strong>Streamlit</strong> is optional and needs Community Cloud or local Python.
+        <strong>UK Macro Analytics Engine:</strong> open <code>./demo.html</code> for Chart.js dashboards fed by committed pipeline exports.
+        <strong>Other CV demos</strong> below are mirrored from the <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">portfolio</a> repository (MIT) — same static front-end files. The AI ATS matcher calls the existing portfolio Worker API at <code>https://tgollogly.dev/api</code> only when you click analyse / generate (see <code>./portfolio/ats-matcher.html</code> and <code>./portfolio/config.js</code>).
       </p>
     </div>
   </header>
   <main class="wrap">
+    <div class="site-notice" id="hub">
+      <strong>Portfolio demos (mirrored).</strong>
+      The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). Upstream README states they are real deployed applications; this hub serves the same HTML/JS/CSS from disk. For <strong>AI ATS Resume Matcher</strong>, the page calls <code>https://tgollogly.dev/api</code> only after you click the action buttons; the backend is described in portfolio <code>server.js</code> (CORS allows any origin). Read the in-page notice and <a href="./portfolio/privacy.html" style="color:var(--link)">portfolio privacy &amp; AI notice</a> before pasting personal text.
+    </div>
     <div class="grid">
-      <article class="card">
-        <h2><span class="pill">Interactive</span> Browser demo</h2>
-        <p>CPIH YoY and PSNB £m from committed <code>static-site/demo/*.json</code> (built from the same DuckDB analytics as the Python export step). Chart.js, sliders, downloads — no server-side compute on Cloudflare.</p>
-        <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open demo</a>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
+        <p>ONS pipeline — CPIH YoY and PSNB from committed exports; Chart.js in the browser.</p>
+        <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open <code>/demo.html</code></a>
+        <p class="src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
       </article>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
+        <p>Eight-factor model in the browser; upstream README: figures stay on device.</p>
+        <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
+        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
+      </article>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
+        <p>Open-Meteo, MapLibre, RainViewer — keyless public APIs in upstream stack.</p>
+        <a class="btn btn-primary" href="./portfolio/heat-dome.html" style="margin-top:0.75rem;display:inline-flex">Open heat dashboard</a>
+        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
+      </article>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
+        <p>Multi-location feels-like compare; Open-Meteo (upstream: no key).</p>
+        <a class="btn btn-primary" href="./portfolio/thermal-compare.html" style="margin-top:0.75rem;display:inline-flex">Open thermal compare</a>
+        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
+      </article>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
+        <p>Full static UI; AI calls go to <code>tgollogly.dev/api</code> on button click only. In-page privacy notice is bundled with the mirror.</p>
+        <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
+        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
+      </article>
+      <article class="card hub-card">
+        <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
+        <p>Court bundle structure and print layout; upstream: processing in browser.</p>
+        <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
+        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
+      </article>
+    </div>
+    <div class="grid" style="margin-top:1rem">
       <article class="card">
-        <h2><span class="pill">Pipeline</span> Engineering</h2>
-        <p>Requests with retries, schema checks, Parquet cache under <code>data/cache/</code>, DuckDB views, and analytics SQL — documented in the README architecture diagram.</p>
+        <h2><span class="pill">Engineering</span> This repository</h2>
+        <p>Parquet cache, DuckDB, tests and CI — see the GitHub README and architecture diagram.</p>
         <ul class="list-clean">
           <li>Tests: <code>pytest -q</code></li>
           <li>Lint: <code>ruff check</code></li>
         </ul>
       </article>
       <article class="card">
-        <h2><span class="pill">This page</span> Static + CDN</h2>
-        <p>Deploy this folder on Vercel with root <code>static-site/</code>. It complements Streamlit (which needs a long-running Python process — not Vercel serverless by default).</p>
-        <ul class="list-clean">
-          <li>See <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/VERCEL.md" style="color:var(--link)">docs/VERCEL.md</a></li>
-        </ul>
+        <h2><span class="pill">Legal</span> Portfolio disclaimer (upstream)</h2>
+        <p style="font-size:0.88rem;color:var(--muted)">From portfolio <code>README.md</code>: demos are for <strong>demonstration only</strong> and must not be relied on for legal, financial, medical, career or other professional decisions. See <a href="./portfolio/privacy.html" style="color:var(--link)">mirrored privacy notice</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/README.md" style="color:var(--link)">full README</a>.</p>
       </article>
     </div>
   </main>
