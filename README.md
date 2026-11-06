@@ -20,17 +20,14 @@
 </p>
 
 <p align="center">
-  <picture>
-    <source srcset="./hero.webp" type="image/webp" />
-    <img
-      src="./hero.png"
-      alt="UK Macro Analytics Engine banner"
-      width="1000"
-      height="333"
-      decoding="async"
-      fetchpriority="high"
-    />
-  </picture>
+  <img
+    src="./hero.png"
+    alt="UK Macro Analytics Engine banner"
+    width="1500"
+    height="500"
+    decoding="async"
+    fetchpriority="high"
+  />
 </p>
 
 > **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
@@ -76,20 +73,17 @@
 </pre>
 
 <p align="center">
-  <picture>
-    <source srcset="./architecture.webp" type="image/webp" />
-    <img
-      src="./architecture.png"
-      alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
-      width="800"
-      height="186"
-      loading="lazy"
-      decoding="async"
-    />
-  </picture>
+  <img
+    src="./architecture.png"
+    alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+    width="1200"
+    height="280"
+    loading="lazy"
+    decoding="async"
+  />
 </p>
 
-<p align="center"><sub>Bitmap + WebP for README; <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
+<p align="center"><sub>PNG bitmap for README (<code>python3 tools/regen_readme_images.py</code> also writes WebP); <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
 
 ---
 
