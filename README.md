@@ -20,14 +20,16 @@
 </p>
 
 <p align="center">
-  <img
-    src="./hero.png"
-    alt="UK Macro Analytics Engine banner"
-    width="1500"
-    height="500"
-    decoding="async"
-    fetchpriority="high"
-  />
+  <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
+  <a href="./hero.png" title="hero.png (this branch)">
+    <img
+      src="./hero.png"
+      alt="UK Macro Analytics Engine banner"
+      width="100%"
+      decoding="async"
+      fetchpriority="high"
+    />
+  </a>
 </p>
 
 > **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
@@ -73,14 +75,15 @@
 </pre>
 
 <p align="center">
-  <img
-    src="./architecture.png"
-    alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
-    width="1200"
-    height="280"
-    loading="lazy"
-    decoding="async"
-  />
+  <a href="./architecture.png" title="architecture.png (this branch)">
+    <img
+      src="./architecture.png"
+      alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+      width="100%"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
 </p>
 
 <p align="center"><sub>PNG bitmap for README (<code>python3 tools/regen_readme_images.py</code> also writes WebP); <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
@@ -220,14 +223,14 @@ See [**CONTRIBUTING.md**](./CONTRIBUTING.md).
 
 ## Hero & diagram assets (HiDPI)
 
-Images use **~2×** pixel width vs displayed `width` for sharp Retina rendering. **WebP** first, **PNG** fallback.
+Bitmaps are exported **wide**; in the README they use **`width="100%"`** so they use the full README column on mobile. **PNG** is what the README loads; the script also writes **WebP** beside it if you want to use `<picture>` elsewhere.
 
 ```bash
 pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Optional master: `tools/source/hero.png`. Vector slides: [`architecture.svg`](./architecture.svg).
+Wrap README images in `<a href="./hero.png">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 

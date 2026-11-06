@@ -66,10 +66,10 @@ def render_hero(width: int = 3000) -> Image.Image:
     pad = int(width * 0.035)
     title_h = int(height * 0.34)
     f_title, f_sub, f_pill, _ = _fonts(
-        max(52, width // 28),
-        max(26, width // 62),
-        max(22, width // 72),
-        max(18, width // 85),
+        max(56, width // 24),
+        max(28, width // 54),
+        max(24, width // 62),
+        max(20, width // 78),
     )
 
     # Title strip — solid teal for maximum contrast
@@ -135,13 +135,13 @@ def render_architecture(width: int = 2400) -> Image.Image:
 
     try:
         f_h = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(28, int(26 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(34, int(30 * s))
         )
         f_b = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(22, int(19 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(26, int(22 * s))
         )
         f_t = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(17, int(15 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(20, int(17 * s))
         )
     except OSError:
         f_h = f_b = f_t = ImageFont.load_default()
@@ -180,7 +180,7 @@ def render_architecture(width: int = 2400) -> Image.Image:
         ly = y1 + int(48 * s)
         for line in lines:
             d.text((cx, ly), line, fill=TEXT_MUTED, font=f_t, anchor="mm")
-            ly += int(26 * s)
+            ly += int(28 * s)
 
     # Arrows between stages
     def arrow(ax1: float, ax2: float, y: float) -> None:
@@ -222,9 +222,8 @@ def main() -> None:
     hw, hh = hero.size
     aw, ah = arch.size
     print()
-    print("Suggested README <img> half-size (Retina):")
-    print(f"  hero: width={hw // 2} height={hh // 2}")
-    print(f"  arch: width={aw // 2} height={ah // 2}")
+    print("Suggested README: use width=\"100%\" on <img> for full column width; files are")
+    print(f"  hero {hw}x{hh}px, arch {aw}x{ah}px (~2x of typical CSS width for sharpness).")
 
 
 if __name__ == "__main__":
