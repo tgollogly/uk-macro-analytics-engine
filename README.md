@@ -25,7 +25,7 @@
   <!-- href has no ?v= so mobile “open image” matches this file; ?v= on src only busts CDN cache. -->
   <a href="./hero.png" title="hero.png (this branch)">
     <img
-      src="./hero.png?v=7"
+      src="./hero.png?v=8"
       alt="UK Macro Analytics Engine banner"
       width="100%"
       decoding="async"
@@ -79,7 +79,7 @@
 <p align="center">
   <a href="./architecture.png" title="architecture.png (this branch)">
     <img
-      src="./architecture.png?v=7"
+      src="./architecture.png?v=8"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
       width="100%"
       loading="lazy"
@@ -232,7 +232,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Put **`?v=` on the `<img src>` only** (not on the wrapping `<a href>`) so taps open the correct file while the CDN still refreshes. Bump `?v=` when you replace PNG bytes (this README uses `?v=7`). Vector: [`architecture.svg`](./architecture.svg).
+Put **`?v=` on the `<img src>` only** (not on the wrapping `<a href>`) so taps open the correct file while the CDN still refreshes. Bump `?v=` when you replace PNG bytes (this README uses `?v=8`). Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 

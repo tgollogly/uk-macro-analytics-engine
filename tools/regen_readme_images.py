@@ -144,9 +144,15 @@ def render_hero(width: int = 2400) -> Image.Image:
         body_wrapped: list[str] = []
         for L in lines:
             body_wrapped.extend(_wrap_lines(sd, L, f_line, tw_body))
-        head_h = len(head_wrapped) * int(lh_big * 1.2) + int(lh_line * 0.35)
-        body_h = len(body_wrapped) * int(lh_line * 1.28)
-        rh = max(int(width * 0.14), card_inset * 2 + head_h + body_h)
+        # Must match the draw loop below (same spacing constants).
+        top_text = card_inset + int(lh_big * 0.15)
+        head_block = len(head_wrapped) * int(lh_big * 1.2)
+        gap_hb = int(lh_line * 0.25)
+        body_block = len(body_wrapped) * int(lh_line * 1.28)
+        bottom_margin = card_inset + int(lh_line * 0.45)
+        need_inner = top_text + head_block + gap_hb + body_block + bottom_margin
+        min_row = int(width * 0.14)
+        rh = max(min_row, need_inner)
         row_heights.append(rh)
 
     stack_top = pad + title_h + int(width * 0.04)
@@ -174,7 +180,7 @@ def render_hero(width: int = 2400) -> Image.Image:
     )
     d.text(
         (pad * 2, sub_y + int(title_h * 0.28)),
-        "README poster v5 · wrapped text so labels stay inside cards",
+        "README poster v5 · padding fix — text measured to card bottom",
         fill=(199, 210, 254),
         font=f_tag,
     )
@@ -252,7 +258,7 @@ def render_architecture(width: int = 2400) -> Image.Image:
     sd = ImageDraw.Draw(scratch)
     banner_sub_lines = _wrap_lines(
         sd,
-        "Diagram v6 · large type · vector: architecture.svg",
+        "Diagram v7 · overflow fix · vector: architecture.svg",
         f_banner_sub,
         tw_banner,
     )
@@ -291,12 +297,15 @@ def render_architecture(width: int = 2400) -> Image.Image:
         body_lines: list[str] = []
         for L in lines:
             body_lines.extend(_wrap_lines(sd, L, f_line, tw_text))
-        title_h = len(title_lines) * int(lh_head * 1.22)
-        body_h = len(body_lines) * int(lh_line * 1.42)
-        text_stack_h = title_h + int(lh_line * 0.55) + body_h
-        min_pill_h = int(width * 0.22)
-        inner_h = max(text_stack_h, min_pill_h)
-        block_heights.append(inner_h + 2 * card_inset)
+        # Must match draw loop: ty starts at card_inset + lh_head*0.1, then head lines, gap, body lines.
+        top_pad = card_inset + int(lh_head * 0.1)
+        title_block = len(title_lines) * int(lh_head * 1.22)
+        gap_ht = int(lh_line * 0.4)
+        body_block = len(body_lines) * int(lh_line * 1.42)
+        below_last = int(lh_line * 0.9)
+        inner_text = top_pad + title_block + gap_ht + body_block + below_last
+        min_pill = int(width * 0.22) + 2 * card_inset
+        block_heights.append(max(inner_text, min_pill))
 
     content_top = banner_top + banner_h + int(width * 0.028)
     height = content_top + sum(block_heights) + arrow_h * (len(stages) - 1) + margin
