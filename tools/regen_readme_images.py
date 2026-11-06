@@ -100,24 +100,26 @@ def _save_png(img: Image.Image, path: Path) -> None:
 def render_hero(width: int = 2400) -> Image.Image:
     """Tall poster: indigo header + numbered stack; row height follows wrapped body text."""
     pad = int(width * 0.055)
-    title_h = int(width * 0.26)
+    title_h = int(width * 0.28)
+    # Larger type than v5: GitHub README column is ~900px CSS; 2400px canvas ≈2.6× so body text
+    # must read clearly when scaled down (many “broken image” reports were legibility + bad cache ideas).
     f_title, f_sub, _, _ = _fonts(
-        max(76, width // 15),
-        max(38, width // 38),
-        max(44, width // 32),
-        max(30, width // 48),
+        max(88, width // 13),
+        max(44, width // 34),
+        max(48, width // 30),
+        max(34, width // 44),
     )
-    f_big = _font_bold(max(56, width // 22))
+    f_big = _font_bold(max(64, width // 19))
     try:
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(42, width // 34)
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(48, width // 29)
         )
         f_tag = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, width // 52)
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(30, width // 48)
         )
     except OSError:
         f_line = f_tag = ImageFont.load_default()
-    f_step = _font_bold(max(96, width // 11))
+    f_step = _font_bold(max(108, width // 9))
 
     inner_x = pad * 2
     inner_w = width - pad * 4
@@ -146,7 +148,7 @@ def render_hero(width: int = 2400) -> Image.Image:
             body_wrapped.extend(_wrap_lines(sd, L, f_line, tw_body))
         head_h = len(head_wrapped) * int(lh_big * 1.2) + int(lh_line * 0.35)
         body_h = len(body_wrapped) * int(lh_line * 1.28)
-        rh = max(int(width * 0.14), card_inset * 2 + head_h + body_h)
+        rh = max(int(width * 0.155), card_inset * 2 + head_h + body_h)
         row_heights.append(rh)
 
     stack_top = pad + title_h + int(width * 0.04)
@@ -174,7 +176,7 @@ def render_hero(width: int = 2400) -> Image.Image:
     )
     d.text(
         (pad * 2, sub_y + int(title_h * 0.28)),
-        "README poster v5 · wrapped text so labels stay inside cards",
+        "README poster v7 · larger type for GitHub column width",
         fill=(199, 210, 254),
         font=f_tag,
     )
@@ -229,15 +231,15 @@ def render_architecture(width: int = 2400) -> Image.Image:
     iw = inner_r - inner_l
 
     try:
-        f_banner_title = _font_bold(max(56, int(width * 0.03)))
+        f_banner_title = _font_bold(max(64, int(width * 0.034)))
         f_banner_sub = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, int(width * 0.017))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(32, int(width * 0.02))
         )
-        f_head = _font_bold(max(48, int(width * 0.028)))
+        f_head = _font_bold(max(56, int(width * 0.031)))
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(38, int(width * 0.024))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(44, int(width * 0.022))
         )
-        f_step = _font_bold(max(72, int(width * 0.048)))
+        f_step = _font_bold(max(84, int(width * 0.044)))
     except OSError:
         f_banner_title = f_head = f_step = ImageFont.load_default()
         f_banner_sub = f_line = ImageFont.load_default()
@@ -252,7 +254,7 @@ def render_architecture(width: int = 2400) -> Image.Image:
     sd = ImageDraw.Draw(scratch)
     banner_sub_lines = _wrap_lines(
         sd,
-        "Diagram v6 · large type · vector: architecture.svg",
+        "Diagram v7 · larger type for README width · vector: architecture.svg",
         f_banner_sub,
         tw_banner,
     )
@@ -294,7 +296,7 @@ def render_architecture(width: int = 2400) -> Image.Image:
         title_h = len(title_lines) * int(lh_head * 1.22)
         body_h = len(body_lines) * int(lh_line * 1.42)
         text_stack_h = title_h + int(lh_line * 0.55) + body_h
-        min_pill_h = int(width * 0.22)
+        min_pill_h = int(width * 0.24)
         inner_h = max(text_stack_h, min_pill_h)
         block_heights.append(inner_h + 2 * card_inset)
 
@@ -391,6 +393,14 @@ def main() -> None:
 
     _save_webp(arch, ROOT / "architecture.webp", quality=94)
     _save_png(arch, ROOT / "architecture.png")
+
+    # Keep tools/source/ in sync so doc links and “open file” paths match repo root bitmaps.
+    source_dir = ROOT / "tools" / "source"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("hero.png", "architecture.png"):
+        src = ROOT / name
+        dst = source_dir / name
+        dst.write_bytes(src.read_bytes())
 
     for name in ("hero.webp", "hero.png", "architecture.webp", "architecture.png"):
         p = ROOT / name

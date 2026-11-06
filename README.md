@@ -20,18 +20,23 @@
 </p>
 
 <p align="center">
-  <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
-  <!-- ?v= bumps GitHub’s image CDN when the PNG bytes change (otherwise it can look “stuck”). -->
-  <!-- href has no ?v= so mobile “open image” matches this file; ?v= on src only busts CDN cache. -->
-  <a href="./hero.png" title="hero.png (this branch)">
+  <!--
+    GitHub README gotcha: `?v=` on <img src> does **not** bust Camo’s cache — the query is stripped
+    before raw.githubusercontent.com is fetched (same ETag as without ?v=). “Stuck old image” fixes
+    require a new commit (new bytes) or a filename change — not a query string.
+    Clicks: <a href="./file"> opens the blob page for the **current branch/PR** (not default branch).
+  -->
+  <a href="./hero.png" title="Open hero.png on this branch (full resolution)">
     <img
-      src="./hero.png?v=7"
-      alt="UK Macro Analytics Engine banner"
+      src="./hero.png"
+      alt="UK Macro Analytics Engine — pipeline summary poster (hi-res PNG)"
       width="100%"
       decoding="async"
       fetchpriority="high"
     />
   </a>
+  <br/>
+  <sub><a href="./hero.png">Open full-size hero.png</a> (tap image or link — same branch)</sub>
 </p>
 
 > **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
@@ -77,15 +82,17 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png" title="architecture.png (this branch)">
+  <a href="./architecture.png" title="Open architecture.png on this branch (full resolution)">
     <img
-      src="./architecture.png?v=7"
-      alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+      src="./architecture.png"
+      alt="Architecture diagram — Ingestion, DuckDB, Analytics, Exports (hi-res PNG)"
       width="100%"
       loading="lazy"
       decoding="async"
     />
   </a>
+  <br/>
+  <sub><a href="./architecture.png">Open full-size architecture.png</a></sub>
 </p>
 
 <p align="center"><sub>PNG bitmap for README (<code>python3 tools/regen_readme_images.py</code> also writes WebP); <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
@@ -122,6 +129,10 @@ streamlit run streamlit_app.py
 ### Landing page on Vercel
 
 Streamlit needs a **long-running Python app** — not Vercel serverless by default. Use **`static-site/`** on [**Vercel**](https://vercel.com) and link to your Streamlit URL: [**docs/VERCEL.md**](./docs/VERCEL.md).
+
+### Landing page on Cloudflare Pages
+
+The same **`static-site/`** folder can be published as **Cloudflare Pages** (static assets only — **no** Streamlit process on Pages). Use a **new** project name and `*.pages.dev` preview until a custom hostname is explicitly approved: [**docs/CLOUDFLARE_PAGES.md**](./docs/CLOUDFLARE_PAGES.md).
 
 ### More docs (free tooling)
 
@@ -187,10 +198,11 @@ If a publisher changes CSV layout, update **`DatasetSpec`** or **`_alias_key_col
 
 Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
-1. `python -m ruff check src tests tools`
+1. `python -m ruff check src tests tools streamlit_app.py`
 2. `python src/security_audit.py`
-3. `python -m compileall -q src tests`
-4. `pytest -q --tb=short`
+3. `pip-audit -r requirements.txt --no-deps --disable-pip`
+4. `python -m compileall -q src tests streamlit_app.py`
+5. `pytest -q --tb=short`
 
 ```bash
 pytest -q
@@ -203,10 +215,11 @@ pytest -q
 ```
 .
 ├── streamlit_app.py          # Streamlit portfolio dashboard
-├── static-site/              # Vercel-ready landing (HTML)
+├── static-site/              # Static landing (Vercel / Cloudflare Pages)
 ├── src/                      # Pipeline package
 ├── tests/
-├── docs/                     # Architecture, governance, Streamlit, Vercel, BI notes
+├── docs/                     # Architecture, governance, Streamlit, Vercel, Cloudflare, BI notes
+├── wrangler.toml             # Optional Cloudflare Pages deploy config (static-site/)
 ├── tools/regen_readme_images.py
 ├── requirements.txt
 ├── requirements-dev.txt
@@ -232,7 +245,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Put **`?v=` on the `<img src>` only** (not on the wrapping `<a href>`) so taps open the correct file while the CDN still refreshes. Bump `?v=` when you replace PNG bytes (this README uses `?v=7`). Vector: [`architecture.svg`](./architecture.svg).
+After regenerating bitmaps, commit the updated **`hero.png`** / **`architecture.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s CDN updates from file content — **query strings on `src=` are not required** and are stripped by `raw.githubusercontent.com` anyway. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for reproducible checks.
 
 ---
 

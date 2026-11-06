@@ -1,0 +1,5 @@
+# Cloudflare Pages — static output only (see docs/CLOUDFLARE_PAGES.md).
+# Deploy: npx wrangler pages deploy static-site --project-name=<name>
+# Rename `name` if it conflicts with an existing Pages project in your account.
+name = "uk-macro-analytics-landing"
+pages_build_output_dir = "static-site"
