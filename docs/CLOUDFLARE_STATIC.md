@@ -22,11 +22,16 @@ This repo has two **different** surfaces:
 ## Deploy (CLI)
 
 1. Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) and authenticate on **your** machine (not this agent).
-2. From repo root:
+2. (Optional) Refresh **demo** JSON from the Python pipeline — **real ONS data**, committed for static hosting:
+   ```bash
+   python -m src.analytics
+   python tools/export_demo_assets.py --from-exports
+   ```
+3. From repo root:
    ```bash
    npx wrangler deploy
    ```
-3. Set the hero button in `static-site/index.html` to your **Streamlit** URL after deploy.
+4. Interactive **browser demo**: open **`/demo.html`** on the deployed Worker URL (Chart.js loads from jsDelivr CDN). **`index.html`** remains the brochure; link between them.
 
 Configuration: root `wrangler.toml` + `workers/static-landing.js` — assets directory **`static-site`**. See Cloudflare [Static Assets](https://developers.cloudflare.com/workers/static-assets/).
 

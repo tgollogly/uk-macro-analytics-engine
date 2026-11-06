@@ -163,25 +163,22 @@
       <strong>Streamlit</strong> dashboard — with <strong>pytest</strong> and <strong>CI</strong> on GitHub.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="https://share.streamlit.io/">Open Streamlit Community Cloud</a>
+      <a class="btn btn-primary" href="./demo.html">Open interactive demo (browser charts)</a>
+      <a class="btn btn-secondary" href="https://share.streamlit.io/">Streamlit Community Cloud</a>
       <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">View on GitHub</a>
-      <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/README.md#portfolio-dashboard-streamlit--free-locally">README · run locally</a>
     </div>
     <p class="note">
-      After you deploy <code>streamlit_app.py</code> on Community Cloud, edit this file and point the primary button at your
-      public app URL so visitors land on your dashboard in one click (<code>static-site/index.html</code> → hero → first
-      <code>href</code>). Until then, Cloud opens the hoster login / app picker.
+      <strong>Interactive on Cloudflare:</strong> deploy <code>static-site/</code> with Workers Static Assets — open
+      <code>/demo.html</code> for Chart.js dashboards fed by committed pipeline exports (see <code>docs/CLOUDFLARE_STATIC.md</code>).
+      <strong>Streamlit</strong> is optional and needs Community Cloud or local Python.
     </p>
   </header>
   <main class="wrap">
     <div class="grid">
       <article class="card">
-        <h2><span class="pill">Interactive</span> Dashboard</h2>
-        <p>Plotly charts, downloadable CSV exports, rolling windows, and a plain-language read of the latest pull. Data refreshes when you request it from ONS URLs in the repo config.</p>
-        <ul class="list-clean">
-          <li>Run locally: <code>streamlit run streamlit_app.py</code></li>
-          <li>Requires network access to ONS for a fresh pull</li>
-        </ul>
+        <h2><span class="pill">Interactive</span> Browser demo</h2>
+        <p>CPIH YoY and PSNB £m from committed <code>static-site/demo/*.json</code> (built from the same DuckDB analytics as the Python export step). Chart.js, sliders, downloads — no server-side compute on Cloudflare.</p>
+        <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open demo</a>
       </article>
       <article class="card">
         <h2><span class="pill">Pipeline</span> Engineering</h2>

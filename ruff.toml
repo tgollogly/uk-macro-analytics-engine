@@ -7,4 +7,5 @@ ignore = []
 
 [lint.per-file-ignores]
 "tools/regen_readme_images.py" = ["E501"]
+"tools/export_demo_assets.py" = ["E501"]
 "streamlit_app.py" = ["E501"]

@@ -132,6 +132,10 @@ Streamlit needs a **long-running Python app** — not Vercel serverless by defau
 
 The same **`static-site/`** folder can be published with **Workers Static Assets** (recommended for a **new** Worker name — does not replace existing production). **Streamlit** still needs [Streamlit Community Cloud](https://streamlit.io/cloud) or local run — **not** inside a Worker. See [**docs/CLOUDFLARE_STATIC.md**](./docs/CLOUDFLARE_STATIC.md). **Pages** remains an alternative: [**docs/CLOUDFLARE_PAGES.md**](./docs/CLOUDFLARE_PAGES.md).
 
+### Interactive browser demo (Cloudflare/static)
+
+**[`static-site/demo.html`](./static-site/demo.html)** — Chart.js charts over **`static-site/demo/*.json`**, produced from the same DuckDB analytics as `python -m src.analytics` (regenerate with **`python tools/export_demo_assets.py`**, see `docs/CLOUDFLARE_STATIC.md`). No Python at the edge: snapshot JSON + client-side interaction.
+
 ### More docs (free tooling)
 
 - [**Data governance**](./docs/DATA_GOVERNANCE.md) · [**T-SQL notes**](./docs/SQL_SERVER_MAPPING.md) · [**Power BI Desktop**](./docs/POWERBI_DESKTOP.md)

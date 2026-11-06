@@ -1,0 +1,24 @@
+{
+  "generated_at_utc": "2026-11-06T16:21:46Z",
+  "pipeline": "uk-macro-analytics-engine",
+  "sources": {
+    "cpih": {
+      "series": "ONS CPIH all items (L522)",
+      "config_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/l522/mm23",
+      "rows": 465,
+      "export_csv": "data/exports/cpih_yoy.csv"
+    },
+    "psnb": {
+      "series": "ONS PSNB ex banks, monthly \u00a3m (DZLS)",
+      "config_url": "https://www.ons.gov.uk/generator?format=csv&uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/timeseries/dzls/pusf",
+      "rows": 354,
+      "export_csv": "data/exports/psnb_monthly.csv"
+    }
+  },
+  "limitations": [
+    "ONS may revise past periods; confirm headline figures on ons.gov.uk.",
+    "CPIH YoY is null for the first ~11 months and whenever the lag index is missing.",
+    "PSNB row_count > 1 means multiple CSV rows were summed for that month.",
+    "This bundle is a snapshot at generated_at_utc \u2014 not a live feed."
+  ]
+}
