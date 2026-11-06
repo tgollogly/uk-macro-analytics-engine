@@ -20,17 +20,21 @@
 </p>
 
 <p align="center">
-  <!-- Relative ./ links can open the wrong blob on GitHub mobile; use canonical main file URL for tap targets. -->
-  <!-- ?v= on src only: Camo CDN cache bust (bump when PNG bytes change). -->
-  <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/hero.png" title="hero.png on main">
+  <!--
+    Camo fetches raw.githubusercontent.com without the query string — `?v=` does not bust cache.
+    Branch/PR: use ./ so image and tap target resolve to this ref (not pinned to main).
+  -->
+  <a href="./hero.png" title="Open hero.png on this branch (full resolution)">
     <img
-      src="./hero.png?v=9"
-      alt="UK Macro Analytics Engine banner"
+      src="./hero.png"
+      alt="UK Macro Analytics Engine — pipeline summary poster (hi-res PNG)"
       width="100%"
       decoding="async"
       fetchpriority="high"
     />
   </a>
+  <br/>
+  <sub><a href="./hero.png">Open full-size hero.png</a> (tap image or link — same branch)</sub>
 </p>
 
 > **What this is** — A **Python 3.11+** pipeline that downloads **UK open macro** CSVs from the ONS, **validates** structure, caches **Parquet**, loads **DuckDB**, runs **SQL analytics** (rolling averages, YoY inflation, fiscal series), and serves a **Streamlit** portfolio dashboard with optional static/Vercel landing page.
@@ -76,15 +80,17 @@
 </pre>
 
 <p align="center">
-  <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/architecture.png" title="architecture.png on main">
+  <a href="./architecture.png" title="Open architecture.png on this branch (full resolution)">
     <img
-      src="./architecture.png?v=9"
-      alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+      src="./architecture.png"
+      alt="Architecture diagram — Ingestion, DuckDB, Analytics, Exports (hi-res PNG)"
       width="100%"
       loading="lazy"
       decoding="async"
     />
   </a>
+  <br/>
+  <sub><a href="./architecture.png">Open full-size architecture.png</a></sub>
 </p>
 
 <p align="center"><sub>PNG bitmap for README (<code>python3 tools/regen_readme_images.py</code> also writes WebP); <strong>vector</strong>: <a href="./architecture.svg">architecture.svg</a> · <strong>Mermaid source</strong> (desktop): <a href="./docs/architecture.mmd">docs/architecture.mmd</a></sub></p>
@@ -121,6 +127,10 @@ streamlit run streamlit_app.py
 ### Landing page on Vercel
 
 Streamlit needs a **long-running Python app** — not Vercel serverless by default. Use **`static-site/`** on [**Vercel**](https://vercel.com) and link to your Streamlit URL: [**docs/VERCEL.md**](./docs/VERCEL.md).
+
+### Landing page on Cloudflare (Workers Static Assets)
+
+The same **`static-site/`** folder can be published with **Workers Static Assets** (recommended for a **new** Worker name — does not replace existing production). **Streamlit** still needs [Streamlit Community Cloud](https://streamlit.io/cloud) or local run — **not** inside a Worker. See [**docs/CLOUDFLARE_STATIC.md**](./docs/CLOUDFLARE_STATIC.md). **Pages** remains an alternative: [**docs/CLOUDFLARE_PAGES.md**](./docs/CLOUDFLARE_PAGES.md).
 
 ### More docs (free tooling)
 
@@ -186,10 +196,11 @@ If a publisher changes CSV layout, update **`DatasetSpec`** or **`_alias_key_col
 
 Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
-1. `python -m ruff check src tests tools`
+1. `python -m ruff check src tests tools streamlit_app.py`
 2. `python src/security_audit.py`
-3. `python -m compileall -q src tests`
-4. `pytest -q --tb=short`
+3. `pip-audit -r requirements.txt --no-deps --disable-pip`
+4. `python -m compileall -q src tests streamlit_app.py`
+5. `pytest -q --tb=short`
 
 ```bash
 pytest -q
@@ -202,10 +213,12 @@ pytest -q
 ```
 .
 ├── streamlit_app.py          # Streamlit portfolio dashboard
-├── static-site/              # Vercel-ready landing (HTML)
+├── static-site/              # Static landing (Vercel / Cloudflare Pages)
 ├── src/                      # Pipeline package
 ├── tests/
-├── docs/                     # Architecture, governance, Streamlit, Vercel, BI notes
+├── docs/                     # Architecture, governance, Streamlit, Vercel, Cloudflare, BI notes
+├── wrangler.toml             # Optional Cloudflare Workers + static-site/ (see docs/CLOUDFLARE_STATIC.md)
+├── workers/                  # Minimal Worker that serves static-site/ assets
 ├── tools/regen_readme_images.py
 ├── requirements.txt
 ├── requirements-dev.txt
@@ -231,7 +244,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Use a **canonical `https://github.com/…/blob/main/…png`** on the `<a href>` for reliable **mobile** taps (relative `./` links are flaky). Put **`?v=` only on `<img src>`** for CDN cache busting (this README uses `?v=9`). Forks: change the org/repo in those two `href`s or switch back to `./file.png`. Vector: [`architecture.svg`](./architecture.svg).
+After regenerating bitmaps, commit the updated **`hero.png`** / **`architecture.png`** (and matching **`tools/source/*.png`**, written by `tools/regen_readme_images.py`). GitHub’s Camo proxy strips **`?v=`** from the underlying raw URL — cache refresh comes from **new file bytes**, not query strings. Use **`./` links** so taps match the **current branch/PR** blob. Vector: [`architecture.svg`](./architecture.svg). See [`docs/README_IMAGES.md`](./docs/README_IMAGES.md) for checks and manual verification.
 
 ---
 

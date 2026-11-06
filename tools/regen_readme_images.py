@@ -26,7 +26,6 @@ BG = (254, 252, 232)  # amber-50 (warm canvas)
 HEADER = (49, 46, 129)  # indigo-900
 HEADER_STROKE = (67, 56, 202)  # indigo-700
 ACCENT_BADGE = (251, 191, 36)  # amber-400 (step numbers)
-TEXT = (15, 23, 42)  # slate-900
 TEXT_MUTED = (51, 65, 85)  # slate-700
 # Slightly darker for long lines on pale card fills (mobile readability)
 TEXT_BODY = (30, 41, 59)  # slate-800
@@ -50,9 +49,16 @@ def _fonts(
         return d, d, d, d
 
 
-def _font_bold(px: int) -> ImageFont.FreeTypeFont:
+def _font_bold(px: int) -> ImageFont.ImageFont:
     try:
         return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", px)
+    except OSError:
+        return ImageFont.load_default()
+
+
+def _font_sans(px: int) -> ImageFont.ImageFont:
+    try:
+        return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", px)
     except OSError:
         return ImageFont.load_default()
 
@@ -89,6 +95,16 @@ def _wrap_lines(
     return lines
 
 
+def _longest_wrapped_line_width(
+    draw: ImageDraw.ImageDraw, lines: list[str], font: ImageFont.ImageFont
+) -> float:
+    wmax = 0.0
+    for line in lines:
+        bb = draw.textbbox((0, 0), line, font=font)
+        wmax = max(wmax, float(bb[2] - bb[0]))
+    return wmax
+
+
 def _save_webp(img: Image.Image, path: Path, quality: int = 93) -> None:
     img.save(path, format="WEBP", quality=quality, method=6)
 
@@ -97,27 +113,57 @@ def _save_png(img: Image.Image, path: Path) -> None:
     img.convert("RGB").save(path, format="PNG", optimize=True, compress_level=9)
 
 
+def _fit_hero_header_fonts(
+    width: int, text_width: int
+) -> tuple[ImageFont.ImageFont, ImageFont.ImageFont, list[str], list[str]]:
+    """Shrink title/body fonts until wrapped lines fit text_width (no cropping)."""
+    title_str = "UK Macro Analytics Engine"
+    subtitle_str = "ONS open data → Parquet → DuckDB → analytics & exports"
+    scratch = ImageDraw.Draw(Image.new("RGB", (max(text_width, 100), 50), color=HEADER))
+    title_px = max(76, width // 14)
+    sub_px = max(36, width // 34)
+    min_title = max(52, width // 24)
+    min_sub = max(26, width // 52)
+    while True:
+        f_title = _font_bold(title_px)
+        f_sub = _font_sans(sub_px)
+        title_lines = _wrap_lines(scratch, title_str, f_title, text_width)
+        sub_lines = _wrap_lines(scratch, subtitle_str, f_sub, text_width)
+        ok = (
+            _longest_wrapped_line_width(scratch, title_lines, f_title) <= text_width + 0.5
+            and _longest_wrapped_line_width(scratch, sub_lines, f_sub) <= text_width + 0.5
+        )
+        if ok or (title_px <= min_title and sub_px <= min_sub):
+            return f_title, f_sub, title_lines, sub_lines
+        title_px = max(min_title, title_px - 3)
+        sub_px = max(min_sub, sub_px - 2)
+
+
 def render_hero(width: int = 2400) -> Image.Image:
-    """Tall poster: indigo header + numbered stack; row height follows wrapped body text."""
+    """Tall poster: indigo header + numbered stack; header text wrapped and font-fit to width."""
     pad = int(width * 0.055)
-    title_h = int(width * 0.26)
-    f_title, f_sub, _, _ = _fonts(
-        max(76, width // 15),
-        max(38, width // 38),
-        max(44, width // 32),
-        max(30, width // 48),
-    )
-    f_big = _font_bold(max(56, width // 22))
+    inner_margin = int(width * 0.036)
+    header_inner_left = pad + inner_margin
+    header_inner_right = width - pad - inner_margin
+    tw_header = max(120, header_inner_right - header_inner_left)
+
+    f_title, f_sub, title_lines, sub_lines = _fit_hero_header_fonts(width, tw_header)
+    lh_title = _text_line_height(f_title)
+    lh_sub = _text_line_height(f_sub)
+    gap_after_title = int(lh_title * 0.42)
+    title_block = len(title_lines) * int(lh_title * 1.18)
+    sub_block = len(sub_lines) * int(lh_sub * 1.22)
+    header_content_h = title_block + gap_after_title + sub_block
+    title_h = inner_margin + header_content_h + inner_margin
+
+    f_big = _font_bold(max(60, width // 20))
     try:
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(42, width // 34)
-        )
-        f_tag = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, width // 52)
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(44, width // 30)
         )
     except OSError:
-        f_line = f_tag = ImageFont.load_default()
-    f_step = _font_bold(max(96, width // 11))
+        f_line = ImageFont.load_default()
+    f_step = _font_bold(max(96, width // 10))
 
     inner_x = pad * 2
     inner_w = width - pad * 4
@@ -133,18 +179,15 @@ def render_hero(width: int = 2400) -> Image.Image:
         ("4", "EXPORTS", ["data/exports/", "CSV · JSON · Parquet"]),
     ]
 
-    # Measure row heights with wrapping (scratch draw)
-    scratch = Image.new("RGB", (width, 50), color=BG)
-    sd = ImageDraw.Draw(scratch)
+    scratch = ImageDraw.Draw(Image.new("RGB", (width, 50), color=BG))
     lh_big = _text_line_height(f_big)
     lh_line = _text_line_height(f_line)
     row_heights: list[int] = []
     for _num, head, lines in stages:
-        head_wrapped = _wrap_lines(sd, head, f_big, tw_body)
+        head_wrapped = _wrap_lines(scratch, head, f_big, tw_body)
         body_wrapped: list[str] = []
         for L in lines:
-            body_wrapped.extend(_wrap_lines(sd, L, f_line, tw_body))
-        # Must match the draw loop below (same spacing constants).
+            body_wrapped.extend(_wrap_lines(scratch, L, f_line, tw_body))
         top_text = card_inset + int(lh_big * 0.15)
         head_block = len(head_wrapped) * int(lh_big * 1.2)
         gap_hb = int(lh_line * 0.25)
@@ -169,21 +212,23 @@ def render_hero(width: int = 2400) -> Image.Image:
         outline=HEADER_STROKE,
         width=max(4, width // 380),
     )
-    d.text((pad * 2, pad + int(title_h * 0.18)), "UK Macro Analytics Engine", fill=(255, 255, 255), font=f_title)
-
-    sub_y = pad + int(title_h * 0.55)
-    d.text(
-        (pad * 2, sub_y),
-        "ONS open data → Parquet → DuckDB → analytics & exports",
-        fill=SUBTITLE_ON_HEADER,
-        font=f_sub,
-    )
-    d.text(
-        (pad * 2, sub_y + int(title_h * 0.28)),
-        "README poster v6 · extra bottom padding (no edge clipping)",
-        fill=(199, 210, 254),
-        font=f_tag,
-    )
+    hy = pad + inner_margin
+    tx = float(header_inner_left)
+    for tl in title_lines:
+        d.text((tx, hy), tl, fill=(255, 255, 255), font=f_title)
+        bb = d.textbbox((tx, hy), tl, font=f_title)
+        assert bb[0] >= header_inner_left - 1 and bb[2] <= header_inner_right + 1, (
+            f"hero title overflow: {tl!r} bbox={bb} inner=[{header_inner_left},{header_inner_right}]"
+        )
+        hy += int(lh_title * 1.18)
+    hy += gap_after_title - int(lh_title * 0.05)
+    for sl in sub_lines:
+        d.text((tx, hy), sl, fill=SUBTITLE_ON_HEADER, font=f_sub)
+        bb = d.textbbox((tx, hy), sl, font=f_sub)
+        assert bb[0] >= header_inner_left - 1 and bb[2] <= header_inner_right + 1, (
+            f"hero subtitle overflow: {sl!r} bbox={bb}"
+        )
+        hy += int(lh_sub * 1.22)
 
     y = stack_top
     for (_idx, (num, head, lines)) in enumerate(stages):
@@ -210,17 +255,17 @@ def render_hero(width: int = 2400) -> Image.Image:
         )
         d.text(((bx1 + bx2) / 2, (by1 + by2) / 2), num, fill=(67, 20, 7), font=f_step, anchor="mm")
 
-        tx = bx2 + int(inner_w * 0.035)
+        tx_body = bx2 + int(inner_w * 0.035)
         ty = y + card_inset + int(lh_big * 0.15)
         head_wrapped = _wrap_lines(d, head, f_big, tw_body)
         ly = ty
         for hl in head_wrapped:
-            d.text((tx, ly), hl, fill=HEADER, font=f_big)
+            d.text((tx_body, ly), hl, fill=HEADER, font=f_big)
             ly += int(lh_big * 1.2)
         ly += int(lh_line * 0.25)
         for L in lines:
             for wl in _wrap_lines(d, L, f_line, tw_body):
-                d.text((tx, ly), wl, fill=TEXT_MUTED, font=f_line)
+                d.text((tx_body, ly), wl, fill=TEXT_MUTED, font=f_line)
                 ly += int(lh_line * 1.28)
         y += row_h + gap
 
@@ -235,15 +280,15 @@ def render_architecture(width: int = 2400) -> Image.Image:
     iw = inner_r - inner_l
 
     try:
-        f_banner_title = _font_bold(max(56, int(width * 0.03)))
+        f_banner_title = _font_bold(max(64, int(width * 0.034)))
         f_banner_sub = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(28, int(width * 0.017))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(32, int(width * 0.02))
         )
-        f_head = _font_bold(max(48, int(width * 0.028)))
+        f_head = _font_bold(max(56, int(width * 0.031)))
         f_line = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(38, int(width * 0.024))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(44, int(width * 0.022))
         )
-        f_step = _font_bold(max(72, int(width * 0.048)))
+        f_step = _font_bold(max(84, int(width * 0.044)))
     except OSError:
         f_banner_title = f_head = f_step = ImageFont.load_default()
         f_banner_sub = f_line = ImageFont.load_default()
@@ -254,16 +299,21 @@ def render_architecture(width: int = 2400) -> Image.Image:
     banner_top = margin + int(width * 0.02)
     banner_pad_x = int(iw * 0.04)
     tw_banner = iw - 2 * banner_pad_x
-    scratch = Image.new("RGB", (width, 50), color=BG)
-    sd = ImageDraw.Draw(scratch)
+    scratch = ImageDraw.Draw(Image.new("RGB", (width, 50), color=BG))
     banner_sub_lines = _wrap_lines(
-        sd,
-        "Diagram v8 · deep descender padding · vector: architecture.svg",
+        scratch,
+        "ONS open CSVs · validation · Parquet · DuckDB · analytics & exports",
         f_banner_sub,
         tw_banner,
     )
+    for line in banner_sub_lines:
+        assert _longest_wrapped_line_width(scratch, [line], f_banner_sub) <= tw_banner + 0.5
     banner_line_h = _text_line_height(f_banner_sub)
-    banner_h = int(banner_line_h * 1.5) + len(banner_sub_lines) * int(banner_line_h * 1.25) + int(width * 0.02)
+    banner_h = (
+        int(banner_line_h * 1.5)
+        + len(banner_sub_lines) * int(banner_line_h * 1.25)
+        + int(width * 0.02)
+    )
 
     stages = [
         ("1", "INGESTION", ["config + requests", "data_fetcher", "Parquet cache", "ONS CSV → validated Parquet"], (240, 253, 250), HEADER),
@@ -293,11 +343,10 @@ def render_architecture(width: int = 2400) -> Image.Image:
     arrow_h = int(width * 0.028)
     block_heights: list[int] = []
     for _num, title, lines, _fill, _stroke in stages:
-        title_lines = _wrap_lines(sd, title, f_head, tw_text)
+        title_lines = _wrap_lines(scratch, title, f_head, tw_text)
         body_lines: list[str] = []
         for L in lines:
-            body_lines.extend(_wrap_lines(sd, L, f_line, tw_text))
-        # Must match draw loop: ty starts at card_inset + lh_head*0.1, then head lines, gap, body lines.
+            body_lines.extend(_wrap_lines(scratch, L, f_line, tw_text))
         top_pad = card_inset + int(lh_head * 0.1)
         title_block = len(title_lines) * int(lh_head * 1.22)
         gap_ht = int(lh_line * 0.4)
@@ -330,10 +379,18 @@ def render_architecture(width: int = 2400) -> Image.Image:
         width=max(2, width // 300),
     )
     bx = inner_l + banner_pad_x
-    d.text((bx, banner_top + int(banner_line_h * 0.75)), "Architecture", fill=(255, 255, 255), font=f_banner_title)
-    sy = banner_top + int(banner_line_h * 1.95)
+    ban_title_lines = _wrap_lines(d, "Architecture", f_banner_title, tw_banner)
+    sy = banner_top + int(banner_line_h * 0.72)
+    for bt in ban_title_lines:
+        d.text((bx, sy), bt, fill=(255, 255, 255), font=f_banner_title)
+        sy += int(banner_line_h * 1.22)
+    sy += int(banner_line_h * 0.35)
     for sl in banner_sub_lines:
         d.text((bx, sy), sl, fill=(199, 210, 254), font=f_banner_sub)
+        bbb = d.textbbox((bx, sy), sl, font=f_banner_sub)
+        inner_l2 = inner_l + banner_pad_x
+        inner_r2 = inner_r - banner_pad_x
+        assert bbb[0] >= inner_l2 - 1 and bbb[2] <= inner_r2 + 1, f"arch banner sub overflow {sl!r}"
         sy += int(banner_line_h * 1.22)
 
     cx = (inner_l + inner_r) / 2
@@ -369,15 +426,15 @@ def render_architecture(width: int = 2400) -> Image.Image:
         )
         d.text(((bx1 + bx2) / 2, (by1 + by2) / 2), num, fill=(67, 20, 7), font=f_step, anchor="mm")
 
-        tx = bx2 + gap_after_badge
+        tx2 = bx2 + gap_after_badge
         ty = int(y) + card_inset + int(lh_head * 0.1)
         for hl in _wrap_lines(d, title, f_head, tw_text):
-            d.text((tx, ty), hl, fill=HEADER, font=f_head)
+            d.text((tx2, ty), hl, fill=HEADER, font=f_head)
             ty += int(lh_head * 1.22)
         ty += int(lh_line * 0.4)
         for L in lines:
             for wl in _wrap_lines(d, L, f_line, tw_text):
-                d.text((tx, ty), wl, fill=TEXT_BODY, font=f_line)
+                d.text((tx2, ty), wl, fill=TEXT_BODY, font=f_line)
                 ty += int(lh_line * 1.42)
 
         y += blk_h
@@ -390,9 +447,7 @@ def render_architecture(width: int = 2400) -> Image.Image:
 
 def main() -> None:
     target_w = 2400
-    # Always draw hero in code for consistent bright, high-contrast README assets.
     hero = render_hero(target_w)
-
     arch = render_architecture(2400)
 
     _save_webp(hero, ROOT / "hero.webp", quality=94)
@@ -400,6 +455,13 @@ def main() -> None:
 
     _save_webp(arch, ROOT / "architecture.webp", quality=94)
     _save_png(arch, ROOT / "architecture.png")
+
+    source_dir = ROOT / "tools" / "source"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("hero.png", "architecture.png"):
+        src = ROOT / name
+        dst = source_dir / name
+        dst.write_bytes(src.read_bytes())
 
     for name in ("hero.webp", "hero.png", "architecture.webp", "architecture.png"):
         p = ROOT / name
