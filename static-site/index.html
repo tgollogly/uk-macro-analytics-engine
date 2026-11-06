@@ -216,8 +216,7 @@
       <h1>Thomas Gollogly — project demos</h1>
       <p class="lead">
         Pulls <strong>official ONS CSVs</strong> (inflation &amp; public borrowing), validates structure,
-        caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong>, and visualises results in a
-        <strong>Streamlit</strong> dashboard — with <strong>pytest</strong> and <strong>CI</strong> on GitHub.
+        caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong> (rolling averages, YoY inflation, monthly PSNB totals), and visualises results in <strong>Streamlit</strong> or a <strong>static Chart.js</strong> snapshot — with <strong>pytest</strong> and <strong>CI</strong> on GitHub. For sources, limitations, and reproducible commands, see the repo <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md" style="color:var(--link)">case studies</a> (evidence-led; no employment outcome claims).
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#hub">Open project hub (six demos)</a>
@@ -226,8 +225,8 @@
         <a class="btn btn-secondary" href="https://github.com/tgollogly/portfolio">Portfolio source on GitHub</a>
       </div>
       <p class="note">
-        <strong>UK Macro Analytics Engine:</strong> open <code>./demo.html</code> for Chart.js dashboards fed by committed pipeline exports.
-        <strong>Other CV demos</strong> below are mirrored from the <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">portfolio</a> repository (MIT) — same static front-end files. The AI ATS matcher sends requests to <code>https://tgollogly.dev/api</code> only when you click analyse or generate (see <code>./portfolio/ats-matcher.html</code> and <code>./portfolio/config.js</code>). Optional chat is disabled on this mirror.
+        <strong>UK Macro Analytics Engine:</strong> <code>./demo.html</code> plots a <strong>dated JSON snapshot</strong> (see <code>./demo/manifest.json</code> for UTC time and row counts) — not a live ONS pull in the edge browser. <strong>Streamlit</strong> can refresh from ONS when you run the Python app locally or hosted.
+        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; ATS POSTs to <code>https://tgollogly.dev/api</code> on button click and may be <strong>blocked</strong> on some networks (see <code>./portfolio/config.js</code>). Optional chat is disabled on this mirror.
       </p>
     </div>
   </header>
@@ -239,13 +238,13 @@
     <div class="grid">
       <article class="card hub-card">
         <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
-        <p>ONS pipeline — CPIH YoY and PSNB from committed exports; Chart.js in the browser.</p>
+        <p>ONS CPIH YoY and monthly PSNB totals (DuckDB SQL) — static demo uses committed JSON snapshot + manifest.</p>
         <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open <code>/demo.html</code></a>
         <p class="src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
-        <p>Eight-factor model in the browser; figures stay on device (see portfolio notice).</p>
+        <p>Eight-factor model in-browser; use illustrative/sample figures unless you supply real data you may use.</p>
         <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
       </article>
@@ -263,13 +262,13 @@
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
-        <p>Static UI; POST to <code>tgollogly.dev/api</code> on button click. Backend/Gemini path described in <code>./portfolio/privacy.html</code>.</p>
+        <p>Static UI; POST to <code>tgollogly.dev/api</code> on click — response may fail (e.g. blocked/challenge) from some hosts.</p>
         <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
       </article>
       <article class="card hub-card">
         <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
-        <p>Court bundle structure and print layout; processing in browser (see notice).</p>
+        <p>Court bundle layout / print; fictional matter details in-browser only.</p>
         <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
         <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
       </article>
@@ -286,10 +285,11 @@
       </article>
       <article class="card">
         <h2><span class="pill">Pipeline</span> Engineering</h2>
-        <p>Parquet cache, DuckDB, tests and CI — see the GitHub README and architecture diagram.</p>
+        <p>Parquet cache, DuckDB SQL views, exports (CSV/JSON/Parquet), tests and CI — README architecture diagram.</p>
         <ul class="list-clean">
           <li>Tests: <code>pytest -q</code></li>
           <li>Lint: <code>ruff check</code></li>
+          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md" style="color:var(--link)">Case studies (evidence, limits, exercise)</a></li>
         </ul>
       </article>
       <article class="card">

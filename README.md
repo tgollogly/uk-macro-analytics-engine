@@ -52,7 +52,14 @@
 | [**Config**](#configuration) | URLs, DuckDB, cache |
 | [**Security & compliance**](#security--compliance) | Audit, secrets, licences |
 | [**CI & tests**](#continuous-integration) | GitHub Actions |
+| [**Case studies (junior analyst)**](#case-studies-junior-reporting--data-technician) | Evidence, methods, reproducibility |
 | [**Legal**](#legal-licence--disclaimer) | MIT, OGL, disclaimers |
+
+---
+
+## Case studies (junior reporting / data technician)
+
+Concise **evidence-led** write-ups (sources, snapshot vs live, SQL analytics shape, **measured** sample results from committed exports, limits, smallest extra exercise) live in [**docs/CASE_STUDIES.md**](./docs/CASE_STUDIES.md). They are written for reviewers of **junior data analyst / reporting analyst / data technician / junior BI** portfolios and **do not** claim senior modelling work, job placement, or stack-specific proficiency beyond what this repository contains (Python, DuckDB, Parquet exports; optional Streamlit and Power BI Desktop notes in docs).
 
 ---
 

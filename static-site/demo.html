@@ -225,6 +225,14 @@
     <h1>Interactive macro dashboard (browser)</h1>
     <p class="meta" id="meta">Loading manifest…</p>
     <div id="error" class="err" hidden role="alert"></div>
+    <section class="limit" id="analyst-review" aria-labelledby="analyst-h" style="margin-bottom:1.25rem">
+      <strong id="analyst-h">For reviewers (junior reporting / data technician)</strong>
+      <p style="margin:0.35rem 0 0;line-height:1.5">
+        This page reads committed <strong>JSON snapshots</strong> from the Python pipeline (<code>static-site/demo/*.json</code>), not a live ONS feed in the browser.
+        The <code>manifest.json</code> file records the UTC build time, row counts, and limitations (e.g. revisions, null YoY at series start).
+        Regenerate from source CSVs: <code>python -m src.analytics</code> then <code>python tools/export_demo_assets.py</code> — see <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md" style="color:var(--link)">docs/CASE_STUDIES.md</a> for evidence-led notes (no employment or senior-role claims).
+      </p>
+    </section>
     <div class="grid two">
       <section class="card" aria-labelledby="cpih-h2">
         <h2 id="cpih-h2">CPIH — year-on-year %</h2>
