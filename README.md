@@ -25,8 +25,8 @@
     <img
       src="./hero.png"
       alt="UK Macro Analytics Engine banner"
-      width="900"
-      height="300"
+      width="1000"
+      height="333"
       decoding="async"
       fetchpriority="high"
     />
@@ -81,8 +81,8 @@
     <img
       src="./architecture.png"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
-      width="600"
-      height="175"
+      width="800"
+      height="186"
       loading="lazy"
       decoding="async"
     />

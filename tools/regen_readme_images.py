@@ -2,14 +2,14 @@
 """
 Regenerate README hero and architecture images as high-DPI WebP + full-color PNG.
 
-Targets ~2x the typical README column width so images stay sharp on Retina / mobile.
+Designed for **mobile GitHub**: brighter background, high contrast, larger type.
 
 Requires Pillow: pip install pillow
 
   python3 tools/regen_readme_images.py
 
-Optional masters: tools/source/hero.png (wide banner) — if missing, a vector-style
-banner is drawn in code. Architecture is always drawn in code for consistent sharpness.
+Optional master: tools/source/hero.png — otherwise hero is drawn in code.
+Architecture diagram is always drawn in code (matches architecture.svg theme).
 """
 
 from __future__ import annotations
@@ -21,19 +21,33 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "tools" / "source"
 
+# Light “portfolio” palette — readable on phone screens and in dark-mode GitHub frame
+BG_TOP = (239, 246, 255)  # blue-50
+BG_BOTTOM = (226, 232, 240)  # slate-200
+ACCENT = (37, 99, 235)  # blue-600
+ACCENT_DARK = (30, 64, 175)  # blue-800
+TEXT = (15, 23, 42)  # slate-900
+TEXT_MUTED = (51, 65, 85)  # slate-700
+CARD = (255, 255, 255)
+OUTLINE = (59, 130, 246)  # blue-500
 
-def _fonts() -> tuple[ImageFont.FreeTypeFont, ImageFont.FreeTypeFont, ImageFont.FreeTypeFont]:
+
+def _fonts(
+    title: int, subtitle: int, label: int, small: int
+) -> tuple[ImageFont.FreeTypeFont, ...]:
     try:
-        bold = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 44)
-        regular = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
-        small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
+        return (
+            ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", title),
+            ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", subtitle),
+            ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", label),
+            ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", small),
+        )
     except OSError:
         d = ImageFont.load_default()
-        return d, d, d
-    return bold, regular, small
+        return d, d, d, d
 
 
-def _save_webp(img: Image.Image, path: Path, quality: int = 90) -> None:
+def _save_webp(img: Image.Image, path: Path, quality: int = 93) -> None:
     img.save(path, format="WEBP", quality=quality, method=6)
 
 
@@ -41,180 +55,174 @@ def _save_png(img: Image.Image, path: Path) -> None:
     img.convert("RGB").save(path, format="PNG", optimize=True, compress_level=9)
 
 
-def render_hero(width: int = 1800) -> Image.Image:
-    """Wide banner with smooth gradient (full color, no heavy quantization)."""
-    ar = 1200 / 400  # original aspect
+def render_hero(width: int = 2000) -> Image.Image:
+    """Bright banner, large type, high contrast pills."""
+    ar = 1200 / 400
     height = max(1, int(width / ar))
-    img = Image.new("RGB", (width, height), color=(15, 23, 42))
+    img = Image.new("RGB", (width, height), color=BG_TOP)
     d = ImageDraw.Draw(img)
     for i in range(height):
         t = i / max(height - 1, 1)
-        r = int(15 + t * 28)
-        g = int(23 + t * 45)
-        b = int(42 + t * 65)
+        r = int(BG_TOP[0] + t * (BG_BOTTOM[0] - BG_TOP[0]))
+        g = int(BG_TOP[1] + t * (BG_BOTTOM[1] - BG_TOP[1]))
+        b = int(BG_TOP[2] + t * (BG_BOTTOM[2] - BG_TOP[2]))
         d.line([(0, i), (width, i)], fill=(r, g, b))
 
-    # Accent header bar
-    pad = int(width * 0.03)
-    d.rounded_rectangle(
-        [pad, pad, width - pad, int(height * 0.28)],
-        radius=int(height * 0.06),
-        fill=(30, 58, 138),
-        outline=(59, 130, 246),
-        width=max(2, width // 600),
+    pad = int(width * 0.035)
+    title_h = int(height * 0.34)
+    f_title, f_sub, f_pill, _ = _fonts(
+        max(52, width // 28),
+        max(26, width // 62),
+        max(22, width // 72),
+        max(18, width // 85),
     )
 
-    f_title, f_sub, f_lab = _fonts()
+    # Title strip — solid blue for maximum contrast
+    d.rounded_rectangle(
+        [pad, pad, width - pad, pad + title_h],
+        radius=int(height * 0.07),
+        fill=ACCENT,
+        outline=ACCENT_DARK,
+        width=max(3, width // 400),
+    )
     title = "UK Macro Analytics Engine"
-    subtitle = "Open data -> Parquet cache -> DuckDB -> analytics & exports"
+    d.text((pad * 2, pad + int(title_h * 0.22)), title, fill=(255, 255, 255), font=f_title)
 
-    tx = pad * 2
-    ty = int(height * 0.11)
-    d.text((tx, ty), title, fill=(248, 250, 252), font=f_title)
-    d.text((tx, ty + int(height * 0.14)), subtitle, fill=(203, 213, 225), font=f_sub)
+    sub_y = pad + int(title_h * 0.52)
+    subtitle = "ONS open data → Parquet → DuckDB → analytics & exports"
+    d.text((pad * 2, sub_y), subtitle, fill=(219, 234, 254), font=f_sub)
 
-    # Pipeline pills
-    bx_y = int(height * 0.52)
-    bx_h = int(height * 0.2)
+    # Pipeline pills — white cards, dark text
+    bx_y = pad + title_h + int(height * 0.06)
+    bx_h = int(height * 0.26)
     labels = ["Ingest", "DuckDB", "Analytics", "Exports"]
     n = len(labels)
-    inner_pad = pad
-    gap = int(width * 0.012)
-    bw = (width - 2 * inner_pad - gap * (n - 1)) // n
-    x0 = inner_pad
+    gap = int(width * 0.015)
+    inner = pad * 2
+    bw = (width - 2 * inner - gap * (n - 1)) // n
     for i, lab in enumerate(labels):
-        x1 = x0 + i * (bw + gap)
+        x1 = inner + i * (bw + gap)
         d.rounded_rectangle(
             [x1, bx_y, x1 + bw, bx_y + bx_h],
-            radius=int(bx_h * 0.18),
-            fill=(51, 65, 85),
-            outline=(148, 163, 184),
-            width=1,
+            radius=int(bx_h * 0.2),
+            fill=CARD,
+            outline=OUTLINE,
+            width=max(2, width // 500),
         )
-        bbox = d.textbbox((0, 0), lab, font=f_lab)
+        bbox = d.textbbox((0, 0), lab, font=f_pill)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
         d.text(
             (x1 + (bw - tw) // 2, bx_y + (bx_h - th) // 2 - 2),
             lab,
-            fill=(248, 250, 252),
-            font=f_lab,
+            fill=TEXT,
+            font=f_pill,
         )
 
     return img
 
 
-def render_architecture(width: int = 1200) -> Image.Image:
-    """Crisp pipeline diagram (flat fills, high DPI)."""
-    height = int(width * 240 / 820)
-    img = Image.new("RGB", (width, height), color=(15, 23, 42))
+def render_architecture(width: int = 1600) -> Image.Image:
+    """Wide architecture strip: light background, coloured stage boxes, bold text."""
+    height = int(width * 280 / 1200)
+    img = Image.new("RGB", (width, height), color=BG_TOP)
     d = ImageDraw.Draw(img)
     for i in range(height):
         t = i / max(height - 1, 1)
-        r = int(15 + t * 12)
-        g = int(23 + t * 20)
-        b = int(42 + t * 30)
+        r = int(BG_TOP[0] + t * (BG_BOTTOM[0] - BG_TOP[0]))
+        g = int(BG_TOP[1] + t * (BG_BOTTOM[1] - BG_TOP[1]))
+        b = int(BG_TOP[2] + t * (BG_BOTTOM[2] - BG_TOP[2]))
         d.line([(0, i), (width, i)], fill=(r, g, b))
 
+    margin = max(20, width // 80)
     d.rounded_rectangle(
-        [16, 16, width - 16, height - 16],
-        radius=20,
-        outline=(59, 130, 246),
-        width=max(2, width // 400),
+        [margin, margin, width - margin, height - margin],
+        radius=24,
+        outline=ACCENT,
+        width=max(3, width // 320),
+        fill=(255, 255, 255),
     )
 
+    s = (width - 2 * margin) / 1000.0
+
     try:
-        f_h = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(22, width // 45))
-        f_b = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(16, width // 58))
-        f_t = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(13, width // 72))
+        f_h = ImageFont.truetype(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(28, int(26 * s))
+        )
+        f_b = ImageFont.truetype(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(22, int(19 * s))
+        )
+        f_t = ImageFont.truetype(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(17, int(15 * s))
+        )
     except OSError:
         f_h = f_b = f_t = ImageFont.load_default()
 
-    d.text((40, 28), "Architecture", fill=(248, 250, 252), font=f_h)
+    hx = margin + int(28 * s)
+    hy = margin + int(22 * s)
+    d.text((hx, hy), "Architecture", fill=TEXT, font=f_h)
     d.text(
-        (40, 28 + int(height * 0.09)),
-        "High-resolution diagram — also see architecture.svg for vector",
-        fill=(148, 163, 184),
+        (hx, hy + int(36 * s)),
+        "Bright theme for README / mobile · vector: architecture.svg",
+        fill=TEXT_MUTED,
         font=f_t,
     )
 
-    # Scale boxes to width
-    s = width / 820.0
+    # Stage colours (light fills, dark text)
+    stages: list[tuple[float, float, float, float, str, list[str], tuple[int, int, int], tuple[int, int, int]]] = [
+        (28, 92, 232, 168, "Ingestion", ["config + requests", "data_fetcher", "Parquet cache"], (219, 234, 254), ACCENT),
+        (278, 92, 232, 168, "Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly"], (224, 231, 255), (67, 56, 202)),
+        (528, 92, 200, 168, "Analytics", ["analytics.py", "rolling · YoY", "Parquet + JSON"], (254, 243, 199), (180, 83, 9)),
+        (748, 92, 224, 168, "Exports", ["data/exports/", "CSV · JSON · Parquet"], (220, 252, 231), (22, 101, 52)),
+    ]
 
-    def box(
-        x: float,
-        y: float,
-        bw: float,
-        bh: float,
-        title: str,
-        lines: list[str],
-        header_rgb: tuple[int, int, int] = (30, 58, 95),
-    ) -> None:
-        x1, y1, x2, y2 = x * s, y * s, (x + bw) * s, (y + bh) * s
+    y0 = margin + int(88 * s)
+    for x, _y, bw, bh, title, lines, fill, stroke in stages:
+        x1, y1 = margin + x * s, y0
+        x2, y2 = x1 + bw * s, y1 + bh * s
         d.rounded_rectangle(
             [x1, y1, x2, y2],
-            radius=8 * s,
-            fill=header_rgb,
-            outline=(59, 130, 246),
-            width=max(1, int(s)),
+            radius=14,
+            fill=fill,
+            outline=stroke,
+            width=max(2, int(2 * s)),
         )
         cx = (x1 + x2) / 2
-        d.text((cx, y1 + 12 * s), title, fill=(226, 232, 240), font=f_b, anchor="mm")
-        ly = y1 + 32 * s
+        d.text((cx, y1 + int(22 * s)), title, fill=TEXT, font=f_b, anchor="mm")
+        ly = y1 + int(48 * s)
         for line in lines:
-            d.text((cx, ly), line, fill=(241, 245, 249), font=f_t, anchor="mm")
-            ly += 22 * s
+            d.text((cx, ly), line, fill=TEXT_MUTED, font=f_t, anchor="mm")
+            ly += int(26 * s)
 
-    def arrow(x1: float, x2: float, y: float) -> None:
-        ya = y * s
-        x1p, x2p = x1 * s, x2 * s
-        d.line([(x1p, ya), (x2p, ya)], fill=(100, 116, 139), width=max(2, int(2 * s)))
-        # arrowhead
-        ah = 8 * s
-        d.polygon([(x2p, ya), (x2p - ah, ya - ah / 2), (x2p - ah, ya + ah / 2)], fill=(100, 116, 139))
+    # Arrows between stages
+    def arrow(ax1: float, ax2: float, y: float) -> None:
+        ya = y0 + y * s
+        x1p, x2p = margin + ax1 * s, margin + ax2 * s
+        d.line([(x1p, ya), (x2p, ya)], fill=ACCENT, width=max(3, int(3 * s)))
+        ah = 12 * s
+        d.polygon(
+            [(x2p, ya), (x2p - ah, ya - ah * 0.45), (x2p - ah, ya + ah * 0.45)],
+            fill=ACCENT,
+        )
 
-    box(24, 70, 180, 150, "Ingestion", ["config + requests", "data_fetcher", "Parquet cache"])
-    arrow(210, 256, 142)
-    box(264, 70, 180, 150, "Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly"])
-    arrow(450, 488, 142)
-    box(500, 70, 160, 150, "Analytics", ["analytics.py", "rolling / YoY", "Parquet + JSON"])
-    arrow(664, 698, 142)
-
-    ex1, ey1, ex2, ey2 = 710 * s, 95 * s, 806 * s, 208 * s
-    d.rounded_rectangle(
-        [ex1, ey1, ex2, ey2],
-        radius=8 * s,
-        fill=(20, 83, 45),
-        outline=(34, 197, 94),
-        width=max(1, int(s)),
-    )
-    cx = (ex1 + ex2) / 2
-    d.text((cx, ey1 + 28 * s), "Exports", fill=(236, 252, 203), font=f_b, anchor="mm")
-    d.text((cx, ey1 + 52 * s), "data/exports/", fill=(187, 247, 208), font=f_t, anchor="mm")
+    mid_y = 72.0
+    arrow(264, 276, mid_y)
+    arrow(514, 526, mid_y)
+    arrow(734, 746, mid_y)
 
     return img
 
 
 def main() -> None:
-    hero_path = SRC / "hero.png"
-    if hero_path.is_file() and hero_path.stat().st_size > 0:
-        src = Image.open(hero_path).convert("RGB")
-        w0, h0 = src.size
-        target_w = 1800
-        if w0 < target_w:
-            nh = max(1, int(h0 * target_w / w0))
-            hero = src.resize((target_w, nh), Image.Resampling.LANCZOS)
-        else:
-            nh = max(1, int(h0 * target_w / w0))
-            hero = src.resize((target_w, nh), Image.Resampling.LANCZOS)
-    else:
-        hero = render_hero(1800)
+    target_w = 2000
+    # Always draw hero in code for consistent bright, high-contrast README assets.
+    hero = render_hero(target_w)
 
-    arch = render_architecture(1200)
+    arch = render_architecture(1600)
 
-    _save_webp(hero, ROOT / "hero.webp", quality=92)
+    _save_webp(hero, ROOT / "hero.webp", quality=94)
     _save_png(hero, ROOT / "hero.png")
 
-    _save_webp(arch, ROOT / "architecture.webp", quality=92)
+    _save_webp(arch, ROOT / "architecture.webp", quality=94)
     _save_png(arch, ROOT / "architecture.png")
 
     for name in ("hero.webp", "hero.png", "architecture.webp", "architecture.png"):
@@ -225,7 +233,7 @@ def main() -> None:
     hw, hh = hero.size
     aw, ah = arch.size
     print()
-    print("README display (CSS px) for ~2x sharpness on Retina:")
+    print("Suggested README <img> half-size (Retina):")
     print(f"  hero: width={hw // 2} height={hh // 2}")
     print(f"  arch: width={aw // 2} height={ah // 2}")
 
