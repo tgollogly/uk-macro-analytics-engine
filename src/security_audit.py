@@ -15,7 +15,6 @@ from __future__ import annotations
 import argparse
 import ast
 import re
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -37,8 +36,14 @@ class ScanResult:
 
 
 SECRET_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"(?i)aws_(access|secret)_key_id\s*=\s*['\"][^'\"]+['\"]"), "AWS key-like assignment"),
-    (re.compile(r"(?i)api_key\s*=\s*['\"][^'\"]{16,}['\"]"), "api_key assignment with long literal"),
+    (
+        re.compile(r"(?i)aws_(access|secret)_key_id\s*=\s*['\"][^'\"]+['\"]"),
+        "AWS key-like assignment",
+    ),
+    (
+        re.compile(r"(?i)api_key\s*=\s*['\"][^'\"]{16,}['\"]"),
+        "api_key assignment with long literal",
+    ),
     (re.compile(r"(?i)Bearer\s+[A-Za-z0-9\-_]{20,}"), "Bearer token literal"),
     (re.compile(r"(?i)sk-[A-Za-z0-9]{20,}"), "OpenAI-style sk- secret"),
     (re.compile(r"(?i)ghp_[A-Za-z0-9]{20,}"), "GitHub PAT ghp_"),

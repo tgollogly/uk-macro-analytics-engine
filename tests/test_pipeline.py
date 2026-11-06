@@ -75,11 +75,11 @@ def test_fetch_and_schema_validation(tmp_path: Path) -> None:
 
 def test_ons_parser_skips_annual_and_preamble() -> None:
     raw = (
-        '"Title","CPIH"\n'
-        '"1997","70.0"\n'
-        '"2023 JAN","100.0"\n'
-        '"2023 FEB","101.0"\n'
-    ).encode("utf-8")
+        b'"Title","CPIH"\n'
+        b'"1997","70.0"\n'
+        b'"2023 JAN","100.0"\n'
+        b'"2023 FEB","101.0"\n'
+    )
     df = parse_ons_generator_monthly_csv(raw, "ons_cpih_monthly")
     assert list(df.columns) == ["time", "value"]
     assert len(df) == 2
@@ -143,12 +143,15 @@ def test_duckdb_pipeline_and_analytics(tmp_path: Path) -> None:
         assert psnb_df.iloc[0]["total_net_borrowing_gbp_m"] == pytest.approx(15.0)
 
         exports = run_analytics(con, export_outputs=True)
-        for k in ("cpih_parquet", "cpih_json", "psnb_parquet", "psnb_json"):
+        for k in ("cpih_parquet", "cpih_json", "cpih_csv", "psnb_parquet", "psnb_json", "psnb_csv"):
             p = exports.get(k)
             assert p is not None and Path(p).exists()
         with open(exports["cpih_json"], encoding="utf-8") as f:
             js = json.load(f)
         assert isinstance(js, list) and len(js) >= 1
+        with open(exports["cpih_csv"], encoding="utf-8") as f:
+            header = f.readline()
+            assert "obs_date" in header
     finally:
         con.close()
 

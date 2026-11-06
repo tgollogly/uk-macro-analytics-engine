@@ -4,9 +4,9 @@ Download open UK macroeconomic datasets with caching, retries, and schema guardr
 
 from __future__ import annotations
 
+import csv
 import logging
 import time
-import csv
 from calendar import month_abbr
 from io import BytesIO, TextIOWrapper
 from pathlib import Path

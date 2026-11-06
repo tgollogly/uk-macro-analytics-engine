@@ -88,6 +88,13 @@ def export_relation_json_records(relation: duckdb.DuckDBPyRelation, path: Path) 
     path.write_text(json.dumps(records, indent=2, default=str), encoding="utf-8")
 
 
+def export_relation_csv(relation: duckdb.DuckDBPyRelation, path: Path) -> None:
+    """Write query results as UTF-8 CSV (Power BI / Excel / SSMS import friendly)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df = relation.df()
+    df.to_csv(path, index=False, encoding="utf-8")
+
+
 def run_analytics(
     con: duckdb.DuckDBPyConnection,
     *,
@@ -115,20 +122,34 @@ def run_analytics(
         p2 = base / "cpih_yoy.json"
         p3 = base / "psnb_monthly.parquet"
         p4 = base / "psnb_monthly.json"
+        c1 = base / "cpih_yoy.csv"
+        c2 = base / "psnb_monthly.csv"
         export_relation_parquet(cpih_rel, p1)
         export_relation_json_records(cpih_rel, p2)
+        export_relation_csv(cpih_rel, c1)
         export_relation_parquet(psnb_rel, p3)
         export_relation_json_records(psnb_rel, p4)
+        export_relation_csv(psnb_rel, c2)
         out.update(
             {
                 "cpih_parquet": p1,
                 "cpih_json": p2,
+                "cpih_csv": c1,
                 "psnb_parquet": p3,
                 "psnb_json": p4,
+                "psnb_csv": c2,
             }
         )
     else:
-        out = {k: None for k in ("cpih_parquet", "cpih_json", "psnb_parquet", "psnb_json")}
+        keys = (
+            "cpih_parquet",
+            "cpih_json",
+            "cpih_csv",
+            "psnb_parquet",
+            "psnb_json",
+            "psnb_csv",
+        )
+        out = {k: None for k in keys}
 
     return out
 

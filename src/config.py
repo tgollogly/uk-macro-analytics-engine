@@ -7,9 +7,9 @@ URLs may change when publishers update their sites; see README for how to overri
 
 from __future__ import annotations
 
-from pathlib import Path
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Mapping
+from pathlib import Path
 
 
 def _default_project_root() -> Path:

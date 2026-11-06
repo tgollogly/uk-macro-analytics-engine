@@ -65,8 +65,15 @@ GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks 
 | Tabular IO | **pandas** + **pyarrow** (Parquet) |
 | HTTP | **requests** with retries |
 | Testing | **pytest** |
-| CI | **GitHub Actions** (audit → compile → tests) |
+| CI | **GitHub Actions** (ruff → audit → compile → tests) |
 | Edge / Workers | No hard dependency on a specific host. Pure Python **stdlib + wheels**; for **Cloudflare Workers** use a **Python compat** or **container** pattern—this repo is CLI-first. |
+
+## CV / portfolio (everything below is free)
+
+- **Governance narrative** you can quote in interviews: [`docs/DATA_GOVERNANCE.md`](./docs/DATA_GOVERNANCE.md)
+- **SQL Server angle** — same logic as T-SQL notes: [`docs/SQL_SERVER_MAPPING.md`](./docs/SQL_SERVER_MAPPING.md)
+- **Power BI Desktop** (free) — load CSV exports: [`docs/POWERBI_DESKTOP.md`](./docs/POWERBI_DESKTOP.md)
+- **Static “dashboard” HTML** (browser only, optional CDN for Chart.js): `python -m src.report_builder` → opens `data/exports/report.html` if you pass `--open`
 
 ## Project layout
 
@@ -78,7 +85,11 @@ GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks 
 ├── architecture.png
 ├── architecture.svg
 ├── docs/
-│   └── architecture.mmd    # Mermaid source (use mermaid.live / IDE; not mobile README)
+│   ├── architecture.mmd         # Mermaid source (desktop / mermaid.live)
+│   ├── DATA_GOVERNANCE.md       # lineage, quality, licences
+│   ├── SQL_SERVER_MAPPING.md    # T-SQL interview notes
+│   ├── POWERBI_DESKTOP.md       # free BI import walkthrough
+│   └── samples/                 # optional screenshots (see docs/samples/README.md)
 ├── .github/workflows/ci.yml
 ├── src/
 │   ├── __init__.py
@@ -86,12 +97,16 @@ GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks 
 │   ├── data_fetcher.py    # download + cache + validation
 │   ├── db_engine.py       # DuckDB connect, views, indexes
 │   ├── analytics.py       # queries + exports
+│   ├── report_builder.py  # static HTML KPI page from exports
 │   └── security_audit.py  # lightweight static checks
 ├── tools/
 │   ├── regen_readme_images.py   # rebuild WebP + PNG README assets
 │   └── source/                  # optional high-res sources (hero.png, architecture.png)
-├── tests/test_pipeline.py
+├── tests/
 ├── requirements.txt
+├── requirements-dev.txt
+├── ruff.toml
+├── CONTRIBUTING.md
 ├── LICENSE
 ├── NOTICE.md
 └── README.md
@@ -106,11 +121,15 @@ GitHub **mobile** and many other viewers **never** render ` ```mermaid ` blocks 
 
 ### Install
 
+For day-to-day work (includes **ruff** for the same checks CI runs):
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+Production-style installs can use `requirements.txt` only (no linter).
 
 ### Quickstart (CLI)
 
@@ -127,10 +146,17 @@ python -m src.data_fetcher ons_psnb_monthly
 python -m src.analytics
 ```
 
+**3) Optional — static HTML dashboard** (uses [Chart.js](https://www.chartjs.org/) from a public CDN; works offline after cache)
+
+```bash
+python -m src.report_builder --open
+```
+
 Exports are written under `data/exports/`:
 
-- `cpih_yoy.parquet` / `cpih_yoy.json`
-- `psnb_monthly.parquet` / `psnb_monthly.json`
+- `cpih_yoy.parquet` / `cpih_yoy.json` / **`cpih_yoy.csv`**
+- `psnb_monthly.parquet` / `psnb_monthly.json` / **`psnb_monthly.csv`**
+- `report.html` (after report_builder)
 
 Use `--no-export` on `analytics` to skip writing files.
 
@@ -153,15 +179,20 @@ If a publisher changes CSV layout, update the **`DatasetSpec`** or extend **`_al
 
 Workflow: `.github/workflows/ci.yml`
 
-1. `python src/security_audit.py`
-2. `python -m compileall -q src tests`
-3. `pytest -q --tb=short`
+1. `ruff check src tests tools`
+2. `python src/security_audit.py`
+3. `python -m compileall -q src tests`
+4. `pytest -q --tb=short`
 
 ## Tests
 
 ```bash
 pytest -q
 ```
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Hero image
 
