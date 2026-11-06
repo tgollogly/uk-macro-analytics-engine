@@ -170,6 +170,14 @@ function formatAiHttpError(parsed){
   }
   return "Unexpected response from " + host + " (HTTP " + parsed.status + "). Expected JSON; got " + (parsed.contentType || "(no Content-Type)") + ". The backend may be unreachable, blocked, or returning an error page.";
 }
+/** When JSON parses but the server put diagnostics in `error`, label it so UI is not read as local env diagnosis. */
+function formatRemoteApiError(raw){
+  const s = String(raw||"");
+  const hint = (/GEMINI|Cloudflare Pages|Variables and Secrets|API key|secret/i.test(s))
+    ? " [Remote API message — verify on the server; not proven from this page alone.]"
+    : "";
+  return "Error: "+s+hint;
+}
 function bandColour(s){ return s>=75?"var(--ok)":s>=50?"var(--warn)":"var(--err)"; }
 function verdict(s){
   if(s>=75) return ["Strong match","Your CV lines up well with this job. Tighten the few missing keywords and apply."];
@@ -193,7 +201,7 @@ $("go").addEventListener("click", async ()=>{
     const parsed=await readAiResponse(r);
     const d=parsed.data;
     if(!d||typeof d!=="object"||Array.isArray(d)){ msg.className="msg err"; msg.textContent=formatAiHttpError(parsed); return; }
-    if(d.error){ msg.className="msg err"; msg.textContent="Error: "+d.error+(d.raw?(" — "+String(d.raw).slice(0,200)):""); return; }
+    if(d.error){ msg.className="msg err"; msg.textContent=formatRemoteApiError(d.error)+(d.raw?(" — "+String(d.raw).slice(0,200)):""); return; }
     const score=Math.max(0,Math.min(100,parseInt(d.score)||0));
     lastMatchScore=score;
     msg.style.display="none";
@@ -230,7 +238,7 @@ async function generate(mode, title, kind, btn){
     const parsed=await readAiResponse(r);
     const d=parsed.data;
     if(!d||typeof d!=="object"||Array.isArray(d)){ gm.className="msg err"; gm.textContent=formatAiHttpError(parsed); return; }
-    if(d.error && !d.text){ gm.className="msg err"; gm.textContent="Error: "+d.error; return; }
+    if(d.error && !d.text){ gm.className="msg err"; gm.textContent=formatRemoteApiError(d.error); return; }
     gm.style.display="none";
     $("genTitle").textContent=title;
     $("genText").textContent=(d.text||"").trim();

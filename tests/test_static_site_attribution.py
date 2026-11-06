@@ -124,3 +124,18 @@ def test_ats_matcher_parses_non_json_backend_errors() -> None:
     assert "readAiResponse" in ats
     assert "formatAiHttpError" in ats
     assert ".json()" not in ats
+
+
+def test_sitebar_narrow_wrap_prevents_back_link_clip() -> None:
+    """Portfolio site.css: back link can wrap on narrow viewports (avoid clipped 'All demos')."""
+    css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
+    assert ".sitebar .back{flex:1 1 100%" in css or "flex: 1 1 100%" in css
+    assert ".sitebar .in{" in css and "flex-wrap:wrap" in css
+
+
+def test_ats_remote_error_adds_verify_hint_for_server_diagnostics() -> None:
+    """When API returns JSON {error: '...GEMINI...'}, UI must label as remote message."""
+    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
+    assert "function formatRemoteApiError" in ats
+    assert "Remote API message" in ats
+    assert "formatRemoteApiError(d.error)" in ats
