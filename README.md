@@ -8,11 +8,28 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 
 ## Architecture
 
-**Works everywhere:** SVG (no Mermaid required):
+**Diagram (PNG)** — works in the GitHub web README, **mobile app**, and clients that block inline **SVG**.
 
-<img src="./architecture.svg" alt="Architecture: Ingestion, DuckDB, Analytics, Exports" width="100%" />
+<img src="./architecture.png" alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports" width="100%" />
 
-**Interactive diagram (GitHub, GitLab, many Markdown viewers):** plain Mermaid `flowchart LR` only — avoids nested subgraphs and special characters that break some renderers.
+**Vector source (for decks / print):** [`architecture.svg`](./architecture.svg).
+
+**Plain text (always renders):**
+
+```
+  [ Ingestion: config, requests, data_fetcher, Parquet cache ]
+                            |
+                            v
+  [ DuckDB: db_engine, views v_cpih_core, v_psnb_monthly ]
+                            |
+                            v
+  [ analytics.py: rolling windows, YoY, exports ]
+                            |
+                            v
+  [ data/exports: .parquet + .json ]
+```
+
+**Mermaid** (GitHub.com and most IDEs; **not** in GitHub mobile app, many email clients, or plain `git show`):
 
 ```mermaid
 flowchart LR
@@ -38,6 +55,7 @@ flowchart LR
 ```
 .
 ├── hero.png
+├── architecture.png
 ├── architecture.svg
 ├── .github/workflows/ci.yml
 ├── src/
