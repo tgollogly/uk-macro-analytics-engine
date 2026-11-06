@@ -2,8 +2,8 @@
 """
 Regenerate README hero and architecture images as high-DPI WebP + full-color PNG.
 
-Designed for **mobile GitHub**: flat fills, high contrast, larger type (fewer
-gradients = less softness when the CDN scales images).
+Designed for **mobile GitHub**: flat fills, high contrast, **tall poster** layouts
+(large type, stacked stages) so text stays legible at `width="100%"`.
 
 Requires Pillow: pip install pillow
 
@@ -56,157 +56,170 @@ def _save_png(img: Image.Image, path: Path) -> None:
     img.convert("RGB").save(path, format="PNG", optimize=True, compress_level=9)
 
 
-def render_hero(width: int = 3000) -> Image.Image:
-    """Bright banner, large type, high contrast pills."""
-    ar = 1200 / 400
-    height = max(1, int(width / ar))
+def render_hero(width: int = 2400) -> Image.Image:
+    """Tall poster: large title block + 2×2 stage grid (readable on narrow screens)."""
+    # 3:4 portrait — lots of vertical space for type at full README width
+    height = int(width * 4 / 3)
     img = Image.new("RGB", (width, height), color=BG)
     d = ImageDraw.Draw(img)
 
-    pad = int(width * 0.035)
-    title_h = int(height * 0.34)
-    f_title, f_sub, f_pill, _ = _fonts(
-        max(56, width // 24),
-        max(28, width // 54),
-        max(24, width // 62),
-        max(20, width // 78),
+    pad = int(width * 0.055)
+    title_h = int(height * 0.22)
+    f_title, f_sub, f_pill, f_small = _fonts(
+        max(64, width // 18),
+        max(34, width // 46),
+        max(40, width // 36),
+        max(28, width // 52),
     )
 
     # Title strip — solid teal for maximum contrast
     d.rounded_rectangle(
         [pad, pad, width - pad, pad + title_h],
-        radius=int(height * 0.07),
+        radius=int(height * 0.03),
         fill=HEADER,
         outline=HEADER_STROKE,
         width=max(3, width // 400),
     )
     title = "UK Macro Analytics Engine"
-    d.text((pad * 2, pad + int(title_h * 0.22)), title, fill=(255, 255, 255), font=f_title)
+    d.text((pad * 2, pad + int(title_h * 0.18)), title, fill=(255, 255, 255), font=f_title)
 
     sub_y = pad + int(title_h * 0.52)
     subtitle = "ONS open data → Parquet → DuckDB → analytics & exports"
     d.text((pad * 2, sub_y), subtitle, fill=SUBTITLE_ON_HEADER, font=f_sub)
 
-    # Pipeline pills — white cards, dark text
-    bx_y = pad + title_h + int(height * 0.06)
-    bx_h = int(height * 0.26)
-    labels = ["Ingest", "DuckDB", "Analytics", "Exports"]
-    n = len(labels)
-    gap = int(width * 0.015)
-    inner = pad * 2
-    bw = (width - 2 * inner - gap * (n - 1)) // n
-    for i, lab in enumerate(labels):
-        x1 = inner + i * (bw + gap)
+    # 2×2 grid — each cell is a mini “poster” panel
+    gap = int(width * 0.03)
+    grid_top = pad + title_h + int(height * 0.04)
+    inner_left = pad * 2
+    inner_w = width - 4 * pad
+    cell_w = (inner_w - gap) // 2
+    cell_h = int((height - grid_top - pad * 2 - gap) / 2)
+
+    panels: list[tuple[int, int, str, list[str]]] = [
+        (0, 0, "Ingest", ["config + requests", "data_fetcher → Parquet"]),
+        (1, 0, "DuckDB", ["db_engine + views", "CPIH / PSNB"]),
+        (0, 1, "Analytics", ["analytics.py", "rolling · YoY"]),
+        (1, 1, "Exports", ["CSV · JSON · Parquet", "data/exports/"]),
+    ]
+
+    for col, row, lab, lines in panels:
+        x1 = inner_left + col * (cell_w + gap)
+        y1 = grid_top + row * (cell_h + gap)
         d.rounded_rectangle(
-            [x1, bx_y, x1 + bw, bx_y + bx_h],
-            radius=int(bx_h * 0.2),
+            [x1, y1, x1 + cell_w, y1 + cell_h],
+            radius=int(cell_h * 0.12),
             fill=CARD,
             outline=OUTLINE,
-            width=max(2, width // 500),
+            width=max(2, width // 450),
         )
-        bbox = d.textbbox((0, 0), lab, font=f_pill)
-        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-        d.text(
-            (x1 + (bw - tw) // 2, bx_y + (bx_h - th) // 2 - 2),
-            lab,
-            fill=TEXT,
-            font=f_pill,
-        )
+        cx = x1 + cell_w // 2
+        ty = y1 + int(cell_h * 0.14)
+        d.text((cx, ty), lab, fill=TEXT, font=f_pill, anchor="mm")
+        ly = ty + int(cell_h * 0.22)
+        for line in lines:
+            d.text((cx, ly), line, fill=TEXT_MUTED, font=f_small, anchor="mm")
+            ly += int(cell_h * 0.16)
 
     return img
 
 
-def render_architecture(width: int = 2400) -> Image.Image:
-    """Wide architecture strip: light background, coloured stage boxes, bold text."""
-    height = int(width * 280 / 1200)
+def render_architecture(width: int = 1440) -> Image.Image:
+    """Tall poster: stages stacked top-to-bottom with down arrows (matches architecture.svg)."""
+    # Same aspect as SVG viewBox 720×2000
+    height = int(width * 2000 / 720)
     img = Image.new("RGB", (width, height), color=BG)
     d = ImageDraw.Draw(img)
 
-    margin = max(20, width // 80)
+    margin = max(24, width // 25)
     d.rounded_rectangle(
         [margin, margin, width - margin, height - margin],
-        radius=24,
+        radius=int(width * 0.028),
         outline=HEADER,
-        width=max(3, width // 320),
+        width=max(4, width // 240),
         fill=(255, 255, 255),
     )
 
-    s = (width - 2 * margin) / 1000.0
+    iw = width - 2 * margin
+    s = iw / 720.0
 
     try:
         f_h = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(34, int(30 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(36, int(32 * s))
         )
         f_b = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(26, int(22 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", max(28, int(26 * s))
         )
         f_t = ImageFont.truetype(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(20, int(17 * s))
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", max(22, int(22 * s))
         )
     except OSError:
         f_h = f_b = f_t = ImageFont.load_default()
 
-    hx = margin + int(28 * s)
-    hy = margin + int(22 * s)
+    hx = margin + int(40 * s)
+    hy = margin + int(36 * s)
     d.text((hx, hy), "Architecture", fill=TEXT, font=f_h)
     d.text(
-        (hx, hy + int(36 * s)),
-        "Flat high-contrast theme for README / mobile · vector: architecture.svg",
+        (hx, hy + int(48 * s)),
+        "Poster layout for mobile · vector: architecture.svg",
         fill=TEXT_MUTED,
         font=f_t,
     )
 
-    # Stage colours (light fills, saturated strokes — matches architecture.svg)
-    stages: list[tuple[float, float, float, float, str, list[str], tuple[int, int, int], tuple[int, int, int]]] = [
-        (28, 92, 232, 168, "Ingestion", ["config + requests", "data_fetcher", "Parquet cache"], (240, 253, 250), HEADER),
-        (278, 92, 232, 168, "Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly"], (224, 242, 254), (3, 105, 161)),
-        (528, 92, 200, 168, "Analytics", ["analytics.py", "rolling · YoY", "Parquet + JSON"], (255, 247, 237), (194, 65, 12)),
-        (748, 92, 224, 168, "Exports", ["data/exports/", "CSV · JSON · Parquet"], (220, 252, 231), (22, 101, 52)),
+    cx = width / 2
+    content_top = hy + int(92 * s)
+    content_bottom = height - margin - int(28 * s)
+
+    stages: list[tuple[str, list[str], tuple[int, int, int], tuple[int, int, int], float]] = [
+        ("Ingestion", ["config + requests", "data_fetcher", "Parquet cache", "ONS CSV → validated Parquet"], (240, 253, 250), HEADER, 0.21),
+        ("Storage", ["DuckDB", "db_engine + views", "v_cpih_core", "v_psnb_monthly", "SQL views over Parquet"], (224, 242, 254), (3, 105, 161), 0.24),
+        ("Analytics", ["analytics.py", "rolling · YoY", "Parquet + JSON", "metrics for dashboards / exports"], (255, 247, 237), (194, 65, 12), 0.21),
+        ("Exports", ["data/exports/", "CSV · JSON · Parquet", "report + optional Streamlit"], (220, 252, 231), (22, 101, 52), 0.18),
     ]
 
-    y0 = margin + int(88 * s)
-    for x, _y, bw, bh, title, lines, fill, stroke in stages:
-        x1, y1 = margin + x * s, y0
-        x2, y2 = x1 + bw * s, y1 + bh * s
+    arrow_h = int((content_bottom - content_top) * 0.028)
+    n_stages = len(stages)
+    total_frac = sum(t[4] for t in stages)
+    body_h = content_bottom - content_top - arrow_h * (n_stages - 1)
+    y = content_top
+
+    def down_arrow(y_top: float) -> None:
+        ya = y_top
+        yb = ya + arrow_h - 4
+        d.line([(cx, ya), (cx, yb)], fill=HEADER_STROKE, width=max(5, int(5 * s)))
+        ah = 14 * s
+        d.polygon([(cx, ya + arrow_h), (cx - ah, yb), (cx + ah, yb)], fill=HEADER_STROKE)
+
+    for i, (title, lines, fill, stroke, frac) in enumerate(stages):
+        blk_h = int(body_h * (frac / total_frac))
+        x1 = margin + int(40 * s)
+        x2 = width - margin - int(40 * s)
         d.rounded_rectangle(
-            [x1, y1, x2, y2],
-            radius=14,
+            [x1, y, x2, y + blk_h],
+            radius=int(16 * s),
             fill=fill,
             outline=stroke,
-            width=max(2, int(2 * s)),
+            width=max(3, int(3 * s)),
         )
-        cx = (x1 + x2) / 2
-        d.text((cx, y1 + int(22 * s)), title, fill=TEXT, font=f_b, anchor="mm")
-        ly = y1 + int(48 * s)
+        d.text((cx, y + int(blk_h * 0.12)), title, fill=TEXT, font=f_b, anchor="mm")
+        ly = y + int(blk_h * 0.28)
+        line_step = max(int(blk_h * 0.11), int(22 * s))
         for line in lines:
             d.text((cx, ly), line, fill=TEXT_MUTED, font=f_t, anchor="mm")
-            ly += int(28 * s)
-
-    # Arrows between stages
-    def arrow(ax1: float, ax2: float, y: float) -> None:
-        ya = y0 + y * s
-        x1p, x2p = margin + ax1 * s, margin + ax2 * s
-        d.line([(x1p, ya), (x2p, ya)], fill=HEADER_STROKE, width=max(3, int(3 * s)))
-        ah = 12 * s
-        d.polygon(
-            [(x2p, ya), (x2p - ah, ya - ah * 0.45), (x2p - ah, ya + ah * 0.45)],
-            fill=HEADER_STROKE,
-        )
-
-    mid_y = 72.0
-    arrow(264, 276, mid_y)
-    arrow(514, 526, mid_y)
-    arrow(734, 746, mid_y)
+            ly += line_step
+        y += blk_h
+        if i < n_stages - 1:
+            down_arrow(y)
+            y += arrow_h
 
     return img
 
 
 def main() -> None:
-    target_w = 3000
+    target_w = 2400
     # Always draw hero in code for consistent bright, high-contrast README assets.
     hero = render_hero(target_w)
 
-    arch = render_architecture(2400)
+    arch = render_architecture(1440)
 
     _save_webp(hero, ROOT / "hero.webp", quality=94)
     _save_png(hero, ROOT / "hero.png")

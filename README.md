@@ -223,7 +223,7 @@ See [**CONTRIBUTING.md**](./CONTRIBUTING.md).
 
 ## Hero & diagram assets (HiDPI)
 
-Bitmaps are exported **wide**; in the README they use **`width="100%"`** so they use the full README column on mobile. **PNG** is what the README loads; the script also writes **WebP** beside it if you want to use `<picture>` elsewhere.
+Bitmaps use a **tall poster** aspect (hero 3∶4, architecture vertical stack) so body text is large when scaled with **`width="100%"`** in the README column. **PNG** is what the README loads; the script also writes **WebP** beside it if you want to use `<picture>` elsewhere.
 
 ```bash
 pip install pillow
