@@ -21,9 +21,10 @@
 
 <p align="center">
   <!-- Explicit ./ link keeps “open image” on the same branch/PR; bare <img> often links to default branch. -->
-  <a href="./hero.png" title="hero.png (this branch)">
+  <!-- ?v= bumps GitHub’s image CDN when the PNG bytes change (otherwise it can look “stuck”). -->
+  <a href="./hero.png?v=4" title="hero.png (this branch)">
     <img
-      src="./hero.png"
+      src="./hero.png?v=4"
       alt="UK Macro Analytics Engine banner"
       width="100%"
       decoding="async"
@@ -75,9 +76,9 @@
 </pre>
 
 <p align="center">
-  <a href="./architecture.png" title="architecture.png (this branch)">
+  <a href="./architecture.png?v=4" title="architecture.png (this branch)">
     <img
-      src="./architecture.png"
+      src="./architecture.png?v=4"
       alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
       width="100%"
       loading="lazy"
@@ -230,7 +231,7 @@ pip install pillow
 python3 tools/regen_readme_images.py
 ```
 
-Wrap README images in `<a href="./hero.png">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Vector: [`architecture.svg`](./architecture.svg).
+Wrap README images in `<a href="./hero.png?v=…">` if you want taps on GitHub to open the file **on the current branch** (bare `<img>` links are often tied to the default branch). Bump `?v=` when you replace PNG bytes so the mobile app does not show a cached copy. Vector: [`architecture.svg`](./architecture.svg).
 
 ---
 
