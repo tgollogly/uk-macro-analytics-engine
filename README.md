@@ -1,6 +1,16 @@
 # uk-macro-analytics-engine
 
-<img src="./hero.png" alt="UK Macro Analytics Engine banner" width="100%" />
+<picture>
+  <source srcset="./hero.webp" type="image/webp" />
+  <img
+    src="./hero.png"
+    alt="UK Macro Analytics Engine banner"
+    width="800"
+    height="266"
+    decoding="async"
+    fetchpriority="high"
+  />
+</picture>
 
 A small, production-minded **Python 3.11+** pipeline that downloads **open UK macroeconomic**
 CSVs, validates shape and column names, caches **Parquet** locally, loads into **DuckDB**,
@@ -10,7 +20,20 @@ and runs **vectorized SQL** analytics (rolling windows, year-over-year inflation
 
 **Diagram (PNG)** — works in the GitHub web README, **mobile app**, and clients that block inline **SVG**.
 
-<img src="./architecture.png" alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports" width="100%" />
+<picture>
+  <source srcset="./architecture.webp" type="image/webp" />
+  <img
+    src="./architecture.png"
+    alt="Architecture diagram: Ingestion, DuckDB, Analytics, Exports"
+    width="560"
+    height="163"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+  />
+</picture>
+
+_Primary payloads are **WebP** (most browsers). Approximate sizes after `tools/regen_readme_images.py`: ~8 KB hero + ~6 KB diagram; **PNG** fallbacks are larger (hero keeps full color for gradients)._
 
 **Vector source (for decks / print):** [`architecture.svg`](./architecture.svg).
 
@@ -54,7 +77,9 @@ flowchart LR
 
 ```
 .
+├── hero.webp
 ├── hero.png
+├── architecture.webp
 ├── architecture.png
 ├── architecture.svg
 ├── .github/workflows/ci.yml
@@ -65,6 +90,9 @@ flowchart LR
 │   ├── db_engine.py       # DuckDB connect, views, indexes
 │   ├── analytics.py       # queries + exports
 │   └── security_audit.py  # lightweight static checks
+├── tools/
+│   ├── regen_readme_images.py   # rebuild WebP + PNG README assets
+│   └── source/                  # optional high-res sources (hero.png, architecture.png)
 ├── tests/test_pipeline.py
 ├── requirements.txt
 ├── LICENSE
@@ -140,7 +168,14 @@ pytest -q
 
 ## Hero image
 
-`hero.png` in the repo root is a lightweight banner so the README image works out of the box. Replace it with your own dashboard screenshot if you prefer.
+Images at the repo root are optimized for **fast README loads**: **WebP** first (`hero.webp`, `architecture.webp`) with **palette-compressed PNG** fallbacks. To regenerate after changing artwork, run:
+
+```bash
+pip install pillow
+python3 tools/regen_readme_images.py
+```
+
+Optional: place high-res sources under `tools/source/` as `hero.png` and `architecture.png` before running.
 
 ## Licence
 
