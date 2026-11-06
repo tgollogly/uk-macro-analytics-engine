@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
+<meta name="color-scheme" content="light">
+<title>Beneish M-Score Screener — live demo</title>
+<meta name="description" content="Enter two years of a company's figures and compute all eight Beneish indices plus the combined M-Score, flagging a statistically elevated risk of earnings manipulation. Edit any number — the score updates instantly."/>
+<link rel="canonical" href="https://tgollogly.dev/beneish.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://tgollogly.dev/beneish.html"/>
+<meta property="og:title" content="Beneish M-Score Screener — live demo"/>
+<meta property="og:description" content="Runs the full eight-factor Beneish model in the browser to flag a statistically elevated risk of earnings manipulation."/>
+<meta property="og:image" content="https://tgollogly.dev/assets/og/beneish.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Beneish M-Score Screener — live demo"/>
+<meta name="twitter:description" content="Runs the full eight-factor Beneish model in the browser to flag a statistically elevated risk of earnings manipulation."/>
+<meta name="twitter:image" content="https://tgollogly.dev/assets/og/beneish.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/site.css"/>
+<style>
+  body{margin:0;background:var(--bg-alt);color:var(--ink);font-family:var(--sans);line-height:1.55;}
+  a{color:var(--accent);}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+  button{font-family:var(--mono);font-weight:600;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:11px 16px;font-size:13px;transition:.2s;}
+  button.primary{background:var(--accent);color:var(--card);border-color:var(--accent);}
+  button.primary:hover{background:var(--accent-2);}
+  button:hover{border-color:var(--accent);}
+  .layout{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 26px rgba(21,32,30,.05);overflow:hidden;}
+  .panel .hd{padding:12px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg-alt);}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  th,td{text-align:right;padding:7px 10px;font-family:var(--mono);font-size:13px;overflow:hidden;}
+  th:first-child,td:first-child{width:44%;}
+  th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3){width:28%;}
+  th{color:var(--muted);font-weight:500;border-bottom:1px solid var(--line);letter-spacing:.03em;}
+  td:first-child,th:first-child{text-align:left;color:var(--ink);word-break:break-word;}
+  tbody tr:nth-child(even){background:var(--bg-alt);}
+  input{width:100%;font-family:var(--mono);font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;text-align:right;color:var(--ink);background:var(--card);}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+  .scorebox{padding:24px;text-align:center;}
+  .mscore{font-family:var(--serif);font-weight:600;font-size:60px;line-height:1;margin:6px 0;}
+  .verdict{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:10px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--card);margin-top:6px;}
+  .thresh{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:16px;line-height:1.7;}
+  .idx{margin-top:2px;}
+  .idx td{font-size:12.5px;padding:6px 12px;}
+  .idx .flag{color:var(--err);font-weight:600;}
+  .note{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.6;}
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    .wrap{padding-left:16px;padding-right:16px;}
+    th,td{padding:6px 6px;font-size:12px;}
+    input{font-size:14px;padding:7px 6px;}
+    th:first-child,td:first-child{width:40%;}
+    th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3){width:30%;}
+    .mscore{font-size:48px;}
+  }
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="in">
+  <a class="brand" href="../index.html"><svg class="tg-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+  <a class="back" href="../index.html#hub">&larr; All demos</a>
+</div></div>
+
+<div class="wrap head">
+  <span class="eyebrow">Demo 06 &middot; Finance &amp; algorithms</span>
+  <h1>Beneish M-Score Screener</h1>
+  <p>Enter two years of a company's figures. This computes all eight Beneish indices and the combined M-Score, which flags a statistically elevated probability of earnings manipulation. It's pre-loaded with a worked example — edit any number and the score updates instantly.</p>
+  <div class="controls">
+    <button class="primary" onclick="compute()">Recalculate</button>
+    <button onclick="loadExample('clean')">Load: healthy company</button>
+    <button onclick="loadExample('flag')">Load: red-flag company</button>
+  </div>
+  <div class="layout">
+    <div class="panel">
+      <div class="hd">Financial inputs</div>
+      <table>
+        <thead><tr><th>Line item</th><th>Prior year</th><th>Latest year</th></tr></thead>
+        <tbody id="inputs"></tbody>
+      </table>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="hd">Result</div>
+        <div class="scorebox">
+          <div style="font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);">Beneish M-Score</div>
+          <div class="mscore" id="mscore">—</div>
+          <div class="verdict" id="verdict" style="background:var(--accent)">—</div>
+          <div class="thresh">Threshold: <b>&minus;1.78</b><br>Above &rarr; higher manipulation risk<br>Below &rarr; unlikely manipulator</div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:18px;">
+        <div class="hd">Eight indices</div>
+        <table class="idx"><tbody id="indices"></tbody></table>
+      </div>
+    </div>
+  </div>
+  <p class="note">For demonstration only — not financial, investment or accounting advice. A high M-Score is a screening signal, not proof of fraud — it flags where a closer look is warranted. Model: Messod Beneish (1999).</p>
+</div>
+<script>
+const FIELDS=[
+  ["receivables","Net receivables"],["sales","Sales / revenue"],["cogs","Cost of goods sold"],
+  ["currentAssets","Current assets"],["ppe","Net PP&E"],["totalAssets","Total assets"],
+  ["depreciation","Depreciation"],["sga","SG&A expense"],["netIncome","Net income"],
+  ["cfo","Cash flow from operations"],["currentLiab","Current liabilities"],["ltd","Long-term debt"]
+];
+const EXAMPLES={
+  clean:{prior:{receivables:180,sales:2000,cogs:1200,currentAssets:600,ppe:900,totalAssets:1800,depreciation:90,sga:300,netIncome:160,cfo:210,currentLiab:340,ltd:400},
+         latest:{receivables:196,sales:2180,cogs:1300,currentAssets:650,ppe:940,totalAssets:1930,depreciation:95,sga:326,netIncome:172,cfo:225,currentLiab:360,ltd:410}},
+  flag: {prior:{receivables:150,sales:1800,cogs:1150,currentAssets:520,ppe:820,totalAssets:1650,depreciation:110,sga:290,netIncome:120,cfo:180,currentLiab:300,ltd:380},
+         latest:{receivables:340,sales:2600,cogs:1500,currentAssets:760,ppe:760,totalAssets:2050,depreciation:70,sga:300,netIncome:290,cfo:120,currentLiab:360,ltd:520}}
+};
+const tbody=document.getElementById("inputs");
+FIELDS.forEach(([k,label])=>{
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${label}</td>
+    <td><input id="p_${k}" type="number" step="any"></td>
+    <td><input id="l_${k}" type="number" step="any"></td>`;
+  tbody.appendChild(tr);
+});
+function loadExample(which){
+  const e=EXAMPLES[which];
+  FIELDS.forEach(([k])=>{document.getElementById("p_"+k).value=e.prior[k];document.getElementById("l_"+k).value=e.latest[k];});
+  compute();
+}
+// The lede promises the score updates as you type, so recompute on every edit.
+tbody.addEventListener("input",compute);
+function g(pfx,k){return parseFloat(document.getElementById(pfx+"_"+k).value)||0;}
+function compute(){
+  const p={},l={};
+  FIELDS.forEach(([k])=>{p[k]=g("p",k);l[k]=g("l",k);});
+  const safe=(n,d)=>d===0?0:n/d;
+  const DSRI=safe(safe(l.receivables,l.sales),safe(p.receivables,p.sales));
+  const gmP=safe(p.sales-p.cogs,p.sales), gmL=safe(l.sales-l.cogs,l.sales);
+  const GMI=safe(gmP,gmL);
+  const aqL=1-safe(l.currentAssets+l.ppe,l.totalAssets), aqP=1-safe(p.currentAssets+p.ppe,p.totalAssets);
+  const AQI=safe(aqL,aqP);
+  const SGI=safe(l.sales,p.sales);
+  const depP=safe(p.depreciation,p.depreciation+p.ppe), depL=safe(l.depreciation,l.depreciation+l.ppe);
+  const DEPI=safe(depP,depL);
+  const SGAI=safe(safe(l.sga,l.sales),safe(p.sga,p.sales));
+  const LVGI=safe(safe(l.ltd+l.currentLiab,l.totalAssets),safe(p.ltd+p.currentLiab,p.totalAssets));
+  const TATA=safe(l.netIncome-l.cfo,l.totalAssets);
+  const M=-4.84+0.920*DSRI+0.528*GMI+0.404*AQI+0.892*SGI+0.115*DEPI-0.172*SGAI+4.679*TATA-0.327*LVGI;
+  const idx=[["DSRI",DSRI,1.031],["GMI",GMI,1.014],["AQI",AQI,1.04],["SGI",SGI,1.134],
+    ["DEPI",DEPI,1.077],["SGAI",SGAI,1.041],["LVGI",LVGI,1.037],["TATA",TATA,0.018]];
+  document.getElementById("indices").innerHTML=idx.map(([n,v,ref])=>{
+    const flag=v>ref?' class="flag"':'';
+    return `<tr><td>${n}</td><td${flag}>${v.toFixed(3)}</td></tr>`;
+  }).join("");
+  const el=document.getElementById("mscore"), vd=document.getElementById("verdict");
+  el.textContent=M.toFixed(2);
+  if(M>-1.78){el.style.color="var(--err)";vd.style.background="var(--err)";vd.textContent="Elevated risk — investigate";}
+  else{el.style.color="var(--accent)";vd.style.background="var(--accent)";vd.textContent="Unlikely manipulator";}
+}
+loadExample('clean');
+</script>
+
+<style>
+
+  @media(max-width:640px){
+    th,td{padding:5px 4px;font-size:11px;}
+    .panel .hd{padding:10px 12px;font-size:11px;}
+    .scorebox{padding:16px;}
+    .mscore{font-size:40px;}
+    .controls{flex-direction:column;}
+    .controls button{width:100%;}
+  }
+</style>
+
+<section class="cs"><div class="cs-card">
+  <div class="cs-eyebrow">Case study</div>
+  <h2 class="cs-h">How it's built — and why</h2>
+  <div class="cs-block"><h3>The problem</h3><p>Screening a company for possible earnings manipulation usually needs a forensic analyst. I wanted anyone to be able to run the recognised model in seconds.</p></div>
+  <div class="cs-block"><h3>Stack &amp; why I chose it</h3><p>This is pure client-side JavaScript with no backend, because the Beneish model is deterministic maths &mdash; so it runs instantly and, importantly, the financial figures never leave the browser, which is a real privacy advantage.</p></div>
+  <div class="cs-block"><h3>Key decisions</h3><p>Rather than ask for pre-calculated ratios (which most people don't have), it takes raw figures for two years and computes all eight indices and the final M-score itself. The &minus;1.78 threshold flags elevated risk. Two worked examples &mdash; a healthy and a red-flag company &mdash; are pre-loaded so it's usable and verifiable immediately.</p></div>
+  <div class="cs-block"><h3>Trade-offs &amp; what's next</h3><p>Figures are entered by hand rather than pulled from filings, to keep it dependency-free. Next: auto-fetching company data from the SEC EDGAR API.</p></div>
+</div></section>
+
+
+<div class="sitefoot"><div class="in">
+  <span>&copy; <span class="footyr"></span> Thomas Gollogly &middot; Northern Ireland</span>
+  <span class="footlinks">
+    <a class="ico" href="../index.html" aria-label="Home"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.69 3.5 9.5V21a1 1 0 0 0 1 1H9v-7h6v7h4.5a1 1 0 0 0 1-1V9.5L12 2.69z"/></svg><span>Home</span></a>
+    <a class="ico" href="../index.html" aria-label="CV"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM7 13h10v1.5H7V13zm0 4h10v1.5H7V17zm0-8h5v1.5H7V9z"/></svg><span>CV</span></a>
+    <a class="ico" href="mailto:thomas@tgollogly.dev" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13zm2.2.5 7.15 5.72a1 1 0 0 0 1.3 0L19.8 6H4.2zM4 8.1V18h16V8.1l-6.86 5.5a3 3 0 0 1-3.78 0L4 8.1z"/></svg><span>Email</span></a>
+    <a class="ico" href="https://github.com/tgollogly/portfolio" target="_blank" rel="noopener me" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.28 5.69.42.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg><span>GitHub</span></a>
+    <a class="ico" href="https://www.linkedin.com/in/thomasgollogly" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg><span>LinkedIn</span></a>
+  </span>
+</div>
+<div class="in footnote">
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+</div></div>
+
+<script>document.querySelectorAll(".footyr").forEach(e=>e.textContent=new Date().getFullYear());</script>
+
+<script src="./config.js"></script>
+<script src="./assets/chat-disabled.js" defer></script>
+</body>
+</html>

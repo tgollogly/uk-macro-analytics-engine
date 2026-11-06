@@ -1,0 +1,3257 @@
+[
+  {
+    "obs_date": "1988-01-01",
+    "index_level": 46.9,
+    "cpih_3m_avg": 46.9,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-02-01",
+    "index_level": 47.0,
+    "cpih_3m_avg": 46.95,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-03-01",
+    "index_level": 47.2,
+    "cpih_3m_avg": 47.03333333333334,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-04-01",
+    "index_level": 47.8,
+    "cpih_3m_avg": 47.333333333333336,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-05-01",
+    "index_level": 48.0,
+    "cpih_3m_avg": 47.666666666666664,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-06-01",
+    "index_level": 48.2,
+    "cpih_3m_avg": 48.0,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-07-01",
+    "index_level": 48.2,
+    "cpih_3m_avg": 48.13333333333333,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-08-01",
+    "index_level": 48.5,
+    "cpih_3m_avg": 48.300000000000004,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-09-01",
+    "index_level": 48.7,
+    "cpih_3m_avg": 48.46666666666667,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-10-01",
+    "index_level": 49.0,
+    "cpih_3m_avg": 48.73333333333333,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-11-01",
+    "index_level": 49.3,
+    "cpih_3m_avg": 49.0,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1988-12-01",
+    "index_level": 49.3,
+    "cpih_3m_avg": 49.199999999999996,
+    "index_12m_ago": null,
+    "yoy_pct": null
+  },
+  {
+    "obs_date": "1989-01-01",
+    "index_level": 49.5,
+    "cpih_3m_avg": 49.36666666666667,
+    "index_12m_ago": 46.9,
+    "yoy_pct": 5.5437100213219646
+  },
+  {
+    "obs_date": "1989-02-01",
+    "index_level": 49.7,
+    "cpih_3m_avg": 49.5,
+    "index_12m_ago": 47.0,
+    "yoy_pct": 5.744680851063836
+  },
+  {
+    "obs_date": "1989-03-01",
+    "index_level": 50.0,
+    "cpih_3m_avg": 49.73333333333333,
+    "index_12m_ago": 47.2,
+    "yoy_pct": 5.932203389830502
+  },
+  {
+    "obs_date": "1989-04-01",
+    "index_level": 50.5,
+    "cpih_3m_avg": 50.06666666666666,
+    "index_12m_ago": 47.8,
+    "yoy_pct": 5.648535564853563
+  },
+  {
+    "obs_date": "1989-05-01",
+    "index_level": 50.9,
+    "cpih_3m_avg": 50.46666666666667,
+    "index_12m_ago": 48.0,
+    "yoy_pct": 6.041666666666664
+  },
+  {
+    "obs_date": "1989-06-01",
+    "index_level": 51.0,
+    "cpih_3m_avg": 50.800000000000004,
+    "index_12m_ago": 48.2,
+    "yoy_pct": 5.809128630705388
+  },
+  {
+    "obs_date": "1989-07-01",
+    "index_level": 51.0,
+    "cpih_3m_avg": 50.96666666666667,
+    "index_12m_ago": 48.2,
+    "yoy_pct": 5.809128630705388
+  },
+  {
+    "obs_date": "1989-08-01",
+    "index_level": 51.1,
+    "cpih_3m_avg": 51.03333333333333,
+    "index_12m_ago": 48.5,
+    "yoy_pct": 5.3608247422680435
+  },
+  {
+    "obs_date": "1989-09-01",
+    "index_level": 51.5,
+    "cpih_3m_avg": 51.199999999999996,
+    "index_12m_ago": 48.7,
+    "yoy_pct": 5.7494866529774065
+  },
+  {
+    "obs_date": "1989-10-01",
+    "index_level": 51.9,
+    "cpih_3m_avg": 51.5,
+    "index_12m_ago": 49.0,
+    "yoy_pct": 5.918367346938773
+  },
+  {
+    "obs_date": "1989-11-01",
+    "index_level": 52.1,
+    "cpih_3m_avg": 51.833333333333336,
+    "index_12m_ago": 49.3,
+    "yoy_pct": 5.679513184584188
+  },
+  {
+    "obs_date": "1989-12-01",
+    "index_level": 52.2,
+    "cpih_3m_avg": 52.06666666666666,
+    "index_12m_ago": 49.3,
+    "yoy_pct": 5.8823529411764826
+  },
+  {
+    "obs_date": "1990-01-01",
+    "index_level": 52.4,
+    "cpih_3m_avg": 52.23333333333334,
+    "index_12m_ago": 49.5,
+    "yoy_pct": 5.858585858585856
+  },
+  {
+    "obs_date": "1990-02-01",
+    "index_level": 52.9,
+    "cpih_3m_avg": 52.5,
+    "index_12m_ago": 49.7,
+    "yoy_pct": 6.4386317907444575
+  },
+  {
+    "obs_date": "1990-03-01",
+    "index_level": 53.1,
+    "cpih_3m_avg": 52.800000000000004,
+    "index_12m_ago": 50.0,
+    "yoy_pct": 6.200000000000002
+  },
+  {
+    "obs_date": "1990-04-01",
+    "index_level": 54.4,
+    "cpih_3m_avg": 53.46666666666667,
+    "index_12m_ago": 50.5,
+    "yoy_pct": 7.722772277227721
+  },
+  {
+    "obs_date": "1990-05-01",
+    "index_level": 55.0,
+    "cpih_3m_avg": 54.166666666666664,
+    "index_12m_ago": 50.9,
+    "yoy_pct": 8.055009823182713
+  },
+  {
+    "obs_date": "1990-06-01",
+    "index_level": 55.2,
+    "cpih_3m_avg": 54.866666666666674,
+    "index_12m_ago": 51.0,
+    "yoy_pct": 8.235294117647065
+  },
+  {
+    "obs_date": "1990-07-01",
+    "index_level": 55.2,
+    "cpih_3m_avg": 55.13333333333333,
+    "index_12m_ago": 51.0,
+    "yoy_pct": 8.235294117647065
+  },
+  {
+    "obs_date": "1990-08-01",
+    "index_level": 55.7,
+    "cpih_3m_avg": 55.366666666666674,
+    "index_12m_ago": 51.1,
+    "yoy_pct": 9.001956947162428
+  },
+  {
+    "obs_date": "1990-09-01",
+    "index_level": 56.2,
+    "cpih_3m_avg": 55.70000000000001,
+    "index_12m_ago": 51.5,
+    "yoy_pct": 9.126213592233015
+  },
+  {
+    "obs_date": "1990-10-01",
+    "index_level": 56.7,
+    "cpih_3m_avg": 56.20000000000001,
+    "index_12m_ago": 51.9,
+    "yoy_pct": 9.248554913294807
+  },
+  {
+    "obs_date": "1990-11-01",
+    "index_level": 56.9,
+    "cpih_3m_avg": 56.6,
+    "index_12m_ago": 52.1,
+    "yoy_pct": 9.213051823416501
+  },
+  {
+    "obs_date": "1990-12-01",
+    "index_level": 57.0,
+    "cpih_3m_avg": 56.86666666666667,
+    "index_12m_ago": 52.2,
+    "yoy_pct": 9.195402298850569
+  },
+  {
+    "obs_date": "1991-01-01",
+    "index_level": 57.0,
+    "cpih_3m_avg": 56.96666666666667,
+    "index_12m_ago": 52.4,
+    "yoy_pct": 8.778625954198477
+  },
+  {
+    "obs_date": "1991-02-01",
+    "index_level": 57.2,
+    "cpih_3m_avg": 57.06666666666666,
+    "index_12m_ago": 52.9,
+    "yoy_pct": 8.128544423440463
+  },
+  {
+    "obs_date": "1991-03-01",
+    "index_level": 57.5,
+    "cpih_3m_avg": 57.23333333333333,
+    "index_12m_ago": 53.1,
+    "yoy_pct": 8.286252354048962
+  },
+  {
+    "obs_date": "1991-04-01",
+    "index_level": 58.7,
+    "cpih_3m_avg": 57.800000000000004,
+    "index_12m_ago": 54.4,
+    "yoy_pct": 7.904411764705891
+  },
+  {
+    "obs_date": "1991-05-01",
+    "index_level": 59.2,
+    "cpih_3m_avg": 58.46666666666667,
+    "index_12m_ago": 55.0,
+    "yoy_pct": 7.636363636363641
+  },
+  {
+    "obs_date": "1991-06-01",
+    "index_level": 59.5,
+    "cpih_3m_avg": 59.13333333333333,
+    "index_12m_ago": 55.2,
+    "yoy_pct": 7.789855072463762
+  },
+  {
+    "obs_date": "1991-07-01",
+    "index_level": 59.3,
+    "cpih_3m_avg": 59.333333333333336,
+    "index_12m_ago": 55.2,
+    "yoy_pct": 7.427536231884047
+  },
+  {
+    "obs_date": "1991-08-01",
+    "index_level": 59.9,
+    "cpih_3m_avg": 59.56666666666666,
+    "index_12m_ago": 55.7,
+    "yoy_pct": 7.5403949730700095
+  },
+  {
+    "obs_date": "1991-09-01",
+    "index_level": 60.1,
+    "cpih_3m_avg": 59.76666666666666,
+    "index_12m_ago": 56.2,
+    "yoy_pct": 6.9395017793594285
+  },
+  {
+    "obs_date": "1991-10-01",
+    "index_level": 60.4,
+    "cpih_3m_avg": 60.13333333333333,
+    "index_12m_ago": 56.7,
+    "yoy_pct": 6.52557319223985
+  },
+  {
+    "obs_date": "1991-11-01",
+    "index_level": 60.5,
+    "cpih_3m_avg": 60.333333333333336,
+    "index_12m_ago": 56.9,
+    "yoy_pct": 6.326889279437612
+  },
+  {
+    "obs_date": "1991-12-01",
+    "index_level": 60.7,
+    "cpih_3m_avg": 60.53333333333334,
+    "index_12m_ago": 57.0,
+    "yoy_pct": 6.491228070175444
+  },
+  {
+    "obs_date": "1992-01-01",
+    "index_level": 60.5,
+    "cpih_3m_avg": 60.56666666666666,
+    "index_12m_ago": 57.0,
+    "yoy_pct": 6.140350877192983
+  },
+  {
+    "obs_date": "1992-02-01",
+    "index_level": 60.8,
+    "cpih_3m_avg": 60.666666666666664,
+    "index_12m_ago": 57.2,
+    "yoy_pct": 6.2937062937062835
+  },
+  {
+    "obs_date": "1992-03-01",
+    "index_level": 61.1,
+    "cpih_3m_avg": 60.800000000000004,
+    "index_12m_ago": 57.5,
+    "yoy_pct": 6.260869565217393
+  },
+  {
+    "obs_date": "1992-04-01",
+    "index_level": 61.8,
+    "cpih_3m_avg": 61.23333333333333,
+    "index_12m_ago": 58.7,
+    "yoy_pct": 5.2810902896081675
+  },
+  {
+    "obs_date": "1992-05-01",
+    "index_level": 62.2,
+    "cpih_3m_avg": 61.70000000000001,
+    "index_12m_ago": 59.2,
+    "yoy_pct": 5.0675675675675675
+  },
+  {
+    "obs_date": "1992-06-01",
+    "index_level": 62.2,
+    "cpih_3m_avg": 62.06666666666666,
+    "index_12m_ago": 59.5,
+    "yoy_pct": 4.537815126050425
+  },
+  {
+    "obs_date": "1992-07-01",
+    "index_level": 62.0,
+    "cpih_3m_avg": 62.13333333333333,
+    "index_12m_ago": 59.3,
+    "yoy_pct": 4.553119730185503
+  },
+  {
+    "obs_date": "1992-08-01",
+    "index_level": 62.1,
+    "cpih_3m_avg": 62.1,
+    "index_12m_ago": 59.9,
+    "yoy_pct": 3.672787979966616
+  },
+  {
+    "obs_date": "1992-09-01",
+    "index_level": 62.3,
+    "cpih_3m_avg": 62.133333333333326,
+    "index_12m_ago": 60.1,
+    "yoy_pct": 3.66056572379367
+  },
+  {
+    "obs_date": "1992-10-01",
+    "index_level": 62.5,
+    "cpih_3m_avg": 62.300000000000004,
+    "index_12m_ago": 60.4,
+    "yoy_pct": 3.4768211920529826
+  },
+  {
+    "obs_date": "1992-11-01",
+    "index_level": 62.5,
+    "cpih_3m_avg": 62.43333333333334,
+    "index_12m_ago": 60.5,
+    "yoy_pct": 3.3057851239669422
+  },
+  {
+    "obs_date": "1992-12-01",
+    "index_level": 62.6,
+    "cpih_3m_avg": 62.53333333333333,
+    "index_12m_ago": 60.7,
+    "yoy_pct": 3.1301482701812167
+  },
+  {
+    "obs_date": "1993-01-01",
+    "index_level": 62.4,
+    "cpih_3m_avg": 62.5,
+    "index_12m_ago": 60.5,
+    "yoy_pct": 3.1404958677685926
+  },
+  {
+    "obs_date": "1993-02-01",
+    "index_level": 62.7,
+    "cpih_3m_avg": 62.56666666666666,
+    "index_12m_ago": 60.8,
+    "yoy_pct": 3.1250000000000093
+  },
+  {
+    "obs_date": "1993-03-01",
+    "index_level": 63.0,
+    "cpih_3m_avg": 62.699999999999996,
+    "index_12m_ago": 61.1,
+    "yoy_pct": 3.1096563011456606
+  },
+  {
+    "obs_date": "1993-04-01",
+    "index_level": 63.4,
+    "cpih_3m_avg": 63.03333333333333,
+    "index_12m_ago": 61.8,
+    "yoy_pct": 2.588996763754048
+  },
+  {
+    "obs_date": "1993-05-01",
+    "index_level": 63.6,
+    "cpih_3m_avg": 63.333333333333336,
+    "index_12m_ago": 62.2,
+    "yoy_pct": 2.250803858520898
+  },
+  {
+    "obs_date": "1993-06-01",
+    "index_level": 63.6,
+    "cpih_3m_avg": 63.53333333333333,
+    "index_12m_ago": 62.2,
+    "yoy_pct": 2.250803858520898
+  },
+  {
+    "obs_date": "1993-07-01",
+    "index_level": 63.4,
+    "cpih_3m_avg": 63.53333333333333,
+    "index_12m_ago": 62.0,
+    "yoy_pct": 2.25806451612903
+  },
+  {
+    "obs_date": "1993-08-01",
+    "index_level": 63.7,
+    "cpih_3m_avg": 63.56666666666666,
+    "index_12m_ago": 62.1,
+    "yoy_pct": 2.5764895330112743
+  },
+  {
+    "obs_date": "1993-09-01",
+    "index_level": 64.0,
+    "cpih_3m_avg": 63.699999999999996,
+    "index_12m_ago": 62.3,
+    "yoy_pct": 2.728731942215093
+  },
+  {
+    "obs_date": "1993-10-01",
+    "index_level": 64.0,
+    "cpih_3m_avg": 63.9,
+    "index_12m_ago": 62.5,
+    "yoy_pct": 2.4
+  },
+  {
+    "obs_date": "1993-11-01",
+    "index_level": 63.8,
+    "cpih_3m_avg": 63.93333333333334,
+    "index_12m_ago": 62.5,
+    "yoy_pct": 2.0799999999999956
+  },
+  {
+    "obs_date": "1993-12-01",
+    "index_level": 64.0,
+    "cpih_3m_avg": 63.93333333333334,
+    "index_12m_ago": 62.6,
+    "yoy_pct": 2.236421725239614
+  },
+  {
+    "obs_date": "1994-01-01",
+    "index_level": 64.0,
+    "cpih_3m_avg": 63.93333333333334,
+    "index_12m_ago": 62.4,
+    "yoy_pct": 2.5641025641025665
+  },
+  {
+    "obs_date": "1994-02-01",
+    "index_level": 64.2,
+    "cpih_3m_avg": 64.06666666666666,
+    "index_12m_ago": 62.7,
+    "yoy_pct": 2.3923444976076556
+  },
+  {
+    "obs_date": "1994-03-01",
+    "index_level": 64.4,
+    "cpih_3m_avg": 64.2,
+    "index_12m_ago": 63.0,
+    "yoy_pct": 2.222222222222231
+  },
+  {
+    "obs_date": "1994-04-01",
+    "index_level": 64.9,
+    "cpih_3m_avg": 64.50000000000001,
+    "index_12m_ago": 63.4,
+    "yoy_pct": 2.365930599369096
+  },
+  {
+    "obs_date": "1994-05-01",
+    "index_level": 65.1,
+    "cpih_3m_avg": 64.8,
+    "index_12m_ago": 63.6,
+    "yoy_pct": 2.3584905660377244
+  },
+  {
+    "obs_date": "1994-06-01",
+    "index_level": 65.1,
+    "cpih_3m_avg": 65.03333333333333,
+    "index_12m_ago": 63.6,
+    "yoy_pct": 2.3584905660377244
+  },
+  {
+    "obs_date": "1994-07-01",
+    "index_level": 64.7,
+    "cpih_3m_avg": 64.96666666666665,
+    "index_12m_ago": 63.4,
+    "yoy_pct": 2.0504731861198806
+  },
+  {
+    "obs_date": "1994-08-01",
+    "index_level": 65.1,
+    "cpih_3m_avg": 64.96666666666667,
+    "index_12m_ago": 63.7,
+    "yoy_pct": 2.197802197802184
+  },
+  {
+    "obs_date": "1994-09-01",
+    "index_level": 65.2,
+    "cpih_3m_avg": 65.0,
+    "index_12m_ago": 64.0,
+    "yoy_pct": 1.8750000000000044
+  },
+  {
+    "obs_date": "1994-10-01",
+    "index_level": 65.1,
+    "cpih_3m_avg": 65.13333333333334,
+    "index_12m_ago": 64.0,
+    "yoy_pct": 1.7187499999999911
+  },
+  {
+    "obs_date": "1994-11-01",
+    "index_level": 65.2,
+    "cpih_3m_avg": 65.16666666666667,
+    "index_12m_ago": 63.8,
+    "yoy_pct": 2.1943573667711687
+  },
+  {
+    "obs_date": "1994-12-01",
+    "index_level": 65.5,
+    "cpih_3m_avg": 65.26666666666667,
+    "index_12m_ago": 64.0,
+    "yoy_pct": 2.34375
+  },
+  {
+    "obs_date": "1995-01-01",
+    "index_level": 65.5,
+    "cpih_3m_avg": 65.39999999999999,
+    "index_12m_ago": 64.0,
+    "yoy_pct": 2.34375
+  },
+  {
+    "obs_date": "1995-02-01",
+    "index_level": 65.7,
+    "cpih_3m_avg": 65.56666666666666,
+    "index_12m_ago": 64.2,
+    "yoy_pct": 2.336448598130841
+  },
+  {
+    "obs_date": "1995-03-01",
+    "index_level": 66.0,
+    "cpih_3m_avg": 65.73333333333333,
+    "index_12m_ago": 64.4,
+    "yoy_pct": 2.484472049689432
+  },
+  {
+    "obs_date": "1995-04-01",
+    "index_level": 66.4,
+    "cpih_3m_avg": 66.03333333333333,
+    "index_12m_ago": 64.9,
+    "yoy_pct": 2.311248073959938
+  },
+  {
+    "obs_date": "1995-05-01",
+    "index_level": 66.7,
+    "cpih_3m_avg": 66.36666666666667,
+    "index_12m_ago": 65.1,
+    "yoy_pct": 2.4577572964669874
+  },
+  {
+    "obs_date": "1995-06-01",
+    "index_level": 66.8,
+    "cpih_3m_avg": 66.63333333333334,
+    "index_12m_ago": 65.1,
+    "yoy_pct": 2.6113671274961643
+  },
+  {
+    "obs_date": "1995-07-01",
+    "index_level": 66.6,
+    "cpih_3m_avg": 66.7,
+    "index_12m_ago": 64.7,
+    "yoy_pct": 2.9366306027820577
+  },
+  {
+    "obs_date": "1995-08-01",
+    "index_level": 66.9,
+    "cpih_3m_avg": 66.76666666666667,
+    "index_12m_ago": 65.1,
+    "yoy_pct": 2.7649769585253634
+  },
+  {
+    "obs_date": "1995-09-01",
+    "index_level": 67.2,
+    "cpih_3m_avg": 66.89999999999999,
+    "index_12m_ago": 65.2,
+    "yoy_pct": 3.067484662576687
+  },
+  {
+    "obs_date": "1995-10-01",
+    "index_level": 67.1,
+    "cpih_3m_avg": 67.06666666666668,
+    "index_12m_ago": 65.1,
+    "yoy_pct": 3.0721966205837177
+  },
+  {
+    "obs_date": "1995-11-01",
+    "index_level": 67.1,
+    "cpih_3m_avg": 67.13333333333334,
+    "index_12m_ago": 65.2,
+    "yoy_pct": 2.9141104294478395
+  },
+  {
+    "obs_date": "1995-12-01",
+    "index_level": 67.5,
+    "cpih_3m_avg": 67.23333333333333,
+    "index_12m_ago": 65.5,
+    "yoy_pct": 3.053435114503817
+  },
+  {
+    "obs_date": "1996-01-01",
+    "index_level": 67.4,
+    "cpih_3m_avg": 67.33333333333333,
+    "index_12m_ago": 65.5,
+    "yoy_pct": 2.900763358778635
+  },
+  {
+    "obs_date": "1996-02-01",
+    "index_level": 67.7,
+    "cpih_3m_avg": 67.53333333333335,
+    "index_12m_ago": 65.7,
+    "yoy_pct": 3.0441400304414
+  },
+  {
+    "obs_date": "1996-03-01",
+    "index_level": 67.9,
+    "cpih_3m_avg": 67.66666666666667,
+    "index_12m_ago": 66.0,
+    "yoy_pct": 2.8787878787878873
+  },
+  {
+    "obs_date": "1996-04-01",
+    "index_level": 68.3,
+    "cpih_3m_avg": 67.96666666666668,
+    "index_12m_ago": 66.4,
+    "yoy_pct": 2.861445783132517
+  },
+  {
+    "obs_date": "1996-05-01",
+    "index_level": 68.6,
+    "cpih_3m_avg": 68.26666666666667,
+    "index_12m_ago": 66.7,
+    "yoy_pct": 2.8485757121439153
+  },
+  {
+    "obs_date": "1996-06-01",
+    "index_level": 68.7,
+    "cpih_3m_avg": 68.53333333333332,
+    "index_12m_ago": 66.8,
+    "yoy_pct": 2.8443113772455177
+  },
+  {
+    "obs_date": "1996-07-01",
+    "index_level": 68.3,
+    "cpih_3m_avg": 68.53333333333335,
+    "index_12m_ago": 66.6,
+    "yoy_pct": 2.552552552552557
+  },
+  {
+    "obs_date": "1996-08-01",
+    "index_level": 68.7,
+    "cpih_3m_avg": 68.56666666666666,
+    "index_12m_ago": 66.9,
+    "yoy_pct": 2.690582959641251
+  },
+  {
+    "obs_date": "1996-09-01",
+    "index_level": 69.0,
+    "cpih_3m_avg": 68.66666666666667,
+    "index_12m_ago": 67.2,
+    "yoy_pct": 2.6785714285714244
+  },
+  {
+    "obs_date": "1996-10-01",
+    "index_level": 69.1,
+    "cpih_3m_avg": 68.93333333333332,
+    "index_12m_ago": 67.1,
+    "yoy_pct": 2.9806259314456036
+  },
+  {
+    "obs_date": "1996-11-01",
+    "index_level": 69.2,
+    "cpih_3m_avg": 69.10000000000001,
+    "index_12m_ago": 67.1,
+    "yoy_pct": 3.129657228017897
+  },
+  {
+    "obs_date": "1996-12-01",
+    "index_level": 69.4,
+    "cpih_3m_avg": 69.23333333333333,
+    "index_12m_ago": 67.5,
+    "yoy_pct": 2.8148148148148233
+  },
+  {
+    "obs_date": "1997-01-01",
+    "index_level": 69.2,
+    "cpih_3m_avg": 69.26666666666667,
+    "index_12m_ago": 67.4,
+    "yoy_pct": 2.670623145400589
+  },
+  {
+    "obs_date": "1997-02-01",
+    "index_level": 69.3,
+    "cpih_3m_avg": 69.30000000000001,
+    "index_12m_ago": 67.7,
+    "yoy_pct": 2.3633677991137287
+  },
+  {
+    "obs_date": "1997-03-01",
+    "index_level": 69.4,
+    "cpih_3m_avg": 69.3,
+    "index_12m_ago": 67.9,
+    "yoy_pct": 2.2091310751104563
+  },
+  {
+    "obs_date": "1997-04-01",
+    "index_level": 69.7,
+    "cpih_3m_avg": 69.46666666666665,
+    "index_12m_ago": 68.3,
+    "yoy_pct": 2.0497803806735075
+  },
+  {
+    "obs_date": "1997-05-01",
+    "index_level": 70.0,
+    "cpih_3m_avg": 69.7,
+    "index_12m_ago": 68.6,
+    "yoy_pct": 2.0408163265306207
+  },
+  {
+    "obs_date": "1997-06-01",
+    "index_level": 70.1,
+    "cpih_3m_avg": 69.93333333333332,
+    "index_12m_ago": 68.7,
+    "yoy_pct": 2.037845705967964
+  },
+  {
+    "obs_date": "1997-07-01",
+    "index_level": 70.0,
+    "cpih_3m_avg": 70.03333333333333,
+    "index_12m_ago": 68.3,
+    "yoy_pct": 2.4890190336749676
+  },
+  {
+    "obs_date": "1997-08-01",
+    "index_level": 70.3,
+    "cpih_3m_avg": 70.13333333333333,
+    "index_12m_ago": 68.7,
+    "yoy_pct": 2.328966521106251
+  },
+  {
+    "obs_date": "1997-09-01",
+    "index_level": 70.5,
+    "cpih_3m_avg": 70.26666666666667,
+    "index_12m_ago": 69.0,
+    "yoy_pct": 2.1739130434782608
+  },
+  {
+    "obs_date": "1997-10-01",
+    "index_level": 70.6,
+    "cpih_3m_avg": 70.46666666666667,
+    "index_12m_ago": 69.1,
+    "yoy_pct": 2.1707670043415344
+  },
+  {
+    "obs_date": "1997-11-01",
+    "index_level": 70.6,
+    "cpih_3m_avg": 70.56666666666666,
+    "index_12m_ago": 69.2,
+    "yoy_pct": 2.0231213872832248
+  },
+  {
+    "obs_date": "1997-12-01",
+    "index_level": 70.7,
+    "cpih_3m_avg": 70.63333333333333,
+    "index_12m_ago": 69.4,
+    "yoy_pct": 1.8731988472622436
+  },
+  {
+    "obs_date": "1998-01-01",
+    "index_level": 70.4,
+    "cpih_3m_avg": 70.56666666666668,
+    "index_12m_ago": 69.2,
+    "yoy_pct": 1.7341040462427786
+  },
+  {
+    "obs_date": "1998-02-01",
+    "index_level": 70.6,
+    "cpih_3m_avg": 70.56666666666668,
+    "index_12m_ago": 69.3,
+    "yoy_pct": 1.875901875901872
+  },
+  {
+    "obs_date": "1998-03-01",
+    "index_level": 70.8,
+    "cpih_3m_avg": 70.60000000000001,
+    "index_12m_ago": 69.4,
+    "yoy_pct": 2.017291066282408
+  },
+  {
+    "obs_date": "1998-04-01",
+    "index_level": 71.2,
+    "cpih_3m_avg": 70.86666666666666,
+    "index_12m_ago": 69.7,
+    "yoy_pct": 2.152080344332855
+  },
+  {
+    "obs_date": "1998-05-01",
+    "index_level": 71.5,
+    "cpih_3m_avg": 71.16666666666667,
+    "index_12m_ago": 70.0,
+    "yoy_pct": 2.142857142857143
+  },
+  {
+    "obs_date": "1998-06-01",
+    "index_level": 71.4,
+    "cpih_3m_avg": 71.36666666666666,
+    "index_12m_ago": 70.1,
+    "yoy_pct": 1.8544935805991605
+  },
+  {
+    "obs_date": "1998-07-01",
+    "index_level": 71.2,
+    "cpih_3m_avg": 71.36666666666667,
+    "index_12m_ago": 70.0,
+    "yoy_pct": 1.7142857142857184
+  },
+  {
+    "obs_date": "1998-08-01",
+    "index_level": 71.4,
+    "cpih_3m_avg": 71.33333333333334,
+    "index_12m_ago": 70.3,
+    "yoy_pct": 1.5647226173542086
+  },
+  {
+    "obs_date": "1998-09-01",
+    "index_level": 71.7,
+    "cpih_3m_avg": 71.43333333333334,
+    "index_12m_ago": 70.5,
+    "yoy_pct": 1.702127659574472
+  },
+  {
+    "obs_date": "1998-10-01",
+    "index_level": 71.7,
+    "cpih_3m_avg": 71.60000000000001,
+    "index_12m_ago": 70.6,
+    "yoy_pct": 1.558073654390947
+  },
+  {
+    "obs_date": "1998-11-01",
+    "index_level": 71.8,
+    "cpih_3m_avg": 71.73333333333333,
+    "index_12m_ago": 70.6,
+    "yoy_pct": 1.699716713881024
+  },
+  {
+    "obs_date": "1998-12-01",
+    "index_level": 72.0,
+    "cpih_3m_avg": 71.83333333333333,
+    "index_12m_ago": 70.7,
+    "yoy_pct": 1.8387553041018347
+  },
+  {
+    "obs_date": "1999-01-01",
+    "index_level": 71.8,
+    "cpih_3m_avg": 71.86666666666667,
+    "index_12m_ago": 70.4,
+    "yoy_pct": 1.9886363636363513
+  },
+  {
+    "obs_date": "1999-02-01",
+    "index_level": 71.9,
+    "cpih_3m_avg": 71.9,
+    "index_12m_ago": 70.6,
+    "yoy_pct": 1.8413597733711211
+  },
+  {
+    "obs_date": "1999-03-01",
+    "index_level": 72.3,
+    "cpih_3m_avg": 72.0,
+    "index_12m_ago": 70.8,
+    "yoy_pct": 2.1186440677966103
+  },
+  {
+    "obs_date": "1999-04-01",
+    "index_level": 72.6,
+    "cpih_3m_avg": 72.26666666666667,
+    "index_12m_ago": 71.2,
+    "yoy_pct": 1.9662921348314486
+  },
+  {
+    "obs_date": "1999-05-01",
+    "index_level": 72.8,
+    "cpih_3m_avg": 72.56666666666666,
+    "index_12m_ago": 71.5,
+    "yoy_pct": 1.8181818181818141
+  },
+  {
+    "obs_date": "1999-06-01",
+    "index_level": 72.7,
+    "cpih_3m_avg": 72.69999999999999,
+    "index_12m_ago": 71.4,
+    "yoy_pct": 1.8207282913165226
+  },
+  {
+    "obs_date": "1999-07-01",
+    "index_level": 72.4,
+    "cpih_3m_avg": 72.63333333333334,
+    "index_12m_ago": 71.2,
+    "yoy_pct": 1.6853932584269702
+  },
+  {
+    "obs_date": "1999-08-01",
+    "index_level": 72.6,
+    "cpih_3m_avg": 72.56666666666668,
+    "index_12m_ago": 71.4,
+    "yoy_pct": 1.680672268907547
+  },
+  {
+    "obs_date": "1999-09-01",
+    "index_level": 72.8,
+    "cpih_3m_avg": 72.60000000000001,
+    "index_12m_ago": 71.7,
+    "yoy_pct": 1.5341701534170074
+  },
+  {
+    "obs_date": "1999-10-01",
+    "index_level": 72.8,
+    "cpih_3m_avg": 72.73333333333333,
+    "index_12m_ago": 71.7,
+    "yoy_pct": 1.5341701534170074
+  },
+  {
+    "obs_date": "1999-11-01",
+    "index_level": 72.9,
+    "cpih_3m_avg": 72.83333333333333,
+    "index_12m_ago": 71.8,
+    "yoy_pct": 1.532033426183856
+  },
+  {
+    "obs_date": "1999-12-01",
+    "index_level": 73.1,
+    "cpih_3m_avg": 72.93333333333332,
+    "index_12m_ago": 72.0,
+    "yoy_pct": 1.52777777777777
+  },
+  {
+    "obs_date": "2000-01-01",
+    "index_level": 72.6,
+    "cpih_3m_avg": 72.86666666666666,
+    "index_12m_ago": 71.8,
+    "yoy_pct": 1.1142061281337008
+  },
+  {
+    "obs_date": "2000-02-01",
+    "index_level": 72.8,
+    "cpih_3m_avg": 72.83333333333333,
+    "index_12m_ago": 71.9,
+    "yoy_pct": 1.2517385257301687
+  },
+  {
+    "obs_date": "2000-03-01",
+    "index_level": 73.0,
+    "cpih_3m_avg": 72.8,
+    "index_12m_ago": 72.3,
+    "yoy_pct": 0.9681881051175697
+  },
+  {
+    "obs_date": "2000-04-01",
+    "index_level": 73.3,
+    "cpih_3m_avg": 73.03333333333335,
+    "index_12m_ago": 72.6,
+    "yoy_pct": 0.9641873278236954
+  },
+  {
+    "obs_date": "2000-05-01",
+    "index_level": 73.5,
+    "cpih_3m_avg": 73.26666666666667,
+    "index_12m_ago": 72.8,
+    "yoy_pct": 0.9615384615384654
+  },
+  {
+    "obs_date": "2000-06-01",
+    "index_level": 73.6,
+    "cpih_3m_avg": 73.46666666666667,
+    "index_12m_ago": 72.7,
+    "yoy_pct": 1.237964236588709
+  },
+  {
+    "obs_date": "2000-07-01",
+    "index_level": 73.3,
+    "cpih_3m_avg": 73.46666666666665,
+    "index_12m_ago": 72.4,
+    "yoy_pct": 1.2430939226519218
+  },
+  {
+    "obs_date": "2000-08-01",
+    "index_level": 73.3,
+    "cpih_3m_avg": 73.39999999999999,
+    "index_12m_ago": 72.6,
+    "yoy_pct": 0.9641873278236954
+  },
+  {
+    "obs_date": "2000-09-01",
+    "index_level": 73.8,
+    "cpih_3m_avg": 73.46666666666665,
+    "index_12m_ago": 72.8,
+    "yoy_pct": 1.3736263736263736
+  },
+  {
+    "obs_date": "2000-10-01",
+    "index_level": 73.8,
+    "cpih_3m_avg": 73.63333333333333,
+    "index_12m_ago": 72.8,
+    "yoy_pct": 1.3736263736263736
+  },
+  {
+    "obs_date": "2000-11-01",
+    "index_level": 74.0,
+    "cpih_3m_avg": 73.86666666666666,
+    "index_12m_ago": 72.9,
+    "yoy_pct": 1.5089163237311307
+  },
+  {
+    "obs_date": "2000-12-01",
+    "index_level": 74.0,
+    "cpih_3m_avg": 73.93333333333334,
+    "index_12m_ago": 73.1,
+    "yoy_pct": 1.231190150478804
+  },
+  {
+    "obs_date": "2001-01-01",
+    "index_level": 73.5,
+    "cpih_3m_avg": 73.83333333333333,
+    "index_12m_ago": 72.6,
+    "yoy_pct": 1.2396694214876112
+  },
+  {
+    "obs_date": "2001-02-01",
+    "index_level": 73.7,
+    "cpih_3m_avg": 73.73333333333333,
+    "index_12m_ago": 72.8,
+    "yoy_pct": 1.236263736263744
+  },
+  {
+    "obs_date": "2001-03-01",
+    "index_level": 73.9,
+    "cpih_3m_avg": 73.7,
+    "index_12m_ago": 73.0,
+    "yoy_pct": 1.232876712328775
+  },
+  {
+    "obs_date": "2001-04-01",
+    "index_level": 74.4,
+    "cpih_3m_avg": 74.00000000000001,
+    "index_12m_ago": 73.3,
+    "yoy_pct": 1.5006821282401208
+  },
+  {
+    "obs_date": "2001-05-01",
+    "index_level": 74.9,
+    "cpih_3m_avg": 74.4,
+    "index_12m_ago": 73.5,
+    "yoy_pct": 1.9047619047619124
+  },
+  {
+    "obs_date": "2001-06-01",
+    "index_level": 75.0,
+    "cpih_3m_avg": 74.76666666666667,
+    "index_12m_ago": 73.6,
+    "yoy_pct": 1.902173913043486
+  },
+  {
+    "obs_date": "2001-07-01",
+    "index_level": 74.5,
+    "cpih_3m_avg": 74.8,
+    "index_12m_ago": 73.3,
+    "yoy_pct": 1.6371077762619413
+  },
+  {
+    "obs_date": "2001-08-01",
+    "index_level": 74.8,
+    "cpih_3m_avg": 74.76666666666667,
+    "index_12m_ago": 73.3,
+    "yoy_pct": 2.0463847203274215
+  },
+  {
+    "obs_date": "2001-09-01",
+    "index_level": 75.0,
+    "cpih_3m_avg": 74.76666666666667,
+    "index_12m_ago": 73.8,
+    "yoy_pct": 1.6260162601626056
+  },
+  {
+    "obs_date": "2001-10-01",
+    "index_level": 74.9,
+    "cpih_3m_avg": 74.9,
+    "index_12m_ago": 73.8,
+    "yoy_pct": 1.4905149051490632
+  },
+  {
+    "obs_date": "2001-11-01",
+    "index_level": 74.9,
+    "cpih_3m_avg": 74.93333333333334,
+    "index_12m_ago": 74.0,
+    "yoy_pct": 1.216216216216224
+  },
+  {
+    "obs_date": "2001-12-01",
+    "index_level": 75.0,
+    "cpih_3m_avg": 74.93333333333334,
+    "index_12m_ago": 74.0,
+    "yoy_pct": 1.3513513513513513
+  },
+  {
+    "obs_date": "2002-01-01",
+    "index_level": 74.8,
+    "cpih_3m_avg": 74.89999999999999,
+    "index_12m_ago": 73.5,
+    "yoy_pct": 1.7687074829931935
+  },
+  {
+    "obs_date": "2002-02-01",
+    "index_level": 75.0,
+    "cpih_3m_avg": 74.93333333333334,
+    "index_12m_ago": 73.7,
+    "yoy_pct": 1.7639077340569838
+  },
+  {
+    "obs_date": "2002-03-01",
+    "index_level": 75.2,
+    "cpih_3m_avg": 75.0,
+    "index_12m_ago": 73.9,
+    "yoy_pct": 1.7591339648173168
+  },
+  {
+    "obs_date": "2002-04-01",
+    "index_level": 75.6,
+    "cpih_3m_avg": 75.26666666666667,
+    "index_12m_ago": 74.4,
+    "yoy_pct": 1.6129032258064362
+  },
+  {
+    "obs_date": "2002-05-01",
+    "index_level": 75.8,
+    "cpih_3m_avg": 75.53333333333335,
+    "index_12m_ago": 74.9,
+    "yoy_pct": 1.2016021361815639
+  },
+  {
+    "obs_date": "2002-06-01",
+    "index_level": 75.8,
+    "cpih_3m_avg": 75.73333333333333,
+    "index_12m_ago": 75.0,
+    "yoy_pct": 1.0666666666666629
+  },
+  {
+    "obs_date": "2002-07-01",
+    "index_level": 75.6,
+    "cpih_3m_avg": 75.73333333333333,
+    "index_12m_ago": 74.5,
+    "yoy_pct": 1.4765100671140863
+  },
+  {
+    "obs_date": "2002-08-01",
+    "index_level": 75.8,
+    "cpih_3m_avg": 75.73333333333333,
+    "index_12m_ago": 74.8,
+    "yoy_pct": 1.3368983957219251
+  },
+  {
+    "obs_date": "2002-09-01",
+    "index_level": 76.0,
+    "cpih_3m_avg": 75.8,
+    "index_12m_ago": 75.0,
+    "yoy_pct": 1.3333333333333333
+  },
+  {
+    "obs_date": "2002-10-01",
+    "index_level": 76.1,
+    "cpih_3m_avg": 75.96666666666667,
+    "index_12m_ago": 74.9,
+    "yoy_pct": 1.6021361815754187
+  },
+  {
+    "obs_date": "2002-11-01",
+    "index_level": 76.1,
+    "cpih_3m_avg": 76.06666666666666,
+    "index_12m_ago": 74.9,
+    "yoy_pct": 1.6021361815754187
+  },
+  {
+    "obs_date": "2002-12-01",
+    "index_level": 76.3,
+    "cpih_3m_avg": 76.16666666666667,
+    "index_12m_ago": 75.0,
+    "yoy_pct": 1.7333333333333296
+  },
+  {
+    "obs_date": "2003-01-01",
+    "index_level": 75.9,
+    "cpih_3m_avg": 76.1,
+    "index_12m_ago": 74.8,
+    "yoy_pct": 1.470588235294129
+  },
+  {
+    "obs_date": "2003-02-01",
+    "index_level": 76.1,
+    "cpih_3m_avg": 76.1,
+    "index_12m_ago": 75.0,
+    "yoy_pct": 1.466666666666659
+  },
+  {
+    "obs_date": "2003-03-01",
+    "index_level": 76.4,
+    "cpih_3m_avg": 76.13333333333334,
+    "index_12m_ago": 75.2,
+    "yoy_pct": 1.5957446808510676
+  },
+  {
+    "obs_date": "2003-04-01",
+    "index_level": 76.8,
+    "cpih_3m_avg": 76.43333333333334,
+    "index_12m_ago": 75.6,
+    "yoy_pct": 1.5873015873015912
+  },
+  {
+    "obs_date": "2003-05-01",
+    "index_level": 76.8,
+    "cpih_3m_avg": 76.66666666666667,
+    "index_12m_ago": 75.8,
+    "yoy_pct": 1.3192612137203166
+  },
+  {
+    "obs_date": "2003-06-01",
+    "index_level": 76.7,
+    "cpih_3m_avg": 76.76666666666667,
+    "index_12m_ago": 75.8,
+    "yoy_pct": 1.1873350923482926
+  },
+  {
+    "obs_date": "2003-07-01",
+    "index_level": 76.6,
+    "cpih_3m_avg": 76.7,
+    "index_12m_ago": 75.6,
+    "yoy_pct": 1.3227513227513228
+  },
+  {
+    "obs_date": "2003-08-01",
+    "index_level": 76.8,
+    "cpih_3m_avg": 76.7,
+    "index_12m_ago": 75.8,
+    "yoy_pct": 1.3192612137203166
+  },
+  {
+    "obs_date": "2003-09-01",
+    "index_level": 77.0,
+    "cpih_3m_avg": 76.8,
+    "index_12m_ago": 76.0,
+    "yoy_pct": 1.3157894736842106
+  },
+  {
+    "obs_date": "2003-10-01",
+    "index_level": 77.1,
+    "cpih_3m_avg": 76.96666666666667,
+    "index_12m_ago": 76.1,
+    "yoy_pct": 1.314060446780552
+  },
+  {
+    "obs_date": "2003-11-01",
+    "index_level": 77.1,
+    "cpih_3m_avg": 77.06666666666666,
+    "index_12m_ago": 76.1,
+    "yoy_pct": 1.314060446780552
+  },
+  {
+    "obs_date": "2003-12-01",
+    "index_level": 77.3,
+    "cpih_3m_avg": 77.16666666666667,
+    "index_12m_ago": 76.3,
+    "yoy_pct": 1.3106159895150722
+  },
+  {
+    "obs_date": "2004-01-01",
+    "index_level": 77.0,
+    "cpih_3m_avg": 77.13333333333333,
+    "index_12m_ago": 75.9,
+    "yoy_pct": 1.449275362318833
+  },
+  {
+    "obs_date": "2004-02-01",
+    "index_level": 77.2,
+    "cpih_3m_avg": 77.16666666666667,
+    "index_12m_ago": 76.1,
+    "yoy_pct": 1.4454664914586184
+  },
+  {
+    "obs_date": "2004-03-01",
+    "index_level": 77.3,
+    "cpih_3m_avg": 77.16666666666667,
+    "index_12m_ago": 76.4,
+    "yoy_pct": 1.1780104712041772
+  },
+  {
+    "obs_date": "2004-04-01",
+    "index_level": 77.6,
+    "cpih_3m_avg": 77.36666666666666,
+    "index_12m_ago": 76.8,
+    "yoy_pct": 1.041666666666663
+  },
+  {
+    "obs_date": "2004-05-01",
+    "index_level": 77.9,
+    "cpih_3m_avg": 77.6,
+    "index_12m_ago": 76.8,
+    "yoy_pct": 1.4322916666666778
+  },
+  {
+    "obs_date": "2004-06-01",
+    "index_level": 77.9,
+    "cpih_3m_avg": 77.8,
+    "index_12m_ago": 76.7,
+    "yoy_pct": 1.5645371577575005
+  },
+  {
+    "obs_date": "2004-07-01",
+    "index_level": 77.7,
+    "cpih_3m_avg": 77.83333333333333,
+    "index_12m_ago": 76.6,
+    "yoy_pct": 1.4360313315927005
+  },
+  {
+    "obs_date": "2004-08-01",
+    "index_level": 77.9,
+    "cpih_3m_avg": 77.83333333333334,
+    "index_12m_ago": 76.8,
+    "yoy_pct": 1.4322916666666778
+  },
+  {
+    "obs_date": "2004-09-01",
+    "index_level": 77.9,
+    "cpih_3m_avg": 77.83333333333334,
+    "index_12m_ago": 77.0,
+    "yoy_pct": 1.168831168831176
+  },
+  {
+    "obs_date": "2004-10-01",
+    "index_level": 78.1,
+    "cpih_3m_avg": 77.96666666666667,
+    "index_12m_ago": 77.1,
+    "yoy_pct": 1.297016861219196
+  },
+  {
+    "obs_date": "2004-11-01",
+    "index_level": 78.3,
+    "cpih_3m_avg": 78.10000000000001,
+    "index_12m_ago": 77.1,
+    "yoy_pct": 1.5564202334630388
+  },
+  {
+    "obs_date": "2004-12-01",
+    "index_level": 78.6,
+    "cpih_3m_avg": 78.33333333333333,
+    "index_12m_ago": 77.3,
+    "yoy_pct": 1.6817593790426872
+  },
+  {
+    "obs_date": "2005-01-01",
+    "index_level": 78.3,
+    "cpih_3m_avg": 78.39999999999999,
+    "index_12m_ago": 77.0,
+    "yoy_pct": 1.6883116883116847
+  },
+  {
+    "obs_date": "2005-02-01",
+    "index_level": 78.5,
+    "cpih_3m_avg": 78.46666666666665,
+    "index_12m_ago": 77.2,
+    "yoy_pct": 1.683937823834193
+  },
+  {
+    "obs_date": "2005-03-01",
+    "index_level": 78.8,
+    "cpih_3m_avg": 78.53333333333335,
+    "index_12m_ago": 77.3,
+    "yoy_pct": 1.9404915912031049
+  },
+  {
+    "obs_date": "2005-04-01",
+    "index_level": 79.1,
+    "cpih_3m_avg": 78.8,
+    "index_12m_ago": 77.6,
+    "yoy_pct": 1.9329896907216497
+  },
+  {
+    "obs_date": "2005-05-01",
+    "index_level": 79.4,
+    "cpih_3m_avg": 79.1,
+    "index_12m_ago": 77.9,
+    "yoy_pct": 1.925545571245186
+  },
+  {
+    "obs_date": "2005-06-01",
+    "index_level": 79.4,
+    "cpih_3m_avg": 79.3,
+    "index_12m_ago": 77.9,
+    "yoy_pct": 1.925545571245186
+  },
+  {
+    "obs_date": "2005-07-01",
+    "index_level": 79.5,
+    "cpih_3m_avg": 79.43333333333334,
+    "index_12m_ago": 77.7,
+    "yoy_pct": 2.316602316602313
+  },
+  {
+    "obs_date": "2005-08-01",
+    "index_level": 79.7,
+    "cpih_3m_avg": 79.53333333333335,
+    "index_12m_ago": 77.9,
+    "yoy_pct": 2.3106546854942196
+  },
+  {
+    "obs_date": "2005-09-01",
+    "index_level": 79.9,
+    "cpih_3m_avg": 79.7,
+    "index_12m_ago": 77.9,
+    "yoy_pct": 2.567394094993581
+  },
+  {
+    "obs_date": "2005-10-01",
+    "index_level": 80.0,
+    "cpih_3m_avg": 79.86666666666667,
+    "index_12m_ago": 78.1,
+    "yoy_pct": 2.432778489116525
+  },
+  {
+    "obs_date": "2005-11-01",
+    "index_level": 80.0,
+    "cpih_3m_avg": 79.96666666666667,
+    "index_12m_ago": 78.3,
+    "yoy_pct": 2.171136653895278
+  },
+  {
+    "obs_date": "2005-12-01",
+    "index_level": 80.3,
+    "cpih_3m_avg": 80.10000000000001,
+    "index_12m_ago": 78.6,
+    "yoy_pct": 2.1628498727735406
+  },
+  {
+    "obs_date": "2006-01-01",
+    "index_level": 80.0,
+    "cpih_3m_avg": 80.10000000000001,
+    "index_12m_ago": 78.3,
+    "yoy_pct": 2.171136653895278
+  },
+  {
+    "obs_date": "2006-02-01",
+    "index_level": 80.2,
+    "cpih_3m_avg": 80.16666666666667,
+    "index_12m_ago": 78.5,
+    "yoy_pct": 2.165605095541405
+  },
+  {
+    "obs_date": "2006-03-01",
+    "index_level": 80.4,
+    "cpih_3m_avg": 80.2,
+    "index_12m_ago": 78.8,
+    "yoy_pct": 2.030456852791889
+  },
+  {
+    "obs_date": "2006-04-01",
+    "index_level": 80.9,
+    "cpih_3m_avg": 80.50000000000001,
+    "index_12m_ago": 79.1,
+    "yoy_pct": 2.275600505689016
+  },
+  {
+    "obs_date": "2006-05-01",
+    "index_level": 81.3,
+    "cpih_3m_avg": 80.86666666666667,
+    "index_12m_ago": 79.4,
+    "yoy_pct": 2.3929471032745484
+  },
+  {
+    "obs_date": "2006-06-01",
+    "index_level": 81.5,
+    "cpih_3m_avg": 81.23333333333333,
+    "index_12m_ago": 79.4,
+    "yoy_pct": 2.644836272040295
+  },
+  {
+    "obs_date": "2006-07-01",
+    "index_level": 81.5,
+    "cpih_3m_avg": 81.43333333333334,
+    "index_12m_ago": 79.5,
+    "yoy_pct": 2.5157232704402515
+  },
+  {
+    "obs_date": "2006-08-01",
+    "index_level": 81.8,
+    "cpih_3m_avg": 81.60000000000001,
+    "index_12m_ago": 79.7,
+    "yoy_pct": 2.634880803011285
+  },
+  {
+    "obs_date": "2006-09-01",
+    "index_level": 81.9,
+    "cpih_3m_avg": 81.73333333333333,
+    "index_12m_ago": 79.9,
+    "yoy_pct": 2.5031289111389237
+  },
+  {
+    "obs_date": "2006-10-01",
+    "index_level": 82.0,
+    "cpih_3m_avg": 81.89999999999999,
+    "index_12m_ago": 80.0,
+    "yoy_pct": 2.5
+  },
+  {
+    "obs_date": "2006-11-01",
+    "index_level": 82.2,
+    "cpih_3m_avg": 82.03333333333335,
+    "index_12m_ago": 80.0,
+    "yoy_pct": 2.7500000000000036
+  },
+  {
+    "obs_date": "2006-12-01",
+    "index_level": 82.6,
+    "cpih_3m_avg": 82.26666666666667,
+    "index_12m_ago": 80.3,
+    "yoy_pct": 2.8642590286425866
+  },
+  {
+    "obs_date": "2007-01-01",
+    "index_level": 82.1,
+    "cpih_3m_avg": 82.3,
+    "index_12m_ago": 80.0,
+    "yoy_pct": 2.624999999999993
+  },
+  {
+    "obs_date": "2007-02-01",
+    "index_level": 82.4,
+    "cpih_3m_avg": 82.36666666666666,
+    "index_12m_ago": 80.2,
+    "yoy_pct": 2.743142144638407
+  },
+  {
+    "obs_date": "2007-03-01",
+    "index_level": 82.8,
+    "cpih_3m_avg": 82.43333333333334,
+    "index_12m_ago": 80.4,
+    "yoy_pct": 2.9850746268656607
+  },
+  {
+    "obs_date": "2007-04-01",
+    "index_level": 83.1,
+    "cpih_3m_avg": 82.76666666666667,
+    "index_12m_ago": 80.9,
+    "yoy_pct": 2.7194066749072787
+  },
+  {
+    "obs_date": "2007-05-01",
+    "index_level": 83.3,
+    "cpih_3m_avg": 83.06666666666666,
+    "index_12m_ago": 81.3,
+    "yoy_pct": 2.4600246002460024
+  },
+  {
+    "obs_date": "2007-06-01",
+    "index_level": 83.5,
+    "cpih_3m_avg": 83.3,
+    "index_12m_ago": 81.5,
+    "yoy_pct": 2.4539877300613497
+  },
+  {
+    "obs_date": "2007-07-01",
+    "index_level": 83.1,
+    "cpih_3m_avg": 83.3,
+    "index_12m_ago": 81.5,
+    "yoy_pct": 1.9631901840490729
+  },
+  {
+    "obs_date": "2007-08-01",
+    "index_level": 83.4,
+    "cpih_3m_avg": 83.33333333333333,
+    "index_12m_ago": 81.8,
+    "yoy_pct": 1.9559902200489103
+  },
+  {
+    "obs_date": "2007-09-01",
+    "index_level": 83.5,
+    "cpih_3m_avg": 83.33333333333333,
+    "index_12m_ago": 81.9,
+    "yoy_pct": 1.9536019536019464
+  },
+  {
+    "obs_date": "2007-10-01",
+    "index_level": 83.8,
+    "cpih_3m_avg": 83.56666666666666,
+    "index_12m_ago": 82.0,
+    "yoy_pct": 2.195121951219509
+  },
+  {
+    "obs_date": "2007-11-01",
+    "index_level": 84.1,
+    "cpih_3m_avg": 83.8,
+    "index_12m_ago": 82.2,
+    "yoy_pct": 2.3114355231143446
+  },
+  {
+    "obs_date": "2007-12-01",
+    "index_level": 84.5,
+    "cpih_3m_avg": 84.13333333333333,
+    "index_12m_ago": 82.6,
+    "yoy_pct": 2.3002421307506125
+  },
+  {
+    "obs_date": "2008-01-01",
+    "index_level": 84.1,
+    "cpih_3m_avg": 84.23333333333333,
+    "index_12m_ago": 82.1,
+    "yoy_pct": 2.43605359317905
+  },
+  {
+    "obs_date": "2008-02-01",
+    "index_level": 84.6,
+    "cpih_3m_avg": 84.39999999999999,
+    "index_12m_ago": 82.4,
+    "yoy_pct": 2.669902912621345
+  },
+  {
+    "obs_date": "2008-03-01",
+    "index_level": 84.9,
+    "cpih_3m_avg": 84.53333333333333,
+    "index_12m_ago": 82.8,
+    "yoy_pct": 2.5362318840579814
+  },
+  {
+    "obs_date": "2008-04-01",
+    "index_level": 85.6,
+    "cpih_3m_avg": 85.03333333333333,
+    "index_12m_ago": 83.1,
+    "yoy_pct": 3.008423586040915
+  },
+  {
+    "obs_date": "2008-05-01",
+    "index_level": 86.1,
+    "cpih_3m_avg": 85.53333333333335,
+    "index_12m_ago": 83.3,
+    "yoy_pct": 3.3613445378151225
+  },
+  {
+    "obs_date": "2008-06-01",
+    "index_level": 86.6,
+    "cpih_3m_avg": 86.09999999999998,
+    "index_12m_ago": 83.5,
+    "yoy_pct": 3.7125748502993945
+  },
+  {
+    "obs_date": "2008-07-01",
+    "index_level": 86.6,
+    "cpih_3m_avg": 86.43333333333332,
+    "index_12m_ago": 83.1,
+    "yoy_pct": 4.21179302045728
+  },
+  {
+    "obs_date": "2008-08-01",
+    "index_level": 87.1,
+    "cpih_3m_avg": 86.76666666666665,
+    "index_12m_ago": 83.4,
+    "yoy_pct": 4.436450839328523
+  },
+  {
+    "obs_date": "2008-09-01",
+    "index_level": 87.5,
+    "cpih_3m_avg": 87.06666666666666,
+    "index_12m_ago": 83.5,
+    "yoy_pct": 4.790419161676646
+  },
+  {
+    "obs_date": "2008-10-01",
+    "index_level": 87.3,
+    "cpih_3m_avg": 87.3,
+    "index_12m_ago": 83.8,
+    "yoy_pct": 4.176610978520286
+  },
+  {
+    "obs_date": "2008-11-01",
+    "index_level": 87.3,
+    "cpih_3m_avg": 87.36666666666667,
+    "index_12m_ago": 84.1,
+    "yoy_pct": 3.804994054696793
+  },
+  {
+    "obs_date": "2008-12-01",
+    "index_level": 87.1,
+    "cpih_3m_avg": 87.23333333333333,
+    "index_12m_ago": 84.5,
+    "yoy_pct": 3.07692307692307
+  },
+  {
+    "obs_date": "2009-01-01",
+    "index_level": 86.6,
+    "cpih_3m_avg": 87.0,
+    "index_12m_ago": 84.1,
+    "yoy_pct": 2.9726516052318672
+  },
+  {
+    "obs_date": "2009-02-01",
+    "index_level": 87.2,
+    "cpih_3m_avg": 86.96666666666665,
+    "index_12m_ago": 84.6,
+    "yoy_pct": 3.0732860520094665
+  },
+  {
+    "obs_date": "2009-03-01",
+    "index_level": 87.3,
+    "cpih_3m_avg": 87.03333333333335,
+    "index_12m_ago": 84.9,
+    "yoy_pct": 2.8268551236749015
+  },
+  {
+    "obs_date": "2009-04-01",
+    "index_level": 87.5,
+    "cpih_3m_avg": 87.33333333333333,
+    "index_12m_ago": 85.6,
+    "yoy_pct": 2.219626168224306
+  },
+  {
+    "obs_date": "2009-05-01",
+    "index_level": 87.9,
+    "cpih_3m_avg": 87.56666666666668,
+    "index_12m_ago": 86.1,
+    "yoy_pct": 2.090592334494787
+  },
+  {
+    "obs_date": "2009-06-01",
+    "index_level": 88.1,
+    "cpih_3m_avg": 87.83333333333333,
+    "index_12m_ago": 86.6,
+    "yoy_pct": 1.7321016166281757
+  },
+  {
+    "obs_date": "2009-07-01",
+    "index_level": 88.0,
+    "cpih_3m_avg": 88.0,
+    "index_12m_ago": 86.6,
+    "yoy_pct": 1.6166281755196372
+  },
+  {
+    "obs_date": "2009-08-01",
+    "index_level": 88.3,
+    "cpih_3m_avg": 88.13333333333333,
+    "index_12m_ago": 87.1,
+    "yoy_pct": 1.3777267508610826
+  },
+  {
+    "obs_date": "2009-09-01",
+    "index_level": 88.3,
+    "cpih_3m_avg": 88.2,
+    "index_12m_ago": 87.5,
+    "yoy_pct": 0.914285714285711
+  },
+  {
+    "obs_date": "2009-10-01",
+    "index_level": 88.4,
+    "cpih_3m_avg": 88.33333333333333,
+    "index_12m_ago": 87.3,
+    "yoy_pct": 1.2600229095074553
+  },
+  {
+    "obs_date": "2009-11-01",
+    "index_level": 88.6,
+    "cpih_3m_avg": 88.43333333333332,
+    "index_12m_ago": 87.3,
+    "yoy_pct": 1.4891179839633415
+  },
+  {
+    "obs_date": "2009-12-01",
+    "index_level": 88.9,
+    "cpih_3m_avg": 88.63333333333333,
+    "index_12m_ago": 87.1,
+    "yoy_pct": 2.066590126291632
+  },
+  {
+    "obs_date": "2010-01-01",
+    "index_level": 88.8,
+    "cpih_3m_avg": 88.76666666666667,
+    "index_12m_ago": 86.6,
+    "yoy_pct": 2.540415704387994
+  },
+  {
+    "obs_date": "2010-02-01",
+    "index_level": 89.0,
+    "cpih_3m_avg": 88.89999999999999,
+    "index_12m_ago": 87.2,
+    "yoy_pct": 2.0642201834862353
+  },
+  {
+    "obs_date": "2010-03-01",
+    "index_level": 89.4,
+    "cpih_3m_avg": 89.06666666666668,
+    "index_12m_ago": 87.3,
+    "yoy_pct": 2.4054982817869512
+  },
+  {
+    "obs_date": "2010-04-01",
+    "index_level": 89.9,
+    "cpih_3m_avg": 89.43333333333334,
+    "index_12m_ago": 87.5,
+    "yoy_pct": 2.7428571428571495
+  },
+  {
+    "obs_date": "2010-05-01",
+    "index_level": 90.1,
+    "cpih_3m_avg": 89.8,
+    "index_12m_ago": 87.9,
+    "yoy_pct": 2.502844141069384
+  },
+  {
+    "obs_date": "2010-06-01",
+    "index_level": 90.2,
+    "cpih_3m_avg": 90.06666666666666,
+    "index_12m_ago": 88.1,
+    "yoy_pct": 2.383654937570952
+  },
+  {
+    "obs_date": "2010-07-01",
+    "index_level": 90.0,
+    "cpih_3m_avg": 90.10000000000001,
+    "index_12m_ago": 88.0,
+    "yoy_pct": 2.272727272727273
+  },
+  {
+    "obs_date": "2010-08-01",
+    "index_level": 90.4,
+    "cpih_3m_avg": 90.2,
+    "index_12m_ago": 88.3,
+    "yoy_pct": 2.3782559456398737
+  },
+  {
+    "obs_date": "2010-09-01",
+    "index_level": 90.4,
+    "cpih_3m_avg": 90.26666666666667,
+    "index_12m_ago": 88.3,
+    "yoy_pct": 2.3782559456398737
+  },
+  {
+    "obs_date": "2010-10-01",
+    "index_level": 90.6,
+    "cpih_3m_avg": 90.46666666666665,
+    "index_12m_ago": 88.4,
+    "yoy_pct": 2.488687782805417
+  },
+  {
+    "obs_date": "2010-11-01",
+    "index_level": 90.9,
+    "cpih_3m_avg": 90.63333333333333,
+    "index_12m_ago": 88.6,
+    "yoy_pct": 2.5959367945824057
+  },
+  {
+    "obs_date": "2010-12-01",
+    "index_level": 91.7,
+    "cpih_3m_avg": 91.06666666666666,
+    "index_12m_ago": 88.9,
+    "yoy_pct": 3.149606299212595
+  },
+  {
+    "obs_date": "2011-01-01",
+    "index_level": 91.8,
+    "cpih_3m_avg": 91.46666666666668,
+    "index_12m_ago": 88.8,
+    "yoy_pct": 3.3783783783783785
+  },
+  {
+    "obs_date": "2011-02-01",
+    "index_level": 92.3,
+    "cpih_3m_avg": 91.93333333333334,
+    "index_12m_ago": 89.0,
+    "yoy_pct": 3.7078651685393225
+  },
+  {
+    "obs_date": "2011-03-01",
+    "index_level": 92.6,
+    "cpih_3m_avg": 92.23333333333333,
+    "index_12m_ago": 89.4,
+    "yoy_pct": 3.5794183445190026
+  },
+  {
+    "obs_date": "2011-04-01",
+    "index_level": 93.3,
+    "cpih_3m_avg": 92.73333333333333,
+    "index_12m_ago": 89.9,
+    "yoy_pct": 3.7819799777530494
+  },
+  {
+    "obs_date": "2011-05-01",
+    "index_level": 93.5,
+    "cpih_3m_avg": 93.13333333333333,
+    "index_12m_ago": 90.1,
+    "yoy_pct": 3.773584905660384
+  },
+  {
+    "obs_date": "2011-06-01",
+    "index_level": 93.5,
+    "cpih_3m_avg": 93.43333333333334,
+    "index_12m_ago": 90.2,
+    "yoy_pct": 3.6585365853658502
+  },
+  {
+    "obs_date": "2011-07-01",
+    "index_level": 93.5,
+    "cpih_3m_avg": 93.5,
+    "index_12m_ago": 90.0,
+    "yoy_pct": 3.888888888888889
+  },
+  {
+    "obs_date": "2011-08-01",
+    "index_level": 93.9,
+    "cpih_3m_avg": 93.63333333333333,
+    "index_12m_ago": 90.4,
+    "yoy_pct": 3.8716814159292032
+  },
+  {
+    "obs_date": "2011-09-01",
+    "index_level": 94.5,
+    "cpih_3m_avg": 93.96666666666665,
+    "index_12m_ago": 90.4,
+    "yoy_pct": 4.535398230088489
+  },
+  {
+    "obs_date": "2011-10-01",
+    "index_level": 94.5,
+    "cpih_3m_avg": 94.3,
+    "index_12m_ago": 90.6,
+    "yoy_pct": 4.30463576158941
+  },
+  {
+    "obs_date": "2011-11-01",
+    "index_level": 94.7,
+    "cpih_3m_avg": 94.56666666666666,
+    "index_12m_ago": 90.9,
+    "yoy_pct": 4.180418041804177
+  },
+  {
+    "obs_date": "2011-12-01",
+    "index_level": 95.0,
+    "cpih_3m_avg": 94.73333333333333,
+    "index_12m_ago": 91.7,
+    "yoy_pct": 3.5986913849509237
+  },
+  {
+    "obs_date": "2012-01-01",
+    "index_level": 94.7,
+    "cpih_3m_avg": 94.8,
+    "index_12m_ago": 91.8,
+    "yoy_pct": 3.1590413943355182
+  },
+  {
+    "obs_date": "2012-02-01",
+    "index_level": 95.2,
+    "cpih_3m_avg": 94.96666666666665,
+    "index_12m_ago": 92.3,
+    "yoy_pct": 3.1419284940411765
+  },
+  {
+    "obs_date": "2012-03-01",
+    "index_level": 95.4,
+    "cpih_3m_avg": 95.10000000000001,
+    "index_12m_ago": 92.6,
+    "yoy_pct": 3.0237580993520643
+  },
+  {
+    "obs_date": "2012-04-01",
+    "index_level": 95.9,
+    "cpih_3m_avg": 95.5,
+    "index_12m_ago": 93.3,
+    "yoy_pct": 2.786709539121124
+  },
+  {
+    "obs_date": "2012-05-01",
+    "index_level": 95.9,
+    "cpih_3m_avg": 95.73333333333335,
+    "index_12m_ago": 93.5,
+    "yoy_pct": 2.5668449197861025
+  },
+  {
+    "obs_date": "2012-06-01",
+    "index_level": 95.6,
+    "cpih_3m_avg": 95.8,
+    "index_12m_ago": 93.5,
+    "yoy_pct": 2.245989304812828
+  },
+  {
+    "obs_date": "2012-07-01",
+    "index_level": 95.7,
+    "cpih_3m_avg": 95.73333333333333,
+    "index_12m_ago": 93.5,
+    "yoy_pct": 2.3529411764705914
+  },
+  {
+    "obs_date": "2012-08-01",
+    "index_level": 96.1,
+    "cpih_3m_avg": 95.8,
+    "index_12m_ago": 93.9,
+    "yoy_pct": 2.3429179978700625
+  },
+  {
+    "obs_date": "2012-09-01",
+    "index_level": 96.4,
+    "cpih_3m_avg": 96.06666666666668,
+    "index_12m_ago": 94.5,
+    "yoy_pct": 2.0105820105820165
+  },
+  {
+    "obs_date": "2012-10-01",
+    "index_level": 96.8,
+    "cpih_3m_avg": 96.43333333333334,
+    "index_12m_ago": 94.5,
+    "yoy_pct": 2.433862433862431
+  },
+  {
+    "obs_date": "2012-11-01",
+    "index_level": 97.0,
+    "cpih_3m_avg": 96.73333333333333,
+    "index_12m_ago": 94.7,
+    "yoy_pct": 2.4287222808870084
+  },
+  {
+    "obs_date": "2012-12-01",
+    "index_level": 97.3,
+    "cpih_3m_avg": 97.03333333333335,
+    "index_12m_ago": 95.0,
+    "yoy_pct": 2.4210526315789442
+  },
+  {
+    "obs_date": "2013-01-01",
+    "index_level": 97.0,
+    "cpih_3m_avg": 97.10000000000001,
+    "index_12m_ago": 94.7,
+    "yoy_pct": 2.4287222808870084
+  },
+  {
+    "obs_date": "2013-02-01",
+    "index_level": 97.5,
+    "cpih_3m_avg": 97.26666666666667,
+    "index_12m_ago": 95.2,
+    "yoy_pct": 2.4159663865546186
+  },
+  {
+    "obs_date": "2013-03-01",
+    "index_level": 97.8,
+    "cpih_3m_avg": 97.43333333333334,
+    "index_12m_ago": 95.4,
+    "yoy_pct": 2.5157232704402426
+  },
+  {
+    "obs_date": "2013-04-01",
+    "index_level": 98.0,
+    "cpih_3m_avg": 97.76666666666667,
+    "index_12m_ago": 95.9,
+    "yoy_pct": 2.189781021897804
+  },
+  {
+    "obs_date": "2013-05-01",
+    "index_level": 98.2,
+    "cpih_3m_avg": 98.0,
+    "index_12m_ago": 95.9,
+    "yoy_pct": 2.3983315954118845
+  },
+  {
+    "obs_date": "2013-06-01",
+    "index_level": 98.0,
+    "cpih_3m_avg": 98.06666666666666,
+    "index_12m_ago": 95.6,
+    "yoy_pct": 2.510460251046031
+  },
+  {
+    "obs_date": "2013-07-01",
+    "index_level": 98.0,
+    "cpih_3m_avg": 98.06666666666666,
+    "index_12m_ago": 95.7,
+    "yoy_pct": 2.4033437826541246
+  },
+  {
+    "obs_date": "2013-08-01",
+    "index_level": 98.4,
+    "cpih_3m_avg": 98.13333333333333,
+    "index_12m_ago": 96.1,
+    "yoy_pct": 2.393340270551521
+  },
+  {
+    "obs_date": "2013-09-01",
+    "index_level": 98.7,
+    "cpih_3m_avg": 98.36666666666667,
+    "index_12m_ago": 96.4,
+    "yoy_pct": 2.3858921161825695
+  },
+  {
+    "obs_date": "2013-10-01",
+    "index_level": 98.8,
+    "cpih_3m_avg": 98.63333333333334,
+    "index_12m_ago": 96.8,
+    "yoy_pct": 2.066115702479339
+  },
+  {
+    "obs_date": "2013-11-01",
+    "index_level": 98.8,
+    "cpih_3m_avg": 98.76666666666667,
+    "index_12m_ago": 97.0,
+    "yoy_pct": 1.8556701030927805
+  },
+  {
+    "obs_date": "2013-12-01",
+    "index_level": 99.2,
+    "cpih_3m_avg": 98.93333333333334,
+    "index_12m_ago": 97.3,
+    "yoy_pct": 1.9527235354573542
+  },
+  {
+    "obs_date": "2014-01-01",
+    "index_level": 98.7,
+    "cpih_3m_avg": 98.89999999999999,
+    "index_12m_ago": 97.0,
+    "yoy_pct": 1.7525773195876317
+  },
+  {
+    "obs_date": "2014-02-01",
+    "index_level": 99.1,
+    "cpih_3m_avg": 99.0,
+    "index_12m_ago": 97.5,
+    "yoy_pct": 1.6410256410256352
+  },
+  {
+    "obs_date": "2014-03-01",
+    "index_level": 99.3,
+    "cpih_3m_avg": 99.03333333333335,
+    "index_12m_ago": 97.8,
+    "yoy_pct": 1.5337423312883436
+  },
+  {
+    "obs_date": "2014-04-01",
+    "index_level": 99.6,
+    "cpih_3m_avg": 99.33333333333333,
+    "index_12m_ago": 98.0,
+    "yoy_pct": 1.632653061224484
+  },
+  {
+    "obs_date": "2014-05-01",
+    "index_level": 99.6,
+    "cpih_3m_avg": 99.5,
+    "index_12m_ago": 98.2,
+    "yoy_pct": 1.4256619144602765
+  },
+  {
+    "obs_date": "2014-06-01",
+    "index_level": 99.8,
+    "cpih_3m_avg": 99.66666666666667,
+    "index_12m_ago": 98.0,
+    "yoy_pct": 1.8367346938775482
+  },
+  {
+    "obs_date": "2014-07-01",
+    "index_level": 99.6,
+    "cpih_3m_avg": 99.66666666666667,
+    "index_12m_ago": 98.0,
+    "yoy_pct": 1.632653061224484
+  },
+  {
+    "obs_date": "2014-08-01",
+    "index_level": 99.9,
+    "cpih_3m_avg": 99.76666666666665,
+    "index_12m_ago": 98.4,
+    "yoy_pct": 1.524390243902439
+  },
+  {
+    "obs_date": "2014-09-01",
+    "index_level": 100.0,
+    "cpih_3m_avg": 99.83333333333333,
+    "index_12m_ago": 98.7,
+    "yoy_pct": 1.3171225937183355
+  },
+  {
+    "obs_date": "2014-10-01",
+    "index_level": 100.1,
+    "cpih_3m_avg": 100.0,
+    "index_12m_ago": 98.8,
+    "yoy_pct": 1.3157894736842077
+  },
+  {
+    "obs_date": "2014-11-01",
+    "index_level": 99.9,
+    "cpih_3m_avg": 100.0,
+    "index_12m_ago": 98.8,
+    "yoy_pct": 1.1133603238866483
+  },
+  {
+    "obs_date": "2014-12-01",
+    "index_level": 99.9,
+    "cpih_3m_avg": 99.96666666666665,
+    "index_12m_ago": 99.2,
+    "yoy_pct": 0.7056451612903254
+  },
+  {
+    "obs_date": "2015-01-01",
+    "index_level": 99.2,
+    "cpih_3m_avg": 99.66666666666667,
+    "index_12m_ago": 98.7,
+    "yoy_pct": 0.5065856129685917
+  },
+  {
+    "obs_date": "2015-02-01",
+    "index_level": 99.5,
+    "cpih_3m_avg": 99.53333333333335,
+    "index_12m_ago": 99.1,
+    "yoy_pct": 0.4036326942482399
+  },
+  {
+    "obs_date": "2015-03-01",
+    "index_level": 99.6,
+    "cpih_3m_avg": 99.43333333333332,
+    "index_12m_ago": 99.3,
+    "yoy_pct": 0.3021148036253748
+  },
+  {
+    "obs_date": "2015-04-01",
+    "index_level": 99.9,
+    "cpih_3m_avg": 99.66666666666667,
+    "index_12m_ago": 99.6,
+    "yoy_pct": 0.30120481927711984
+  },
+  {
+    "obs_date": "2015-05-01",
+    "index_level": 100.1,
+    "cpih_3m_avg": 99.86666666666667,
+    "index_12m_ago": 99.6,
+    "yoy_pct": 0.5020080321285141
+  },
+  {
+    "obs_date": "2015-06-01",
+    "index_level": 100.1,
+    "cpih_3m_avg": 100.03333333333335,
+    "index_12m_ago": 99.8,
+    "yoy_pct": 0.30060120240480676
+  },
+  {
+    "obs_date": "2015-07-01",
+    "index_level": 100.0,
+    "cpih_3m_avg": 100.06666666666666,
+    "index_12m_ago": 99.6,
+    "yoy_pct": 0.40160642570281696
+  },
+  {
+    "obs_date": "2015-08-01",
+    "index_level": 100.3,
+    "cpih_3m_avg": 100.13333333333333,
+    "index_12m_ago": 99.9,
+    "yoy_pct": 0.4004004004003918
+  },
+  {
+    "obs_date": "2015-09-01",
+    "index_level": 100.2,
+    "cpih_3m_avg": 100.16666666666667,
+    "index_12m_ago": 100.0,
+    "yoy_pct": 0.20000000000000284
+  },
+  {
+    "obs_date": "2015-10-01",
+    "index_level": 100.3,
+    "cpih_3m_avg": 100.26666666666667,
+    "index_12m_ago": 100.1,
+    "yoy_pct": 0.19980019980020264
+  },
+  {
+    "obs_date": "2015-11-01",
+    "index_level": 100.3,
+    "cpih_3m_avg": 100.26666666666667,
+    "index_12m_ago": 99.9,
+    "yoy_pct": 0.4004004004003918
+  },
+  {
+    "obs_date": "2015-12-01",
+    "index_level": 100.4,
+    "cpih_3m_avg": 100.33333333333333,
+    "index_12m_ago": 99.9,
+    "yoy_pct": 0.5005005005005004
+  },
+  {
+    "obs_date": "2016-01-01",
+    "index_level": 99.9,
+    "cpih_3m_avg": 100.2,
+    "index_12m_ago": 99.2,
+    "yoy_pct": 0.7056451612903254
+  },
+  {
+    "obs_date": "2016-02-01",
+    "index_level": 100.1,
+    "cpih_3m_avg": 100.13333333333333,
+    "index_12m_ago": 99.5,
+    "yoy_pct": 0.6030150753768787
+  },
+  {
+    "obs_date": "2016-03-01",
+    "index_level": 100.4,
+    "cpih_3m_avg": 100.13333333333333,
+    "index_12m_ago": 99.6,
+    "yoy_pct": 0.8032128514056339
+  },
+  {
+    "obs_date": "2016-04-01",
+    "index_level": 100.6,
+    "cpih_3m_avg": 100.36666666666667,
+    "index_12m_ago": 99.9,
+    "yoy_pct": 0.7007007007006892
+  },
+  {
+    "obs_date": "2016-05-01",
+    "index_level": 100.8,
+    "cpih_3m_avg": 100.60000000000001,
+    "index_12m_ago": 100.1,
+    "yoy_pct": 0.6993006993007022
+  },
+  {
+    "obs_date": "2016-06-01",
+    "index_level": 101.0,
+    "cpih_3m_avg": 100.8,
+    "index_12m_ago": 100.1,
+    "yoy_pct": 0.8991008991009048
+  },
+  {
+    "obs_date": "2016-07-01",
+    "index_level": 100.9,
+    "cpih_3m_avg": 100.90000000000002,
+    "index_12m_ago": 100.0,
+    "yoy_pct": 0.9000000000000057
+  },
+  {
+    "obs_date": "2016-08-01",
+    "index_level": 101.2,
+    "cpih_3m_avg": 101.03333333333335,
+    "index_12m_ago": 100.3,
+    "yoy_pct": 0.8973080757726877
+  },
+  {
+    "obs_date": "2016-09-01",
+    "index_level": 101.5,
+    "cpih_3m_avg": 101.2,
+    "index_12m_ago": 100.2,
+    "yoy_pct": 1.2974051896207557
+  },
+  {
+    "obs_date": "2016-10-01",
+    "index_level": 101.6,
+    "cpih_3m_avg": 101.43333333333332,
+    "index_12m_ago": 100.3,
+    "yoy_pct": 1.2961116650049822
+  },
+  {
+    "obs_date": "2016-11-01",
+    "index_level": 101.8,
+    "cpih_3m_avg": 101.63333333333333,
+    "index_12m_ago": 100.3,
+    "yoy_pct": 1.4955134596211366
+  },
+  {
+    "obs_date": "2016-12-01",
+    "index_level": 102.2,
+    "cpih_3m_avg": 101.86666666666666,
+    "index_12m_ago": 100.4,
+    "yoy_pct": 1.7928286852589612
+  },
+  {
+    "obs_date": "2017-01-01",
+    "index_level": 101.8,
+    "cpih_3m_avg": 101.93333333333334,
+    "index_12m_ago": 99.9,
+    "yoy_pct": 1.9019019019018932
+  },
+  {
+    "obs_date": "2017-02-01",
+    "index_level": 102.4,
+    "cpih_3m_avg": 102.13333333333333,
+    "index_12m_ago": 100.1,
+    "yoy_pct": 2.297702297702309
+  },
+  {
+    "obs_date": "2017-03-01",
+    "index_level": 102.7,
+    "cpih_3m_avg": 102.3,
+    "index_12m_ago": 100.4,
+    "yoy_pct": 2.2908366533864513
+  },
+  {
+    "obs_date": "2017-04-01",
+    "index_level": 103.2,
+    "cpih_3m_avg": 102.76666666666667,
+    "index_12m_ago": 100.6,
+    "yoy_pct": 2.5844930417495116
+  },
+  {
+    "obs_date": "2017-05-01",
+    "index_level": 103.5,
+    "cpih_3m_avg": 103.13333333333333,
+    "index_12m_ago": 100.8,
+    "yoy_pct": 2.6785714285714315
+  },
+  {
+    "obs_date": "2017-06-01",
+    "index_level": 103.5,
+    "cpih_3m_avg": 103.39999999999999,
+    "index_12m_ago": 101.0,
+    "yoy_pct": 2.4752475247524752
+  },
+  {
+    "obs_date": "2017-07-01",
+    "index_level": 103.5,
+    "cpih_3m_avg": 103.5,
+    "index_12m_ago": 100.9,
+    "yoy_pct": 2.576808721506436
+  },
+  {
+    "obs_date": "2017-08-01",
+    "index_level": 104.0,
+    "cpih_3m_avg": 103.66666666666667,
+    "index_12m_ago": 101.2,
+    "yoy_pct": 2.766798418972329
+  },
+  {
+    "obs_date": "2017-09-01",
+    "index_level": 104.3,
+    "cpih_3m_avg": 103.93333333333334,
+    "index_12m_ago": 101.5,
+    "yoy_pct": 2.7586206896551695
+  },
+  {
+    "obs_date": "2017-10-01",
+    "index_level": 104.4,
+    "cpih_3m_avg": 104.23333333333335,
+    "index_12m_ago": 101.6,
+    "yoy_pct": 2.755905511811035
+  },
+  {
+    "obs_date": "2017-11-01",
+    "index_level": 104.7,
+    "cpih_3m_avg": 104.46666666666665,
+    "index_12m_ago": 101.8,
+    "yoy_pct": 2.84872298624755
+  },
+  {
+    "obs_date": "2017-12-01",
+    "index_level": 105.0,
+    "cpih_3m_avg": 104.7,
+    "index_12m_ago": 102.2,
+    "yoy_pct": 2.7397260273972575
+  },
+  {
+    "obs_date": "2018-01-01",
+    "index_level": 104.5,
+    "cpih_3m_avg": 104.73333333333333,
+    "index_12m_ago": 101.8,
+    "yoy_pct": 2.6522593320235783
+  },
+  {
+    "obs_date": "2018-02-01",
+    "index_level": 104.9,
+    "cpih_3m_avg": 104.8,
+    "index_12m_ago": 102.4,
+    "yoy_pct": 2.44140625
+  },
+  {
+    "obs_date": "2018-03-01",
+    "index_level": 105.1,
+    "cpih_3m_avg": 104.83333333333333,
+    "index_12m_ago": 102.7,
+    "yoy_pct": 2.336903602726379
+  },
+  {
+    "obs_date": "2018-04-01",
+    "index_level": 105.5,
+    "cpih_3m_avg": 105.16666666666667,
+    "index_12m_ago": 103.2,
+    "yoy_pct": 2.228682170542633
+  },
+  {
+    "obs_date": "2018-05-01",
+    "index_level": 105.9,
+    "cpih_3m_avg": 105.5,
+    "index_12m_ago": 103.5,
+    "yoy_pct": 2.3188405797101503
+  },
+  {
+    "obs_date": "2018-06-01",
+    "index_level": 105.9,
+    "cpih_3m_avg": 105.76666666666667,
+    "index_12m_ago": 103.5,
+    "yoy_pct": 2.3188405797101503
+  },
+  {
+    "obs_date": "2018-07-01",
+    "index_level": 105.9,
+    "cpih_3m_avg": 105.90000000000002,
+    "index_12m_ago": 103.5,
+    "yoy_pct": 2.3188405797101503
+  },
+  {
+    "obs_date": "2018-08-01",
+    "index_level": 106.5,
+    "cpih_3m_avg": 106.10000000000001,
+    "index_12m_ago": 104.0,
+    "yoy_pct": 2.4038461538461537
+  },
+  {
+    "obs_date": "2018-09-01",
+    "index_level": 106.6,
+    "cpih_3m_avg": 106.33333333333333,
+    "index_12m_ago": 104.3,
+    "yoy_pct": 2.205177372962605
+  },
+  {
+    "obs_date": "2018-10-01",
+    "index_level": 106.7,
+    "cpih_3m_avg": 106.60000000000001,
+    "index_12m_ago": 104.4,
+    "yoy_pct": 2.203065134099614
+  },
+  {
+    "obs_date": "2018-11-01",
+    "index_level": 106.9,
+    "cpih_3m_avg": 106.73333333333335,
+    "index_12m_ago": 104.7,
+    "yoy_pct": 2.1012416427889233
+  },
+  {
+    "obs_date": "2018-12-01",
+    "index_level": 107.1,
+    "cpih_3m_avg": 106.90000000000002,
+    "index_12m_ago": 105.0,
+    "yoy_pct": 1.9999999999999947
+  },
+  {
+    "obs_date": "2019-01-01",
+    "index_level": 106.4,
+    "cpih_3m_avg": 106.8,
+    "index_12m_ago": 104.5,
+    "yoy_pct": 1.8181818181818237
+  },
+  {
+    "obs_date": "2019-02-01",
+    "index_level": 106.8,
+    "cpih_3m_avg": 106.76666666666667,
+    "index_12m_ago": 104.9,
+    "yoy_pct": 1.8112488083889335
+  },
+  {
+    "obs_date": "2019-03-01",
+    "index_level": 107.0,
+    "cpih_3m_avg": 106.73333333333333,
+    "index_12m_ago": 105.1,
+    "yoy_pct": 1.8078020932445344
+  },
+  {
+    "obs_date": "2019-04-01",
+    "index_level": 107.6,
+    "cpih_3m_avg": 107.13333333333333,
+    "index_12m_ago": 105.5,
+    "yoy_pct": 1.9905213270142126
+  },
+  {
+    "obs_date": "2019-05-01",
+    "index_level": 107.9,
+    "cpih_3m_avg": 107.5,
+    "index_12m_ago": 105.9,
+    "yoy_pct": 1.8885741265344664
+  },
+  {
+    "obs_date": "2019-06-01",
+    "index_level": 107.9,
+    "cpih_3m_avg": 107.8,
+    "index_12m_ago": 105.9,
+    "yoy_pct": 1.8885741265344664
+  },
+  {
+    "obs_date": "2019-07-01",
+    "index_level": 108.0,
+    "cpih_3m_avg": 107.93333333333334,
+    "index_12m_ago": 105.9,
+    "yoy_pct": 1.9830028328611844
+  },
+  {
+    "obs_date": "2019-08-01",
+    "index_level": 108.3,
+    "cpih_3m_avg": 108.06666666666666,
+    "index_12m_ago": 106.5,
+    "yoy_pct": 1.6901408450704198
+  },
+  {
+    "obs_date": "2019-09-01",
+    "index_level": 108.4,
+    "cpih_3m_avg": 108.23333333333335,
+    "index_12m_ago": 106.6,
+    "yoy_pct": 1.6885553470919432
+  },
+  {
+    "obs_date": "2019-10-01",
+    "index_level": 108.3,
+    "cpih_3m_avg": 108.33333333333333,
+    "index_12m_ago": 106.7,
+    "yoy_pct": 1.4995313964386077
+  },
+  {
+    "obs_date": "2019-11-01",
+    "index_level": 108.5,
+    "cpih_3m_avg": 108.39999999999999,
+    "index_12m_ago": 106.9,
+    "yoy_pct": 1.4967259120673473
+  },
+  {
+    "obs_date": "2019-12-01",
+    "index_level": 108.5,
+    "cpih_3m_avg": 108.43333333333334,
+    "index_12m_ago": 107.1,
+    "yoy_pct": 1.3071895424836655
+  },
+  {
+    "obs_date": "2020-01-01",
+    "index_level": 108.3,
+    "cpih_3m_avg": 108.43333333333334,
+    "index_12m_ago": 106.4,
+    "yoy_pct": 1.7857142857142776
+  },
+  {
+    "obs_date": "2020-02-01",
+    "index_level": 108.6,
+    "cpih_3m_avg": 108.46666666666665,
+    "index_12m_ago": 106.8,
+    "yoy_pct": 1.6853932584269637
+  },
+  {
+    "obs_date": "2020-03-01",
+    "index_level": 108.6,
+    "cpih_3m_avg": 108.5,
+    "index_12m_ago": 107.0,
+    "yoy_pct": 1.495327102803733
+  },
+  {
+    "obs_date": "2020-04-01",
+    "index_level": 108.6,
+    "cpih_3m_avg": 108.59999999999998,
+    "index_12m_ago": 107.6,
+    "yoy_pct": 0.929368029739777
+  },
+  {
+    "obs_date": "2020-05-01",
+    "index_level": 108.6,
+    "cpih_3m_avg": 108.59999999999998,
+    "index_12m_ago": 107.9,
+    "yoy_pct": 0.6487488415199153
+  },
+  {
+    "obs_date": "2020-06-01",
+    "index_level": 108.8,
+    "cpih_3m_avg": 108.66666666666667,
+    "index_12m_ago": 107.9,
+    "yoy_pct": 0.8341056533827539
+  },
+  {
+    "obs_date": "2020-07-01",
+    "index_level": 109.2,
+    "cpih_3m_avg": 108.86666666666666,
+    "index_12m_ago": 108.0,
+    "yoy_pct": 1.1111111111111138
+  },
+  {
+    "obs_date": "2020-08-01",
+    "index_level": 108.8,
+    "cpih_3m_avg": 108.93333333333334,
+    "index_12m_ago": 108.3,
+    "yoy_pct": 0.46168051708217916
+  },
+  {
+    "obs_date": "2020-09-01",
+    "index_level": 109.2,
+    "cpih_3m_avg": 109.06666666666666,
+    "index_12m_ago": 108.4,
+    "yoy_pct": 0.7380073800737981
+  },
+  {
+    "obs_date": "2020-10-01",
+    "index_level": 109.2,
+    "cpih_3m_avg": 109.06666666666666,
+    "index_12m_ago": 108.3,
+    "yoy_pct": 0.8310249307479277
+  },
+  {
+    "obs_date": "2020-11-01",
+    "index_level": 109.1,
+    "cpih_3m_avg": 109.16666666666667,
+    "index_12m_ago": 108.5,
+    "yoy_pct": 0.5529953917050638
+  },
+  {
+    "obs_date": "2020-12-01",
+    "index_level": 109.4,
+    "cpih_3m_avg": 109.23333333333335,
+    "index_12m_ago": 108.5,
+    "yoy_pct": 0.829493087557609
+  },
+  {
+    "obs_date": "2021-01-01",
+    "index_level": 109.3,
+    "cpih_3m_avg": 109.26666666666667,
+    "index_12m_ago": 108.3,
+    "yoy_pct": 0.9233610341643583
+  },
+  {
+    "obs_date": "2021-02-01",
+    "index_level": 109.4,
+    "cpih_3m_avg": 109.36666666666667,
+    "index_12m_ago": 108.6,
+    "yoy_pct": 0.7366482504604157
+  },
+  {
+    "obs_date": "2021-03-01",
+    "index_level": 109.7,
+    "cpih_3m_avg": 109.46666666666665,
+    "index_12m_ago": 108.6,
+    "yoy_pct": 1.012891344383065
+  },
+  {
+    "obs_date": "2021-04-01",
+    "index_level": 110.4,
+    "cpih_3m_avg": 109.83333333333333,
+    "index_12m_ago": 108.6,
+    "yoy_pct": 1.6574585635359222
+  },
+  {
+    "obs_date": "2021-05-01",
+    "index_level": 111.0,
+    "cpih_3m_avg": 110.36666666666667,
+    "index_12m_ago": 108.6,
+    "yoy_pct": 2.209944751381221
+  },
+  {
+    "obs_date": "2021-06-01",
+    "index_level": 111.4,
+    "cpih_3m_avg": 110.93333333333334,
+    "index_12m_ago": 108.8,
+    "yoy_pct": 2.389705882352949
+  },
+  {
+    "obs_date": "2021-07-01",
+    "index_level": 111.4,
+    "cpih_3m_avg": 111.26666666666667,
+    "index_12m_ago": 109.2,
+    "yoy_pct": 2.0146520146520173
+  },
+  {
+    "obs_date": "2021-08-01",
+    "index_level": 112.1,
+    "cpih_3m_avg": 111.63333333333333,
+    "index_12m_ago": 108.8,
+    "yoy_pct": 3.033088235294115
+  },
+  {
+    "obs_date": "2021-09-01",
+    "index_level": 112.4,
+    "cpih_3m_avg": 111.96666666666665,
+    "index_12m_ago": 109.2,
+    "yoy_pct": 2.930402930402933
+  },
+  {
+    "obs_date": "2021-10-01",
+    "index_level": 113.4,
+    "cpih_3m_avg": 112.63333333333333,
+    "index_12m_ago": 109.2,
+    "yoy_pct": 3.8461538461538485
+  },
+  {
+    "obs_date": "2021-11-01",
+    "index_level": 114.1,
+    "cpih_3m_avg": 113.3,
+    "index_12m_ago": 109.1,
+    "yoy_pct": 4.582951420714941
+  },
+  {
+    "obs_date": "2021-12-01",
+    "index_level": 114.7,
+    "cpih_3m_avg": 114.06666666666666,
+    "index_12m_ago": 109.4,
+    "yoy_pct": 4.844606946983545
+  },
+  {
+    "obs_date": "2022-01-01",
+    "index_level": 114.6,
+    "cpih_3m_avg": 114.46666666666665,
+    "index_12m_ago": 109.3,
+    "yoy_pct": 4.8490393412625785
+  },
+  {
+    "obs_date": "2022-02-01",
+    "index_level": 115.4,
+    "cpih_3m_avg": 114.90000000000002,
+    "index_12m_ago": 109.4,
+    "yoy_pct": 5.484460694698354
+  },
+  {
+    "obs_date": "2022-03-01",
+    "index_level": 116.5,
+    "cpih_3m_avg": 115.5,
+    "index_12m_ago": 109.7,
+    "yoy_pct": 6.198723792160435
+  },
+  {
+    "obs_date": "2022-04-01",
+    "index_level": 119.0,
+    "cpih_3m_avg": 116.96666666666665,
+    "index_12m_ago": 110.4,
+    "yoy_pct": 7.789855072463762
+  },
+  {
+    "obs_date": "2022-05-01",
+    "index_level": 119.7,
+    "cpih_3m_avg": 118.39999999999999,
+    "index_12m_ago": 111.0,
+    "yoy_pct": 7.8378378378378395
+  },
+  {
+    "obs_date": "2022-06-01",
+    "index_level": 120.5,
+    "cpih_3m_avg": 119.73333333333333,
+    "index_12m_ago": 111.4,
+    "yoy_pct": 8.168761220825846
+  },
+  {
+    "obs_date": "2022-07-01",
+    "index_level": 121.2,
+    "cpih_3m_avg": 120.46666666666665,
+    "index_12m_ago": 111.4,
+    "yoy_pct": 8.797127468581685
+  },
+  {
+    "obs_date": "2022-08-01",
+    "index_level": 121.8,
+    "cpih_3m_avg": 121.16666666666667,
+    "index_12m_ago": 112.1,
+    "yoy_pct": 8.65298840321142
+  },
+  {
+    "obs_date": "2022-09-01",
+    "index_level": 122.3,
+    "cpih_3m_avg": 121.76666666666667,
+    "index_12m_ago": 112.4,
+    "yoy_pct": 8.807829181494654
+  },
+  {
+    "obs_date": "2022-10-01",
+    "index_level": 124.3,
+    "cpih_3m_avg": 122.8,
+    "index_12m_ago": 113.4,
+    "yoy_pct": 9.61199294532627
+  },
+  {
+    "obs_date": "2022-11-01",
+    "index_level": 124.8,
+    "cpih_3m_avg": 123.8,
+    "index_12m_ago": 114.1,
+    "yoy_pct": 9.377738825591589
+  },
+  {
+    "obs_date": "2022-12-01",
+    "index_level": 125.3,
+    "cpih_3m_avg": 124.8,
+    "index_12m_ago": 114.7,
+    "yoy_pct": 9.241499564080206
+  },
+  {
+    "obs_date": "2023-01-01",
+    "index_level": 124.8,
+    "cpih_3m_avg": 124.96666666666665,
+    "index_12m_ago": 114.6,
+    "yoy_pct": 8.900523560209427
+  },
+  {
+    "obs_date": "2023-02-01",
+    "index_level": 126.0,
+    "cpih_3m_avg": 125.36666666666667,
+    "index_12m_ago": 115.4,
+    "yoy_pct": 9.185441941074519
+  },
+  {
+    "obs_date": "2023-03-01",
+    "index_level": 126.8,
+    "cpih_3m_avg": 125.86666666666667,
+    "index_12m_ago": 116.5,
+    "yoy_pct": 8.841201716738196
+  },
+  {
+    "obs_date": "2023-04-01",
+    "index_level": 128.3,
+    "cpih_3m_avg": 127.03333333333335,
+    "index_12m_ago": 119.0,
+    "yoy_pct": 7.815126050420178
+  },
+  {
+    "obs_date": "2023-05-01",
+    "index_level": 129.1,
+    "cpih_3m_avg": 128.0666666666667,
+    "index_12m_ago": 119.7,
+    "yoy_pct": 7.852965747702582
+  },
+  {
+    "obs_date": "2023-06-01",
+    "index_level": 129.4,
+    "cpih_3m_avg": 128.9333333333333,
+    "index_12m_ago": 120.5,
+    "yoy_pct": 7.3858921161825775
+  },
+  {
+    "obs_date": "2023-07-01",
+    "index_level": 129.0,
+    "cpih_3m_avg": 129.16666666666666,
+    "index_12m_ago": 121.2,
+    "yoy_pct": 6.435643564356433
+  },
+  {
+    "obs_date": "2023-08-01",
+    "index_level": 129.4,
+    "cpih_3m_avg": 129.26666666666665,
+    "index_12m_ago": 121.8,
+    "yoy_pct": 6.23973727422004
+  },
+  {
+    "obs_date": "2023-09-01",
+    "index_level": 130.1,
+    "cpih_3m_avg": 129.5,
+    "index_12m_ago": 122.3,
+    "yoy_pct": 6.377759607522484
+  },
+  {
+    "obs_date": "2023-10-01",
+    "index_level": 130.2,
+    "cpih_3m_avg": 129.9,
+    "index_12m_ago": 124.3,
+    "yoy_pct": 4.746580852775536
+  },
+  {
+    "obs_date": "2023-11-01",
+    "index_level": 130.0,
+    "cpih_3m_avg": 130.1,
+    "index_12m_ago": 124.8,
+    "yoy_pct": 4.166666666666669
+  },
+  {
+    "obs_date": "2023-12-01",
+    "index_level": 130.5,
+    "cpih_3m_avg": 130.23333333333332,
+    "index_12m_ago": 125.3,
+    "yoy_pct": 4.150039904229851
+  },
+  {
+    "obs_date": "2024-01-01",
+    "index_level": 130.0,
+    "cpih_3m_avg": 130.16666666666666,
+    "index_12m_ago": 124.8,
+    "yoy_pct": 4.166666666666669
+  },
+  {
+    "obs_date": "2024-02-01",
+    "index_level": 130.8,
+    "cpih_3m_avg": 130.43333333333334,
+    "index_12m_ago": 126.0,
+    "yoy_pct": 3.8095238095238186
+  },
+  {
+    "obs_date": "2024-03-01",
+    "index_level": 131.6,
+    "cpih_3m_avg": 130.79999999999998,
+    "index_12m_ago": 126.8,
+    "yoy_pct": 3.785488958990534
+  },
+  {
+    "obs_date": "2024-04-01",
+    "index_level": 132.2,
+    "cpih_3m_avg": 131.53333333333333,
+    "index_12m_ago": 128.3,
+    "yoy_pct": 3.039750584567402
+  },
+  {
+    "obs_date": "2024-05-01",
+    "index_level": 132.7,
+    "cpih_3m_avg": 132.16666666666666,
+    "index_12m_ago": 129.1,
+    "yoy_pct": 2.7885360185902357
+  },
+  {
+    "obs_date": "2024-06-01",
+    "index_level": 133.0,
+    "cpih_3m_avg": 132.63333333333333,
+    "index_12m_ago": 129.4,
+    "yoy_pct": 2.782071097372484
+  },
+  {
+    "obs_date": "2024-07-01",
+    "index_level": 132.9,
+    "cpih_3m_avg": 132.86666666666667,
+    "index_12m_ago": 129.0,
+    "yoy_pct": 3.023255813953493
+  },
+  {
+    "obs_date": "2024-08-01",
+    "index_level": 133.4,
+    "cpih_3m_avg": 133.1,
+    "index_12m_ago": 129.4,
+    "yoy_pct": 3.0911901081916535
+  },
+  {
+    "obs_date": "2024-09-01",
+    "index_level": 133.5,
+    "cpih_3m_avg": 133.26666666666668,
+    "index_12m_ago": 130.1,
+    "yoy_pct": 2.613374327440435
+  },
+  {
+    "obs_date": "2024-10-01",
+    "index_level": 134.3,
+    "cpih_3m_avg": 133.73333333333332,
+    "index_12m_ago": 130.2,
+    "yoy_pct": 3.149001536098328
+  },
+  {
+    "obs_date": "2024-11-01",
+    "index_level": 134.6,
+    "cpih_3m_avg": 134.13333333333333,
+    "index_12m_ago": 130.0,
+    "yoy_pct": 3.538461538461534
+  },
+  {
+    "obs_date": "2024-12-01",
+    "index_level": 135.1,
+    "cpih_3m_avg": 134.66666666666666,
+    "index_12m_ago": 130.5,
+    "yoy_pct": 3.5249042145593825
+  },
+  {
+    "obs_date": "2025-01-01",
+    "index_level": 135.1,
+    "cpih_3m_avg": 134.9333333333333,
+    "index_12m_ago": 130.0,
+    "yoy_pct": 3.923076923076919
+  },
+  {
+    "obs_date": "2025-02-01",
+    "index_level": 135.6,
+    "cpih_3m_avg": 135.26666666666665,
+    "index_12m_ago": 130.8,
+    "yoy_pct": 3.6697247706421883
+  },
+  {
+    "obs_date": "2025-03-01",
+    "index_level": 136.1,
+    "cpih_3m_avg": 135.6,
+    "index_12m_ago": 131.6,
+    "yoy_pct": 3.419452887537994
+  },
+  {
+    "obs_date": "2025-04-01",
+    "index_level": 137.7,
+    "cpih_3m_avg": 136.46666666666667,
+    "index_12m_ago": 132.2,
+    "yoy_pct": 4.160363086232981
+  },
+  {
+    "obs_date": "2025-05-01",
+    "index_level": 138.0,
+    "cpih_3m_avg": 137.26666666666665,
+    "index_12m_ago": 132.7,
+    "yoy_pct": 3.9939713639789085
+  },
+  {
+    "obs_date": "2025-06-01",
+    "index_level": 138.4,
+    "cpih_3m_avg": 138.03333333333333,
+    "index_12m_ago": 133.0,
+    "yoy_pct": 4.060150375939854
+  },
+  {
+    "obs_date": "2025-07-01",
+    "index_level": 138.5,
+    "cpih_3m_avg": 138.29999999999998,
+    "index_12m_ago": 132.9,
+    "yoy_pct": 4.213694507148228
+  },
+  {
+    "obs_date": "2025-08-01",
+    "index_level": 138.9,
+    "cpih_3m_avg": 138.6,
+    "index_12m_ago": 133.4,
+    "yoy_pct": 4.122938530734633
+  },
+  {
+    "obs_date": "2025-09-01",
+    "index_level": 138.9,
+    "cpih_3m_avg": 138.76666666666665,
+    "index_12m_ago": 133.5,
+    "yoy_pct": 4.044943820224724
+  },
+  {
+    "obs_date": "2025-10-01",
+    "index_level": 139.5,
+    "cpih_3m_avg": 139.1,
+    "index_12m_ago": 134.3,
+    "yoy_pct": 3.8719285182427314
+  },
+  {
+    "obs_date": "2025-11-01",
+    "index_level": 139.4,
+    "cpih_3m_avg": 139.26666666666665,
+    "index_12m_ago": 134.6,
+    "yoy_pct": 3.566121842496294
+  },
+  {
+    "obs_date": "2025-12-01",
+    "index_level": 139.9,
+    "cpih_3m_avg": 139.6,
+    "index_12m_ago": 135.1,
+    "yoy_pct": 3.552923760177655
+  },
+  {
+    "obs_date": "2026-01-01",
+    "index_level": 139.4,
+    "cpih_3m_avg": 139.5666666666667,
+    "index_12m_ago": 135.1,
+    "yoy_pct": 3.18282753515915
+  },
+  {
+    "obs_date": "2026-02-01",
+    "index_level": 140.0,
+    "cpih_3m_avg": 139.76666666666668,
+    "index_12m_ago": 135.6,
+    "yoy_pct": 3.244837758112099
+  },
+  {
+    "obs_date": "2026-03-01",
+    "index_level": 140.8,
+    "cpih_3m_avg": 140.06666666666666,
+    "index_12m_ago": 136.1,
+    "yoy_pct": 3.4533431300514454
+  },
+  {
+    "obs_date": "2026-04-01",
+    "index_level": 141.8,
+    "cpih_3m_avg": 140.86666666666667,
+    "index_12m_ago": 137.7,
+    "yoy_pct": 2.9774872912127983
+  },
+  {
+    "obs_date": "2026-05-01",
+    "index_level": 142.1,
+    "cpih_3m_avg": 141.5666666666667,
+    "index_12m_ago": 138.0,
+    "yoy_pct": 2.971014492753619
+  },
+  {
+    "obs_date": "2026-06-01",
+    "index_level": 142.3,
+    "cpih_3m_avg": 142.06666666666666,
+    "index_12m_ago": 138.4,
+    "yoy_pct": 2.8179190751445127
+  },
+  {
+    "obs_date": "2026-07-01",
+    "index_level": 142.7,
+    "cpih_3m_avg": 142.36666666666665,
+    "index_12m_ago": 138.5,
+    "yoy_pct": 3.0324909747292335
+  },
+  {
+    "obs_date": "2026-08-01",
+    "index_level": 143.4,
+    "cpih_3m_avg": 142.79999999999998,
+    "index_12m_ago": 138.9,
+    "yoy_pct": 3.239740820734341
+  },
+  {
+    "obs_date": "2026-09-01",
+    "index_level": 144.0,
+    "cpih_3m_avg": 143.36666666666667,
+    "index_12m_ago": 138.9,
+    "yoy_pct": 3.671706263498916
+  }
+]

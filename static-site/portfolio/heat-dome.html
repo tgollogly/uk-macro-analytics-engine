@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
+<meta name="color-scheme" content="light">
+<title>Heat Anomaly Detector — live 3D demo</title>
+<meta name="description" content="Compares today's forecast against the 30-year climate average (WMO 1991–2020) to flag genuine heat anomalies anywhere on earth — a 3D terrain map and live precipitation radar."/>
+<link rel="canonical" href="https://tgollogly.dev/heat-dome.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://tgollogly.dev/heat-dome.html"/>
+<meta property="og:title" content="Heat Anomaly Detector — live 3D demo"/>
+<meta property="og:description" content="Compares today against the 30-year climate average to flag genuine heat anomalies, with live radar and 3D terrain."/>
+<meta property="og:image" content="https://tgollogly.dev/assets/og/heat-dome.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Heat Anomaly Detector — live 3D demo"/>
+<meta name="twitter:description" content="Compares today against the 30-year climate average to flag genuine heat anomalies, with live radar and 3D terrain."/>
+<meta name="twitter:image" content="https://tgollogly.dev/assets/og/heat-dome.png"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/site.css"/>
+<style>
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;}
+  a{color:var(--accent);text-decoration:none;}
+  .search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  input{font-family:inherit;font-size:16px;padding:13px 16px;border:1px solid var(--line-2);border-radius:11px;background:var(--card);flex:1;min-width:220px;color:var(--ink);}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+  .btn{font-weight:600;cursor:pointer;border:none;border-radius:11px;font-family:inherit;}
+  .go{font-size:15px;background:var(--accent);color:var(--card);padding:0 24px;}
+  .go:hover{background:var(--accent-2);}
+  .chip:hover{border-color:var(--accent);color:var(--accent);}
+  .layout{display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-md);overflow:hidden;}
+  /* WARNING BANNER */
+  .warn{padding:20px 22px;color:var(--card);}
+  .warn .lvl{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.9;}
+  .warn .cat{font-family:var(--serif);font-weight:600;font-size:27px;margin:3px 0 6px;line-height:1.1;}
+  .warn .advice{font-size:14px;opacity:.95;line-height:1.5;}
+  .warn .place{font-size:13px;font-weight:600;margin-bottom:10px;opacity:.95;display:flex;align-items:center;gap:7px;}
+  .readbox{padding:20px 22px;}
+  .bigrow{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px;}
+  .bigtemp{font-family:var(--serif);font-weight:600;font-size:56px;line-height:.9;color:var(--strong);}
+  .feels{font-size:14px;color:var(--muted);padding-bottom:6px;}
+  .feels b{color:var(--strong);}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;border-top:1px solid var(--line);padding-top:16px;}
+  .metric .mk{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600;}
+  .metric .mv{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--strong);}
+  .chart{padding:6px 16px 18px;}
+  .chart .ct{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:8px 4px 6px;}
+  /* map */
+  .mapwrap{position:relative;height:560px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-md);}
+  #map{position:absolute;inset:0;}
+  .mapctrl{position:absolute;top:12px;left:12px;z-index:5;display:flex;flex-direction:column;gap:8px;}
+  .toggle{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.95);border:1px solid var(--line-2);border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .toggle .sw{width:34px;height:20px;border-radius:999px;background:var(--line-2);position:relative;transition:.2s;flex:none;}
+  .toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--card);transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.3);}
+  .toggle.on .sw{background:var(--accent);}
+  .toggle.on .sw::after{left:16px;}
+  .watchdot{width:8px;height:8px;border-radius:50%;background:var(--c-comfort);display:inline-block;}
+  .watchdot.live{animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(12,122,94,.5);}70%{box-shadow:0 0 0 7px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+  .radarlabel{position:absolute;bottom:12px;left:12px;z-index:5;background:rgba(255,255,255,.95);border:1px solid var(--line-2);border-radius:9px;padding:6px 11px;font-size:12px;color:var(--muted);font-weight:500;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .hint{position:absolute;bottom:12px;right:12px;z-index:5;background:rgba(255,255,255,.92);border:1px solid var(--line-2);border-radius:9px;padding:6px 11px;font-size:11.5px;color:var(--faint);}
+  .msg{font-size:13.5px;color:var(--muted);padding:18px 22px;}
+  .msg.err{color:var(--c-danger);}
+  .loader{display:inline-block;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:8px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media(max-width:900px){.layout{grid-template-columns:1fr;}.mapwrap{height:420px;}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="sitebar"><div class="in">
+  <a class="brand" href="../index.html"><svg class="tg-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+  <a class="back" href="../index.html#hub">&larr; All demos</a>
+</div></div>
+
+<div class="wrap head">
+  <span class="eyebrow">Demo 05 &middot; Live data &amp; 3D maps</span>
+  <h1>Heat Anomaly Detector</h1>
+  <p>Search anywhere on earth for a live heat-risk read that compares today against the 30-year climate average (WMO 1991–2020) to flag genuine heat anomalies — with a tilt-and-zoom 3D terrain map, real precipitation radar, colour-coded warnings and an auto-watch mode. No API key, no sign-up.</p>
+  <div class="search">
+    <input id="q" type="text" placeholder="Search a city — e.g. Seville, Phoenix, Athens" autocomplete="off"/>
+    <button class="btn go" id="goBtn">Detect</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div class="layout">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div class="panel" id="warnPanel"><div class="msg">Search a location to begin.</div></div>
+      <div class="panel">
+        <div class="readbox" id="readout"><div class="msg">Live readout will appear here.</div></div>
+        <div class="chart"><div class="ct">Next 24 hours — feels-like (&deg;C)</div><div id="spark"></div></div>
+      </div>
+    </div>
+
+    <div class="mapwrap">
+      <div id="map"></div>
+      <div class="mapctrl">
+        <div class="toggle on" id="radarToggle"><span class="sw"></span>Radar</div>
+        <div class="toggle" id="watchToggle"><span class="sw"></span><span id="watchLabel">Auto-watch</span></div>
+      </div>
+      <div class="radarlabel" id="radarLabel">Loading radar…</div>
+      <div class="hint">Drag to rotate &middot; two-finger / right-drag to tilt</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.anomaly{margin-top:14px;font-size:13px;color:var(--muted,var(--muted));}
+  .anom-in{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+  .anom-h{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:4px;}
+  .anom-h span{font-weight:500;opacity:.7;letter-spacing:0;text-transform:none;}
+  .anom-row{font-size:14.5px;color:var(--ink);line-height:1.4;}
+  .anom-row b{font-size:17px;}
+  .anom-lab{font-size:12.5px;color:var(--faint);margin-top:3px;text-transform:capitalize;}
+
+  @media(max-width:640px){
+    .search{gap:8px;}
+    input{min-width:0;width:100%;flex:1 1 100%;}
+    .go{width:100%;padding:13px 24px;}
+    .metrics{grid-template-columns:1fr 1fr;}
+    .mapwrap{height:320px;}
+    .bigtemp{font-size:44px;}
+    .warn .cat{font-size:23px;}
+    .warn,.readbox{padding:16px;}
+  }
+  @media(max-width:400px){
+    .metrics{grid-template-columns:1fr;}
+  }
+</style>
+
+<section class="cs"><div class="cs-card">
+  <div class="cs-eyebrow">Case study</div>
+  <h2 class="cs-h">How it's built — and why</h2>
+  <div class="cs-block"><h3>The problem</h3><p>Extreme heat is the deadliest weather hazard, yet judging the real risk for a place means stitching together temperature, humidity and radar from different sources. I wanted one screen that answers &lsquo;how dangerous is the heat here right now?&rsquo; for anywhere on earth.</p></div>
+  <div class="cs-block"><h3>Stack &amp; why I chose it</h3><p>I used the <code>Open-Meteo</code> API because it's free, needs no API key, is CORS-friendly and returns apparent (&lsquo;feels-like&rsquo;) temperature directly &mdash; so the whole thing deploys as a static file with no cost or sign-up. The map is <code>MapLibre GL JS</code> (open-source, no access token, unlike Mapbox) with free AWS elevation tiles for real 3D terrain, and <code>RainViewer</code> for live radar &mdash; both also key-free. The 24-hour chart is hand-drawn SVG rather than a charting library, to avoid a dependency and keep it fast and self-contained.</p></div>
+  <div class="cs-block"><h3>Key decisions</h3><p>Warnings are driven by apparent temperature, not raw temperature, because &lsquo;feels-like&rsquo; reflects actual human heat risk; those values map onto NWS-style categories from Comfortable to Extreme Danger. &lsquo;Auto-watch&rsquo; re-fetches every five minutes with <code>setInterval</code>. Every external call is wrapped in <code>try/catch</code>, so if the map or radar fails the readout and warning still work.</p></div>
+  <div class="cs-block"><h3>Trade-offs &amp; what's next</h3><p>It's fully client-side with no persistence, and radar shows the latest frame rather than a full animation loop, to stay simple and reliable. Next: frame-by-frame radar playback and official severe-weather alert feeds.</p></div>
+</div></section>
+
+<div style="max-width:1000px;margin:26px auto 0;padding:0 24px;font-size:12px;color:var(--faint);line-height:1.5;">Data — Weather: open-meteo.com &middot; Radar: RainViewer &middot; Terrain: AWS elevation tiles &middot; Map: MapLibre GL. Heat-risk bands are indicative (apparent-temperature, NWS-style categories) — not an official public-health warning.</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const samples=["Seville","Phoenix","Athens","Dubai","Delhi","Death Valley"];
+const chips=document.getElementById("chips");
+samples.forEach(s=>{const c=document.createElement("span");c.className="chip";c.textContent=s;c.onclick=()=>{document.getElementById("q").value=s;run();};chips.appendChild(c);});
+
+// ---- heat categories (apparent temp °C) ----
+function category(t){
+  if(t>=54) return{lvl:"Level 5",cat:"Extreme Danger",c:"var(--c-extreme)",hex:"var(--c-extreme)",advice:"Heat stroke highly likely. Avoid all outdoor exertion; stay in cool/shaded areas and hydrate constantly."};
+  if(t>=41) return{lvl:"Level 4",cat:"Danger",c:"var(--c-danger)",hex:"var(--err)",advice:"Heat cramps and heat exhaustion likely; heat stroke possible with prolonged exposure. Limit outdoor activity."};
+  if(t>=32) return{lvl:"Level 3",cat:"Extreme Caution",c:"var(--c-xcaution)",hex:"var(--c-xcaution)",advice:"Heat exhaustion possible with prolonged exposure or activity. Take frequent breaks and hydrate."};
+  if(t>=27) return{lvl:"Level 2",cat:"Caution",c:"var(--c-caution)",hex:"var(--warn)",advice:"Fatigue possible with prolonged exposure. Stay hydrated and take it easy in the sun."};
+  return{lvl:"Level 1",cat:"Comfortable",c:"var(--c-comfort)",hex:"var(--ok)",advice:"No significant heat risk right now. Conditions are comfortable for normal activity."};
+}
+function spark(vals){
+  if(!vals||!vals.length)return"";
+  const w=360,h=90,pad=6,min=Math.min(...vals)-1,max=Math.max(...vals)+1,rng=(max-min)||1;
+  const pts=vals.map((v,i)=>[pad+i/(vals.length-1)*(w-2*pad),h-pad-((v-min)/rng)*(h-2*pad)]);
+  const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none">
+    <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(209,98,46,.28)"/><stop offset="100%" stop-color="rgba(209,98,46,0)"/></linearGradient></defs>
+    <path d="${d} L ${w-pad} ${h-pad} L ${pad} ${h-pad} Z" fill="url(#sg)"/>
+    <path d="${d}" fill="none" stroke="var(--c-xcaution)" stroke-width="2.4" stroke-linejoin="round"/></svg>`;
+}
+
+// ---- map (3D terrain) ----
+let map, marker, radarOn=true, radarFrames=[], radarHost="", radarIdx=0, mapReady=false, firstRunDone=false, radarDataReady=false;
+// Runs the initial search exactly once, whichever fires first: the map's "load"
+// event, or the fallback timer below (in case the map is slow, or never loads).
+function initialRun(){ if(firstRunDone) return; firstRunDone=true; run("Seville"); }
+
+// Fetch the radar frame list straight away — it doesn't depend on the map at
+// all, so it shouldn't wait on the map's "load" event (which can be slow, or
+// on some devices/networks never fire). Whichever of the two finishes last —
+// this fetch, or the map becoming ready — is the one that actually paints
+// the radar layer; see the readiness checks in loadRadar()/map.on("load").
+loadRadar();
+
+try{
+  map=new maplibregl.Map({
+    container:"map",
+    style:{version:8,
+      sources:{
+        carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png","https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"],tileSize:256,attribution:"© CARTO © OpenStreetMap"},
+        dem:{type:"raster-dem",tiles:["https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"],encoding:"terrarium",tileSize:256,maxzoom:13}
+      },
+      // MapLibre's style spec is parsed by its own validator, not the CSSOM, so a
+      // CSS custom property like var(--line) is meaningless here — it fails paint
+      // validation, invalidates the whole style, and the map's "load" event then
+      // never fires at all (the actual cause of the 3D map/radar never appearing).
+      layers:[{id:"bg",type:"background",paint:{"background-color":"#e4e8ec"}},{id:"carto",type:"raster",source:"carto"}]
+    },
+    center:[-5.99,37.39],zoom:4.5,minZoom:2,maxZoom:11,pitch:55,bearing:-18,maxPitch:80,attributionControl:false
+  });
+  map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"top-right");
+  map.on("load",()=>{
+    try{map.setTerrain({source:"dem",exaggeration:1.4});}catch(e){}
+    mapReady=true;
+    if(radarDataReady)showRadarFrame(); // radar data already arrived — paint it now
+    initialRun();
+  });
+  map.on("error",()=>{}); // swallow tile errors
+}catch(e){
+  mapReady=false;
+  document.getElementById("radarLabel").style.display="none";
+  initialRun();
+}
+// Don't leave the page showing nothing if the map is slow to fire "load".
+setTimeout(initialRun,2500);
+// The 3D map (terrain + basemap tiles) can legitimately take longer than the
+// weather search above, especially on slower connections — give it a wider
+// window before telling the user radar isn't going to show, rather than
+// leaving the label stuck on "Loading radar…" forever.
+setTimeout(()=>{
+  if(!mapReady)document.getElementById("radarLabel").textContent="Radar unavailable — map didn't load";
+},9000);
+
+async function loadRadar(){
+  try{
+    const j=await fetch("https://api.rainviewer.com/public/weather-maps.json").then(r=>r.json());
+    radarHost=j.host; radarFrames=(j.radar.past||[]).concat(j.radar.nowcast||[]);
+    radarIdx=(j.radar.past||[]).length-1; if(radarIdx<0)radarIdx=0;
+    radarDataReady=true;
+    if(mapReady)showRadarFrame(); // map already loaded — paint it now
+  }catch(e){ document.getElementById("radarLabel").textContent="Radar unavailable"; }
+}
+function showRadarFrame(){
+  if(!mapReady||!radarFrames.length)return;
+  const f=radarFrames[radarIdx];
+  const url=`${radarHost}${f.path}/256/{z}/{x}/{y}/2/1_1.png`;
+  if(map.getLayer("radar"))map.removeLayer("radar");
+  if(map.getSource("radar"))map.removeSource("radar");
+  map.addSource("radar",{type:"raster",tiles:[url],tileSize:256,minzoom:0,maxzoom:7});
+  map.addLayer({id:"radar",type:"raster",source:"radar",paint:{"raster-opacity":radarOn?0.65:0}});
+  const dt=new Date(f.time*1000);
+  document.getElementById("radarLabel").textContent="Radar \u00b7 "+dt.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+}
+document.getElementById("radarToggle").onclick=function(){
+  radarOn=!radarOn; this.classList.toggle("on",radarOn);
+  if(mapReady&&map.getLayer("radar"))map.setPaintProperty("radar","raster-opacity",radarOn?0.65:0);
+};
+
+// ---- auto-watch ----
+let watchTimer=null, lastQuery="Seville";
+const watchToggle=document.getElementById("watchToggle"), watchLabel=document.getElementById("watchLabel");
+watchToggle.onclick=function(){
+  const on=!this.classList.contains("on"); this.classList.toggle("on",on);
+  if(on){
+    watchLabel.innerHTML='<span class="watchdot live"></span> Watching';
+    watchTimer=setInterval(()=>{ run(lastQuery,true); loadRadar(); },300000); // 5 min
+  }else{
+    watchLabel.textContent="Auto-watch"; clearInterval(watchTimer); watchTimer=null;
+  }
+};
+
+// ---- main ----
+async function run(q,silent){
+  q=(q||document.getElementById("q").value).trim(); if(!q)return; lastQuery=q;
+  const wp=document.getElementById("warnPanel"), ro=document.getElementById("readout");
+  if(!silent){wp.innerHTML='<div class="msg"><span class="loader"></span>Locating and fetching live data…</div>';document.getElementById("spark").innerHTML="";}
+  try{
+    const g=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=en&format=json`).then(r=>r.json());
+    if(!g.results||!g.results.length){wp.innerHTML='<div class="msg err">Couldn\u2019t find that place — try a nearby city name.</div>';return;}
+    const loc=g.results[0];
+    const f=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m&hourly=apparent_temperature,temperature_2m&forecast_days=1&timezone=auto`).then(r=>r.json());
+    const cur=f.current, cat=category(cur.apparent_temperature);
+    const place=`${loc.name}${loc.admin1?', '+loc.admin1:''} ${loc.country_code||''}`;
+    wp.innerHTML=`<div class="warn" style="background:${cat.c}">
+      <div class="place">📍 ${place}</div>
+      <div class="lvl">Heat warning &middot; ${cat.lvl}</div>
+      <div class="cat">${cat.cat}</div>
+      <div class="advice">${cat.advice}</div></div>`;
+    ro.innerHTML=`<div class="bigrow"><div class="bigtemp">${Math.round(cur.temperature_2m)}&deg;C</div>
+            <div class="feels">Feels like <b>${Math.round(cur.apparent_temperature)}&deg;C</b><br>Peak today <b>${Math.round(Math.max(...f.hourly.apparent_temperature))}&deg;C</b></div></div>
+      <div class="metrics">
+        <div class="metric"><div class="mk">Humidity</div><div class="mv">${cur.relative_humidity_2m}%</div></div>
+        <div class="metric"><div class="mk">Wind</div><div class="mv">${Number.isFinite(cur.wind_speed_10m)?Math.round(cur.wind_speed_10m)+" km/h":"&mdash;"}</div></div>
+        <div class="metric"><div class="mk">Feels-like</div><div class="mv">${Math.round(cur.apparent_temperature)}&deg;C</div></div>
+      </div>
+      <div id="anomaly" class="anomaly"><span class="loader"></span> Comparing with the 30-year average for this date&hellip;</div>`;
+    document.getElementById("spark").innerHTML=spark(f.hourly.apparent_temperature.slice(0,24));
+
+    // ---- Real 30-year anomaly analysis (WMO 1991–2020 baseline, Open-Meteo archive) ----
+    (async ()=>{
+      const box=document.getElementById("anomaly"); if(!box) return;
+      try{
+        const todayMax = Math.max(...f.hourly.temperature_2m);           // today's forecast high (air temp)
+        const a=await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${loc.latitude}&longitude=${loc.longitude}&start_date=1991-01-01&end_date=2020-12-31&daily=temperature_2m_max&timezone=auto`).then(r=>r.json());
+        const times=a.daily.time, maxes=a.daily.temperature_2m_max;
+        const doy=d=>{const s=new Date(Date.UTC(d.getUTCFullYear(),0,0));return Math.floor((d-s)/86400000);};
+        // Use the location's own local date (from its timezone-adjusted forecast), not the visitor's — otherwise
+        // a search near midnight in a distant timezone compares against the wrong day of year.
+        const todayStr = (cur && cur.time) ? cur.time.slice(0,10) : new Date().toISOString().slice(0,10);
+        const t=doy(new Date(todayStr+"T00:00:00Z"));
+        const vals=[];
+        for(let i=0;i<times.length;i++){
+          const d=new Date(times[i]+"T00:00:00Z");
+          let diff=Math.abs(doy(d)-t); diff=Math.min(diff,365-diff);   // ±7 days around today's date-of-year
+          if(diff<=7 && maxes[i]!=null) vals.push(maxes[i]);
+        }
+        if(!vals.length){ box.style.display="none"; return; }
+        const normal=vals.reduce((x,y)=>x+y,0)/vals.length;
+        const anom=todayMax-normal;
+        const sign=anom>=0?"+":"";
+        let tone="var(--ok)", label="around the seasonal norm";
+        if(anom>=8){tone="var(--err)"; label="an extreme heat anomaly — heat-dome territory";}
+        else if(anom>=5){tone="var(--c-xcaution)"; label="a strong heat anomaly";}
+        else if(anom>=2){tone="var(--warn)"; label="warmer than normal";}
+        else if(anom<=-2){tone="var(--c-cool)"; label="cooler than normal";}
+        box.innerHTML=`<div class="anom-in" style="border-left:4px solid ${tone}">`+
+          `<div class="anom-h">30-year comparison <span>WMO 1991–2020 baseline</span></div>`+
+          `<div class="anom-row"><b style="color:${tone}">${sign}${anom.toFixed(1)}&deg;C</b> vs the 30-year average for this date `+
+          `(today ~${Math.round(todayMax)}&deg;C &middot; normal ~${Math.round(normal)}&deg;C)</div>`+
+          `<div class="anom-lab">${label}</div></div>`;
+      }catch(e){ box.style.display="none"; }
+    })();
+    if(mapReady){
+      map.flyTo({center:[loc.longitude,loc.latitude],zoom:7.5,pitch:60,bearing:-15,duration:2600,essential:true});
+      if(marker)marker.remove();
+      const el=document.createElement("div");
+      el.style.cssText=`width:22px;height:22px;border-radius:50%;background:${cat.hex};border:3px solid var(--card);box-shadow:0 2px 8px rgba(0,0,0,.4);`;
+      marker=new maplibregl.Marker({element:el}).setLngLat([loc.longitude,loc.latitude])
+        .setPopup(new maplibregl.Popup({offset:16}).setHTML(`<b>${loc.name}</b><br>${cat.cat} &middot; feels ${Math.round(cur.apparent_temperature)}&deg;C`))
+        .addTo(map);
+    }
+  }catch(e){ wp.innerHTML='<div class="msg err">Couldn\u2019t reach the weather service. Check your connection and try again.</div>'; }
+}
+document.getElementById("goBtn").onclick=()=>run();
+document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")run();});
+</script>
+
+<div class="sitefoot"><div class="in">
+  <span>&copy; <span class="footyr"></span> Thomas Gollogly &middot; Northern Ireland</span>
+  <span class="footlinks">
+    <a class="ico" href="../index.html" aria-label="Home"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.69 3.5 9.5V21a1 1 0 0 0 1 1H9v-7h6v7h4.5a1 1 0 0 0 1-1V9.5L12 2.69z"/></svg><span>Home</span></a>
+    <a class="ico" href="../index.html" aria-label="CV"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM7 13h10v1.5H7V13zm0 4h10v1.5H7V17zm0-8h5v1.5H7V9z"/></svg><span>CV</span></a>
+    <a class="ico" href="mailto:thomas@tgollogly.dev" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13zm2.2.5 7.15 5.72a1 1 0 0 0 1.3 0L19.8 6H4.2zM4 8.1V18h16V8.1l-6.86 5.5a3 3 0 0 1-3.78 0L4 8.1z"/></svg><span>Email</span></a>
+    <a class="ico" href="https://github.com/tgollogly/portfolio" target="_blank" rel="noopener me" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.28 5.69.42.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg><span>GitHub</span></a>
+    <a class="ico" href="https://www.linkedin.com/in/thomasgollogly" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg><span>LinkedIn</span></a>
+  </span>
+</div>
+<div class="in footnote">
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+</div></div>
+
+<script>document.querySelectorAll(".footyr").forEach(e=>e.textContent=new Date().getFullYear());</script>
+
+<script src="./config.js"></script>
+<script src="./assets/chat-disabled.js" defer></script>
+</body>
+</html>

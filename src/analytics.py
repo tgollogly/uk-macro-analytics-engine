@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import json
 import logging
+import math
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -81,11 +83,25 @@ def export_relation_parquet(relation: duckdb.DuckDBPyRelation, path: Path) -> No
     relation.write_parquet(str(path))
 
 
+def _json_default_records(obj: Any) -> Any:
+    """Finite scalars only; NaN/Inf → null for valid JSON (browser-safe)."""
+    if isinstance(obj, float):
+        return obj if math.isfinite(obj) else None
+    if isinstance(obj, datetime | date):
+        return obj.isoformat()
+    if hasattr(obj, "isoformat") and callable(obj.isoformat):
+        try:
+            return obj.isoformat()
+        except (TypeError, ValueError):
+            pass
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+
 def export_relation_json_records(relation: duckdb.DuckDBPyRelation, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     df = relation.df()
     records: list[dict[str, Any]] = df.to_dict(orient="records")
-    path.write_text(json.dumps(records, indent=2, default=str), encoding="utf-8")
+    path.write_text(json.dumps(records, indent=2, default=_json_default_records), encoding="utf-8")
 
 
 def export_relation_csv(relation: duckdb.DuckDBPyRelation, path: Path) -> None:
