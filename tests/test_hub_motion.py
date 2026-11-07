@@ -15,6 +15,8 @@ def test_motion_css_respects_reduced_motion() -> None:
     assert "navigation: none" in css
     assert "body.is-motion-on" in css
     assert "motion-panel-enter" in css
+    assert "story-in-view" in css
+    assert "opacity: 1" in css  # transform-only entrance; no hidden unload
 
 
 def test_chart_theme_exports_motion_helpers() -> None:
@@ -28,3 +30,9 @@ def test_hub_motion_exports_view_transition_helper() -> None:
     assert "initPageMotion" in js
     assert "initViewTransitionMeta" in js
     assert "prefersReducedMotion" in js
+
+
+def test_hub_tokens_define_editorial_accents() -> None:
+    tokens = (ROOT / "static-site" / "hub-tokens.css").read_text(encoding="utf-8")
+    for name in ("--hub-accent-teal", "--hub-accent-cobalt", "--hub-accent-coral", "--hub-accent-amber"):
+        assert name in tokens

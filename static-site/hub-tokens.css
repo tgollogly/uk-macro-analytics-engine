@@ -55,8 +55,15 @@
   --hub-transition-slow: 280ms ease;
   --hub-content-pad: clamp(16px, 4vw, 28px);
 
-  --hub-chart-cpih: #c2410c;
-  --hub-chart-psnb: #166534;
+  /* Accent roles (teal / cobalt / coral / amber) — charts + editorial chrome */
+  --hub-accent-teal: #0d6e6e;
+  --hub-accent-cobalt: #2e4a8c;
+  --hub-accent-coral: #d64f2a;
+  --hub-accent-coral-ink: #9a3412;
+  --hub-accent-amber: #c17f3a;
+
+  --hub-chart-cpih: var(--hub-accent-coral);
+  --hub-chart-psnb: #0b5e55;
 
   --hub-heat-comfort: #0c7a5e;
   --hub-heat-caution: #9a6700;
@@ -65,8 +72,18 @@
   --hub-heat-extreme: #7b1fa2;
   --hub-heat-cool: #2f6fb0;
 
-  --hub-editorial-teal: #0d6e6e;
-  --hub-editorial-cobalt: #2e4a8c;
+  --hub-editorial-teal: var(--hub-accent-teal);
+  --hub-editorial-cobalt: var(--hub-accent-cobalt);
+
+  --hub-hero-wash: linear-gradient(
+    128deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(244, 246, 249, 0.98) 42%,
+    rgba(255, 247, 236, 0.55) 100%
+  );
+  --hub-hero-orb-cobalt: rgba(46, 74, 140, 0.14);
+  --hub-hero-orb-teal: rgba(13, 110, 110, 0.12);
+  --hub-hero-orb-coral: rgba(214, 79, 42, 0.1);
 
   /* Dashboard panel rhythm (original layout; Orca-like hierarchy, not branded) */
   --hub-panel-surface: #ffffff;

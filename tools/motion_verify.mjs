@@ -35,6 +35,12 @@ async function samplePanelMotion(page, label, engine, reducedMotion) {
       () => document.body.classList.contains("is-motion-on"),
       { timeout: 15000 },
     );
+    await page
+      .waitForFunction(
+        () => document.getElementById("spark-cpih")?.dataset.draw === "complete",
+        { timeout: 12000 },
+      )
+      .catch(() => {});
   }
   await page.waitForSelector(".insight-feature.motion-in", { timeout: 8000 });
   const sample = await page.evaluate(() => {
@@ -49,10 +55,22 @@ async function samplePanelMotion(page, label, engine, reducedMotion) {
       (a) => a.effect?.getComputedTiming?.().duration ?? a.effect?.getTiming?.().duration ?? 0,
     );
     const maxDur = durations.length ? Math.max(...durations) : cssDur * 1000;
+    const sparkDone =
+      document.getElementById("spark-cpih")?.dataset.draw === "complete" ||
+      document.getElementById("spark-cpih")?.dataset.draw === undefined;
     const ok = reduced
       ? !motionOn
-      : motionOn && (anims.length > 0 || cssDur >= 0.5);
-    return { ok, reduced, motionOn, count: anims.length, maxDur, cssDur, animationName: cs.animationName };
+      : motionOn && (anims.length > 0 || cssDur >= 0.5) && sparkDone;
+    return {
+      ok,
+      reduced,
+      motionOn,
+      count: anims.length,
+      maxDur,
+      cssDur,
+      animationName: cs.animationName,
+      sparkDraw: document.getElementById("spark-cpih")?.dataset.draw,
+    };
   });
   pushRun({ label, engine, route: "hub", ...sample });
   return sample;

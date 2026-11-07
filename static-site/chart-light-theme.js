@@ -8,6 +8,10 @@ export const CHART_TICK = "#4a5568";
 export const CHART_GRID = "#c8cdd4";
 export const CHART_AXIS_TITLE = "#1a2332";
 
+/** Align with static-site/hub-tokens.css — CPIH coral, PSNB teal fiscal. */
+export const CHART_SERIES_CPIH = "#d64f2a";
+export const CHART_SERIES_PSNB = "#0b5e55";
+
 export function prefersReducedMotion() {
   if (typeof window === "undefined" || !window.matchMedia) return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -31,23 +31,41 @@
     </nav>
   </header>
 
-  <header class="hero">
+  <header class="hero motion-in">
     <div class="inner motion-in">
-      <p class="hero-eyebrow">Junior reporting &amp; data technician portfolio</p>
-      <h1>From ONS tables to explainable charts</h1>
-      <p class="lead">
-        I build small, testable pipelines in Python and DuckDB, export traceable CSV/JSON, and ship static demos a recruiter can click in under a minute.
-        Numbers below come from the <strong>committed snapshot</strong> in this repo — not invented headlines and not a live ONS pull in the browser.
-      </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#story">Read the snapshot story</a>
-        <a class="btn btn-secondary" href="#hub">Seven interactive demos</a>
-        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">Engine on GitHub</a>
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <p class="hero-eyebrow">Junior reporting &amp; data technician portfolio</p>
+          <h1>From ONS tables to <span class="hero-title-warm">explainable</span> <span class="hero-title-accent">charts</span></h1>
+          <p class="lead">
+            I build small, testable pipelines in Python and DuckDB, export traceable CSV/JSON, and ship static demos a recruiter can click in under a minute.
+            Numbers below come from the <strong>committed snapshot</strong> in this repo — not invented headlines and not a live ONS pull in the browser.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#story">Read the snapshot story</a>
+            <a class="btn btn-secondary" href="#hub">Seven interactive demos</a>
+            <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">Engine on GitHub</a>
+          </div>
+          <p class="hero-note hub-prose">
+            Evidence and limits: <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">case studies</a>.
+            ATS resume matcher is <strong>retired</strong> on this site (no CV submission). Weather and Beneish demos use third-party or illustrative inputs as labelled.
+          </p>
+        </div>
+        <aside class="hero-data-stage motion-in" data-stagger="1" aria-labelledby="hero-stage-title">
+          <p id="hero-stage-title" class="hero-stage-kicker">Snapshot highlights</p>
+          <div class="hero-stat hero-stat--cpih" id="hero-stat-cpih">
+            <p class="hero-stat-label">CPIH year-on-year</p>
+            <p class="hero-stat-value" id="hero-val-cpih">Loading…</p>
+            <p class="hero-stat-meta" id="hero-meta-cpih">Committed JSON export</p>
+          </div>
+          <div class="hero-stat hero-stat--psnb" id="hero-stat-psnb">
+            <p class="hero-stat-label">PSNB monthly (ex banks)</p>
+            <p class="hero-stat-value" id="hero-val-psnb">Loading…</p>
+            <p class="hero-stat-meta" id="hero-meta-psnb">Committed JSON export</p>
+          </div>
+          <p class="hero-stage-asof" id="hero-stage-asof">As of: loading manifest…</p>
+        </aside>
       </div>
-      <p class="hero-note hub-prose">
-        Evidence and limits: <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">case studies</a>.
-        ATS resume matcher is <strong>retired</strong> on this site (no CV submission). Weather and Beneish demos use third-party or illustrative inputs as labelled.
-      </p>
     </div>
   </header>
 
@@ -162,7 +180,7 @@
   </footer>
 
   <script type="module">
-    import { initPageMotion, markInsightsReady } from "./hub-motion.js";
+    import { initPageMotion, initStoryScrollEmphasis, markInsightsReady } from "./hub-motion.js";
     import {
       computeMacroStory,
       sparklineYoY,
@@ -171,6 +189,7 @@
     } from "./hub-insights.js";
 
     initPageMotion();
+    initStoryScrollEmphasis();
 
     const fmtPct = (x) =>
       x == null ? "—" : `${Number(x).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
@@ -191,25 +210,47 @@
         const story = computeMacroStory(cpih, psnb, manifest);
         const cpihPts = sparklineYoY(cpih, 48);
         const psnbPts = sparklinePsnb(psnb, 36);
-        drawSparkline(document.getElementById("spark-cpih"), cpihPts, getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-cpih").trim() || "#c2410c", { yLabel: "YoY %" });
-        drawSparkline(document.getElementById("spark-psnb"), psnbPts, getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-psnb").trim() || "#166534", { yLabel: "£m" });
+        const cpihColor =
+          getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-cpih").trim() || "#d64f2a";
+        const psnbColor =
+          getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-psnb").trim() || "#0b5e55";
+        drawSparkline(document.getElementById("spark-cpih"), cpihPts, cpihColor, {
+          yLabel: "YoY %",
+          animate: true,
+        });
+        drawSparkline(document.getElementById("spark-psnb"), psnbPts, psnbColor, {
+          yLabel: "£m",
+          animate: true,
+        });
 
         if (story.cpih) {
           const d = story.cpih.yoyDeltaPp;
           const delta =
             d == null ? "" : ` — ${d >= 0 ? "up" : "down"} ${Math.abs(d).toFixed(2)} pp vs YoY from ${story.cpih.priorMonth}`;
-          document.getElementById("takeaway-cpih").innerHTML =
+          const cpihEl = document.getElementById("takeaway-cpih");
+          cpihEl.classList.add("is-revealed");
+          cpihEl.innerHTML =
             `Latest month in snapshot: <strong>${story.cpih.month}</strong> at <strong>${fmtPct(story.cpih.yoyPct)}</strong> YoY${delta}.`;
+          document.getElementById("hero-val-cpih").textContent = fmtPct(story.cpih.yoyPct);
+          document.getElementById("hero-meta-cpih").textContent = `Month ${story.cpih.month} in snapshot`;
         } else {
           document.getElementById("takeaway-cpih").textContent = "No non-null YoY values in snapshot.";
+          document.getElementById("hero-val-cpih").textContent = "—";
+          document.getElementById("hero-meta-cpih").textContent = "No non-null YoY in export";
         }
         document.getElementById("prov-cpih").textContent =
           `Source: ONS L522 via pipeline export · ${story.cpihRows} rows · snapshot UTC ${story.asOfUtc}`;
 
         if (story.psnb) {
-          document.getElementById("takeaway-psnb").innerHTML =
+          const psnbEl = document.getElementById("takeaway-psnb");
+          psnbEl.classList.add("is-revealed");
+          psnbEl.innerHTML =
             `Latest month: <strong>${story.psnb.month}</strong> total net borrowing <strong>${fmtM(story.psnb.gbpM)}</strong>${story.psnb.rowCount > 1 ? ` (aggregated from ${story.psnb.rowCount} rows)` : ""}.`;
+          document.getElementById("hero-val-psnb").textContent = fmtM(story.psnb.gbpM);
+          document.getElementById("hero-meta-psnb").textContent =
+            `Month ${story.psnb.month}${story.psnb.rowCount > 1 ? ` · ${story.psnb.rowCount} rows aggregated` : ""}`;
         }
+        document.getElementById("hero-stage-asof").textContent = `Snapshot generated ${story.asOfUtc} UTC`;
         document.getElementById("prov-psnb").textContent =
           `Source: ONS DZLS via pipeline export · ${story.psnbRows} rows · snapshot UTC ${story.asOfUtc}`;
         markInsightsReady();

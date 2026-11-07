@@ -53,4 +53,22 @@ export function markInsightsReady(root = document) {
   root.querySelectorAll?.(".insight-feature[data-insight]").forEach((el) => {
     el.dataset.ready = "true";
   });
+  const hero = root.querySelector?.(".hero");
+  if (hero) hero.classList.add("is-data-live");
+}
+
+/** Scroll-linked emphasis on insight cards (no parallax / scroll-jacking). */
+export function initStoryScrollEmphasis(root = document) {
+  if (prefersReducedMotion()) return;
+  const cards = root.querySelectorAll?.(".insight-feature[data-insight]");
+  if (!cards?.length) return;
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        e.target.classList.toggle("story-in-view", e.isIntersecting);
+      }
+    },
+    { rootMargin: "-15% 0px -15% 0px", threshold: 0.35 },
+  );
+  cards.forEach((c) => io.observe(c));
 }
