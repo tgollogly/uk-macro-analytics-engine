@@ -101,4 +101,4 @@ def test_ats_retired_page_has_no_submission_flow() -> None:
 def test_macro_demo_pages_declare_snapshot_not_live(rel: str) -> None:
     html = (STATIC / rel).read_text(encoding="utf-8")
     assert "snapshot" in html.lower() or "committed" in html.lower()
-    assert 'name="color-scheme" content="dark"' in html
+    assert 'name="color-scheme" content="light"' in html

@@ -39,9 +39,8 @@ def test_hub_index_narrow_layout_constraints() -> None:
 
 
 def test_static_site_documents_readme_palette_comment() -> None:
-    """Both HTML pages include the regen_readme_images palette comment marker."""
+    """Macro demo page includes the regen_readme_images palette comment marker."""
     marker = "README generator palette (tools/regen_readme_images.py)"
-    assert marker in (STATIC / "index.html").read_text(encoding="utf-8")
     assert marker in (STATIC / "demo.html").read_text(encoding="utf-8")
 
 
@@ -100,7 +99,7 @@ def test_portfolio_mirror_declares_dark_color_scheme() -> None:
         "privacy.html",
     ):
         html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
-        assert 'name="color-scheme" content="dark"' in html, name
+        assert 'name="color-scheme" content="light"' in html, name
 
 
 def test_demo_charts_use_architecture_stage_stroke_hex() -> None:
@@ -172,7 +171,8 @@ def test_hub_index_links_to_seven_demo_routes() -> None:
 def test_mirror_privacy_describes_hub_without_active_ats() -> None:
     """Privacy page: static host, chat off, ATS retired, macro JSON demos."""
     priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
-    assert "Static mirror" in priv
+    assert "Static site" in priv or "static HTML" in priv
+    assert "not the same deployment" not in priv.lower()
     assert "Optional chat (disabled on this mirror)" in priv
     assert "retired" in priv.lower()
     assert "macro-explorer" in priv or "Macro trend" in priv

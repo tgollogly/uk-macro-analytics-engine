@@ -3,16 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>UK Macro Analytics Engine — portfolio demo</title>
-  <meta name="description" content="Open ONS macro data: validation, DuckDB, Parquet, Streamlit dashboard, tests and CI." />
+  <meta name="color-scheme" content="light" />
+  <title>Thomas Gollogly — UK macro &amp; analytics demos</title>
+  <meta name="description" content="ONS-derived CPIH and PSNB snapshots, DuckDB pipeline, and interactive portfolio demos — evidence-led, not live ONS in the browser." />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <!--
-    README generator palette (tools/regen_readme_images.py): BG #fefce8, HEADER #312e81,
-    HEADER_STROKE #4338ca, ACCENT_BADGE #fbbf24, TEXT_MUTED #64748b, OUTLINE #4f46e5.
-    Shared: ./hub-tokens.css + ./shell-shared.css + ./hub-pages.css (dark shell, same hues as README/architecture.svg).
-  -->
   <link rel="stylesheet" href="./hub-tokens.css" />
   <link rel="stylesheet" href="./shell-shared.css" />
   <link rel="stylesheet" href="./hub-pages.css" />
@@ -21,135 +16,203 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="page-shell">
+  <a class="skip" href="#main">Skip to content</a>
   <header class="app-nav" role="banner">
     <nav class="nav-inner" aria-label="Primary">
       <a class="nav-title" href="./index.html"
         ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
         ><span>Thomas Gollogly</span></a
       >
+      <a href="#story">Data story</a>
       <a href="#hub">Demos</a>
       <a href="./demo.html">UK macro charts</a>
       <a href="./portfolio/privacy.html">Privacy</a>
     </nav>
   </header>
-  <header class="hero" style="background:linear-gradient(180deg, var(--shell-header) 0%, #1e1b4b 100%);border-bottom:2px solid var(--shell-header-stroke);padding-bottom:1.5rem">
+
+  <header class="hero">
     <div class="inner">
-      <p class="hero-eyebrow">Portfolio demo hub · static assets</p>
-      <h1>Thomas Gollogly — project demos</h1>
+      <p class="hero-eyebrow">Junior reporting &amp; data technician portfolio</p>
+      <h1>From ONS tables to explainable charts</h1>
       <p class="lead">
-        Pulls <strong>official ONS CSVs</strong> (inflation &amp; public borrowing), validates structure,
-        caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong> (rolling averages, YoY inflation, monthly PSNB totals), and visualises results in <strong>Streamlit</strong> or a <strong>static Chart.js</strong> snapshot — with <strong>pytest</strong> and <strong>CI</strong> on GitHub. For sources, limitations, and reproducible commands, see the repo <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md">case studies</a> (evidence-led; no employment outcome claims).
+        I build small, testable pipelines in Python and DuckDB, export traceable CSV/JSON, and ship static demos a recruiter can click in under a minute.
+        Numbers below come from the <strong>committed snapshot</strong> in this repo — not invented headlines and not a live ONS pull in the browser.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#hub">Open project hub (seven demos)</a>
-        <a class="btn btn-primary" href="./demo.html">UK macro — interactive charts</a>
-        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">This engine on GitHub</a>
-        <a class="btn btn-secondary" href="https://github.com/tgollogly/portfolio">Portfolio source on GitHub</a>
+        <a class="btn btn-primary" href="#story">Read the snapshot story</a>
+        <a class="btn btn-secondary" href="#hub">Seven interactive demos</a>
+        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">Engine on GitHub</a>
       </div>
       <p class="hero-note hub-prose">
-        <strong>UK Macro Analytics Engine:</strong> <code>./demo.html</code> plots a <strong>dated JSON snapshot</strong> (see <code>./demo/manifest.json</code> for UTC time and row counts) — not a live ONS pull in the edge browser. <strong>Streamlit</strong> can refresh from ONS when you run the Python app locally or hosted.
-        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; <strong>macro analytics</strong> pages use committed <code>./demo/*.json</code> snapshots only (not live ONS). Optional chat is disabled on this mirror. See <a href="./portfolio/privacy.html">Privacy notice</a>.
+        Evidence and limits: <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">case studies</a>.
+        ATS resume matcher is <strong>retired</strong> on this site (no CV submission). Weather and Beneish demos use third-party or illustrative inputs as labelled.
       </p>
     </div>
   </header>
-  <main class="hub-main">
+
+  <main class="hub-main" id="main">
     <div class="inner">
-      <div class="site-notice" id="hub">
-        <strong>Portfolio demos (mirrored).</strong>
-        Seven interactive demos below (plus engineering cards). Portfolio HTML is mirrored from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> where noted; macro analytics pages are authored in this repo. No server-side app on this host — static files only. The <strong>ATS matcher is retired</strong> on this preview; see <a href="./portfolio/privacy.html">Privacy notice</a>.
+      <section class="story-intro" id="story" aria-labelledby="story-h">
+        <h2 id="story-h">Question → source → chart → takeaway</h2>
+        <p>
+          Each insight is computed from <code>static-site/demo/*.json</code> and <code>manifest.json</code>.
+          CPIH is year-on-year %; PSNB is monthly borrowing in £m — they are shown on <strong>separate</strong> charts (never a misleading shared axis).
+        </p>
+      </section>
+
+      <div class="insight-feature-grid" id="insights" aria-live="polite">
+        <article class="insight-feature" id="insight-cpih">
+          <p class="story-q">Inflation snapshot</p>
+          <h3>CPIH year-on-year</h3>
+          <div class="spark-wrap">
+            <canvas id="spark-cpih" role="img" aria-label="Sparkline of CPIH year-on-year percent from snapshot JSON"></canvas>
+          </div>
+          <p class="takeaway" id="takeaway-cpih">Loading snapshot…</p>
+          <p class="provenance" id="prov-cpih"></p>
+          <p class="limit">Limitation: YoY is null where a 12-month lag is unavailable; ONS may revise history.</p>
+        </article>
+        <article class="insight-feature" id="insight-psnb">
+          <p class="story-q">Fiscal snapshot</p>
+          <h3>PSNB monthly (ex banks)</h3>
+          <div class="spark-wrap">
+            <canvas id="spark-psnb" role="img" aria-label="Sparkline of monthly PSNB in millions of pounds from snapshot JSON"></canvas>
+          </div>
+          <p class="takeaway" id="takeaway-psnb">Loading snapshot…</p>
+          <p class="provenance" id="prov-psnb"></p>
+          <p class="limit">Limitation: months with <code>row_count &gt; 1</code> aggregate multiple CSV rows in the pipeline.</p>
+        </article>
       </div>
+
+      <div class="site-notice" id="hub">
+        <strong>Seven demos</strong> — macro engine chart, trend explorer, coverage QA, mirrored portfolio tools (Beneish, weather, BundleBuilder).
+        Portfolio HTML is attributed to <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) where noted; macro analytics pages are authored in this repo.
+      </div>
+
+      <h2 class="hub-section-title">Macro &amp; analytics</h2>
+      <div class="hub-grid-demos">
+        <article class="hub-card hub-card-feature">
+          <h2><span class="hub-tag">Charts</span> UK macro — dual series (separate axes)</h2>
+          <p>Chart.js dashboard: CPIH YoY % and PSNB £m from the same snapshot bundle; downloads and manifest provenance on-page.</p>
+          <a class="btn btn-primary" href="./demo.html">Open macro charts</a>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">Explorer</span> Macro trend explorer</h2>
+          <p>Filter, chart one series at a time, table cap with honest CSV export sizing.</p>
+          <a class="btn btn-primary" href="./portfolio/macro-explorer.html">Open explorer</a>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">Quality</span> Pipeline coverage</h2>
+          <p>Null YoY months, PSNB row counts, manifest limitations — computed in-browser.</p>
+          <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage</a>
+        </article>
+      </div>
+
+      <h2 class="hub-section-title">Portfolio tools</h2>
+      <div class="hub-grid-demos">
+        <article class="hub-card">
+          <h2><span class="hub-tag">Finance</span> Beneish M-Score</h2>
+          <p>In-browser model; illustrative inputs unless you supply your own figures.</p>
+          <a class="btn btn-primary" href="./portfolio/beneish.html">Open Beneish</a>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">Weather</span> Heat anomaly</h2>
+          <p>Live public weather APIs — see privacy notice.</p>
+          <a class="btn btn-primary" href="./portfolio/heat-dome.html">Open heat demo</a>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">Weather</span> Thermal compare</h2>
+          <p>Multi-location Open-Meteo compare.</p>
+          <a class="btn btn-primary" href="./portfolio/thermal-compare.html">Open thermal</a>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">Print</span> BundleBuilder</h2>
+          <p>Fictional court-bundle layout; print/PDF stays in your browser.</p>
+          <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
+        </article>
+      </div>
+
+      <h2 class="hub-section-title hub-grid-secondary">Engineering notes</h2>
       <div class="hub-grid">
         <article class="hub-card">
-          <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
-          <p>ONS CPIH YoY and monthly PSNB totals (DuckDB SQL) — static demo uses committed JSON snapshot + manifest.</p>
-          <a class="btn btn-primary" href="./demo.html">Open macro demo</a>
-          <p class="hub-src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
-          <p>Eight-factor model in-browser; use illustrative/sample figures unless you supply real data you may use.</p>
-          <a class="btn btn-primary" href="./portfolio/beneish.html">Open Beneish</a>
-          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
-          <p>Open-Meteo, MapLibre, RainViewer — third-party APIs (see privacy notice).</p>
-          <a class="btn btn-primary" href="./portfolio/heat-dome.html">Open heat dashboard</a>
-          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
-          <p>Multi-location compare using Open-Meteo (third-party; see notice).</p>
-          <a class="btn btn-primary" href="./portfolio/thermal-compare.html">Open thermal compare</a>
-          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">5 · Analytics</span> Macro trend explorer</h2>
-          <p>Filter CPIH YoY and monthly PSNB from committed pipeline JSON — chart, table, CSV download.</p>
-          <a class="btn btn-primary" href="./portfolio/macro-explorer.html">Open trend explorer</a>
-          <p class="hub-src">Data: <code>static-site/demo/*.json</code> + manifest</p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">6 · Analytics</span> Pipeline coverage</h2>
-          <p>Null YoY months, PSNB <code>row_count</code> flags, manifest limitations — snapshot QA view.</p>
-          <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage explorer</a>
-          <p class="hub-src">Data: <code>static-site/demo/manifest.json</code></p>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-tag">7 · Docs</span> BundleBuilder</h2>
-          <p>Court bundle layout / print; fictional matter details in-browser only.</p>
-          <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
-          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
-        </article>
-      </div>
-      <div class="hub-grid" style="margin-top:1rem">
-        <article class="hub-card">
-          <h2><span class="hub-pill">Interactive</span> Streamlit dashboard</h2>
-          <p>Plotly charts, downloadable CSV exports, rolling windows, and a plain-language read of the latest pull. Data refreshes when you run a fresh pipeline pull from ONS URLs in the repo config.</p>
+          <h2><span class="hub-pill">Pipeline</span> Python + DuckDB + CI</h2>
           <ul class="list-clean">
-            <li>Run locally: <code>streamlit run streamlit_app.py</code></li>
-            <li>Host (free): <a href="https://share.streamlit.io/">Streamlit Community Cloud</a></li>
-            <li>Requires network access to ONS for a fresh pull</li>
+            <li><code>pytest -q</code> · <code>ruff check</code></li>
+            <li>Parquet cache, exports, Streamlit optional</li>
           </ul>
         </article>
         <article class="hub-card">
-          <h2><span class="hub-pill">Pipeline</span> Engineering</h2>
-          <p>Parquet cache, DuckDB SQL views, exports (CSV/JSON/Parquet), tests and CI — README architecture diagram.</p>
-          <ul class="list-clean">
-            <li>Tests: <code>pytest -q</code></li>
-            <li>Lint: <code>ruff check</code></li>
-            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md">Case studies (evidence, limits, exercise)</a></li>
-          </ul>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-pill">This page</span> Static + CDN</h2>
-          <p>Deploy this folder on Vercel with root <code>static-site/</code> or via Workers Static Assets (see repo docs). It complements Streamlit (long-running Python — not edge Workers).</p>
-          <ul class="list-clean">
-            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/VERCEL.md">docs/VERCEL.md</a></li>
-            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CLOUDFLARE_STATIC.md">docs/CLOUDFLARE_STATIC.md</a></li>
-          </ul>
-        </article>
-        <article class="hub-card">
-          <h2><span class="hub-pill">Legal</span> Portfolio (mirrored)</h2>
-          <p style="font-size:0.88rem;color:var(--shell-muted)">Upstream portfolio README: demos are for <strong>demonstration only</strong>. See <a href="./portfolio/privacy.html">Privacy &amp; AI notice (mirror)</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/LICENSE">portfolio MIT licence</a> (copyright year as in that file).</p>
+          <h2><span class="hub-pill">Legal</span> Privacy &amp; licences</h2>
+          <p class="hub-prose" style="font-size:0.88rem;color:var(--shell-muted)">
+            <a href="./portfolio/privacy.html">Privacy &amp; data notice</a> · portfolio MIT where mirrored · Crown OGL for ONS-derived stats.
+          </p>
         </article>
       </div>
     </div>
   </main>
+
   <footer class="site-footer">
     <div class="inner hub-prose">
-      <p>
-        Copyright <strong>© 2025 Thomas Gollogly</strong>. The <strong>source code and documentation</strong> in this repository are licensed under the
-        <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/LICENSE">MIT License</a>.
-      </p>
-      <p>
-        Official UK statistics accessed via configured URLs (e.g. <strong>Office for National Statistics</strong>) are <strong>© Crown copyright</strong> and made available under the
-        <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>. This project <strong>does not</strong> grant you rights in those statistics beyond what the publisher licences. See <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/NOTICE.md">NOTICE.md</a>.
-      </p>
+      <p>Copyright <strong>© 2025 Thomas Gollogly</strong>. Source code licensed under the <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/LICENSE">MIT License</a>.</p>
+      <p>UK statistics © Crown copyright and made available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence</a>. See <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/NOTICE.md">NOTICE.md</a>.</p>
       <div class="legal-block">
-        The <strong>Software</strong> and any <strong>outputs</strong> (figures, exports, dashboards) are provided <strong>“as is”</strong>, without warranty of any kind. They are <strong>not</strong> official ONS releases, <strong>not</strong> financial, investment, tax, or legal advice, and <strong>not</strong> a substitute for professional judgment or the <strong>original</strong> publications on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. <strong>ONS revises</strong> series; always check the publisher for authoritative figures.
+        Outputs are provided <strong>without warranty</strong> and are <strong>not</strong> official ONS releases or financial advice. Confirm headline figures on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>.
       </div>
     </div>
   </footer>
+
+  <script type="module">
+    import {
+      computeMacroStory,
+      sparklineYoY,
+      sparklinePsnb,
+      drawSparkline,
+    } from "./hub-insights.js";
+
+    const fmtPct = (x) =>
+      x == null ? "—" : `${Number(x).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+    const fmtM = (x) =>
+      x == null ? "—" : `£${Number(x).toLocaleString("en-GB", { maximumFractionDigits: 0 })}m`;
+
+    async function loadBundle() {
+      const [manifest, cpih, psnb] = await Promise.all([
+        fetch("./demo/manifest.json").then((r) => r.json()),
+        fetch("./demo/cpih_yoy.json").then((r) => r.json()),
+        fetch("./demo/psnb_monthly.json").then((r) => r.json()),
+      ]);
+      return { manifest, cpih, psnb };
+    }
+
+    loadBundle()
+      .then(({ manifest, cpih, psnb }) => {
+        const story = computeMacroStory(cpih, psnb, manifest);
+        const cpihPts = sparklineYoY(cpih, 48);
+        const psnbPts = sparklinePsnb(psnb, 36);
+        drawSparkline(document.getElementById("spark-cpih"), cpihPts, getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-cpih").trim() || "#c2410c", { yLabel: "YoY %" });
+        drawSparkline(document.getElementById("spark-psnb"), psnbPts, getComputedStyle(document.documentElement).getPropertyValue("--hub-chart-psnb").trim() || "#166534", { yLabel: "£m" });
+
+        if (story.cpih) {
+          const d = story.cpih.yoyDeltaPp;
+          const delta =
+            d == null ? "" : ` — ${d >= 0 ? "up" : "down"} ${Math.abs(d).toFixed(2)} pp vs YoY from ${story.cpih.priorMonth}`;
+          document.getElementById("takeaway-cpih").innerHTML =
+            `Latest month in snapshot: <strong>${story.cpih.month}</strong> at <strong>${fmtPct(story.cpih.yoyPct)}</strong> YoY${delta}.`;
+        } else {
+          document.getElementById("takeaway-cpih").textContent = "No non-null YoY values in snapshot.";
+        }
+        document.getElementById("prov-cpih").textContent =
+          `Source: ONS L522 via pipeline export · ${story.cpihRows} rows · snapshot UTC ${story.asOfUtc}`;
+
+        if (story.psnb) {
+          document.getElementById("takeaway-psnb").innerHTML =
+            `Latest month: <strong>${story.psnb.month}</strong> total net borrowing <strong>${fmtM(story.psnb.gbpM)}</strong>${story.psnb.rowCount > 1 ? ` (aggregated from ${story.psnb.rowCount} rows)` : ""}.`;
+        }
+        document.getElementById("prov-psnb").textContent =
+          `Source: ONS DZLS via pipeline export · ${story.psnbRows} rows · snapshot UTC ${story.asOfUtc}`;
+      })
+      .catch((e) => {
+        document.getElementById("takeaway-cpih").textContent = `Could not load snapshot: ${e.message}`;
+        document.getElementById("takeaway-psnb").textContent = "";
+      });
+  </script>
 </body>
 </html>
