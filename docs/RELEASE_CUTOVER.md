@@ -123,6 +123,13 @@ Visual reference: [Orca Sales Management Dashboard (Dribbble)](https://dribbble.
 
 Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` (browse fallback — not copied pixels).
 
+| Role | Git `main` | Worker version ID |
+|------|------------|-------------------|
+| **Rollback (pre motion/orca pass)** | `41a4cf4` | `58ffd470-5c57-429c-94b5-564bf299bda5` |
+| **Current** | `17450d7` | `7384a4c4-64b3-4d47-b07a-420320d3213a` |
+
+**PR:** #13
+
 ## Automated checks (repo)
 
 - `pytest` (includes static/macro attribution; optional `HUB_BROWSER_QA=1` Playwright gate)
