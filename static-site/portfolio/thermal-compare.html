@@ -53,7 +53,7 @@
 <header class="app-nav" role="banner">
   <nav class="nav-inner" aria-label="Primary">
     <a class="nav-title" href="../index.html"><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
-    <a href="../index.html#hub">Six demos</a>
+    <a href="../index.html#hub">Demos</a>
     <a href="../demo.html">UK macro</a>
     <a href="./privacy.html">Privacy</a>
   </nav>
@@ -158,12 +158,11 @@ document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")a
   </span>
 </div>
 <div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <strong>the URL in <code>config.js</code></strong> (gate Worker) when you click analyse or generate; the gate forwards to a private Worker that calls Gemini (availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Do not enter confidential information.</span>
 </div></div>
 
 <script>document.querySelectorAll(".footyr").forEach(e=>e.textContent=new Date().getFullYear());</script>
 
-<script src="./config.js"></script>
 <script src="./assets/chat-disabled.js" defer></script>
 </body>
 </html>

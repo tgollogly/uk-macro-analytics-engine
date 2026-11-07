@@ -71,7 +71,7 @@ def test_hub_cards_do_not_force_row_height_stretch() -> None:
 
 
 def test_portfolio_pages_include_shared_nav_and_hub_link() -> None:
-    """Hub return is via primary nav (Six demos) — no duplicate nav-back row on mobile."""
+    """Hub return is via primary nav (Demos) — no duplicate nav-back row on mobile."""
     needle_nav = 'class="app-nav"'
     needle_hub = "../index.html#hub"
     for name in (
@@ -79,6 +79,8 @@ def test_portfolio_pages_include_shared_nav_and_hub_link() -> None:
         "heat-dome.html",
         "thermal-compare.html",
         "bundlebuilder.html",
+        "macro-explorer.html",
+        "data-coverage.html",
         "ats-matcher.html",
         "privacy.html",
     ):
@@ -109,19 +111,21 @@ def test_demo_charts_use_architecture_stage_stroke_hex() -> None:
 
 
 def test_portfolio_mirror_has_core_assets() -> None:
-    """Mirrored portfolio demos ship CSS + config + five demo HTML files."""
+    """Portfolio hub ships CSS, macro analytics modules, and demo HTML routes."""
     p = STATIC / "portfolio"
     assert (p / "assets" / "site.css").is_file()
-    assert (p / "config.js").is_file()
+    assert (p / "assets" / "macro-analytics.js").is_file()
     for name in (
         "beneish.html",
         "heat-dome.html",
         "thermal-compare.html",
         "bundlebuilder.html",
         "ats-matcher.html",
+        "macro-explorer.html",
+        "data-coverage.html",
         "privacy.html",
     ):
-        assert (p / name).is_file(), f"missing mirrored {name}"
+        assert (p / name).is_file(), f"missing {name}"
 
 
 def test_portfolio_config_points_ats_backend_at_verified_url() -> None:
@@ -151,26 +155,27 @@ def test_docs_describe_ats_worker_deploy_and_secrets() -> None:
     assert "new_sqlite_classes" in doc
 
 
-def test_hub_index_links_to_six_demo_routes() -> None:
+def test_hub_index_links_to_seven_demo_routes() -> None:
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
     assert 'href="./demo.html"' in idx
-    assert "Open macro demo" in idx
-    assert 'aria-label="Primary"' in idx
-    assert 'href="./portfolio/privacy.html"' in idx
+    assert "seven demos" in idx.lower()
+    assert 'href="#hub">Demos</a>' in idx
+    assert 'href="./portfolio/macro-explorer.html"' in idx
+    assert 'href="./portfolio/data-coverage.html"' in idx
     assert 'href="./portfolio/beneish.html"' in idx
     assert 'href="./portfolio/heat-dome.html"' in idx
     assert 'href="./portfolio/thermal-compare.html"' in idx
-    assert 'href="./portfolio/ats-matcher.html"' in idx
     assert 'href="./portfolio/bundlebuilder.html"' in idx
+    assert "ATS matcher is retired" in idx or "retired" in idx.lower()
 
 
-def test_mirror_privacy_discloses_static_host_and_ats_backend() -> None:
-    """Mirrored privacy page describes hub host, chat off, ATS POST, no audited no-cookie claim."""
+def test_mirror_privacy_describes_hub_without_active_ats() -> None:
+    """Privacy page: static host, chat off, ATS retired, macro JSON demos."""
     priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
     assert "Static mirror" in priv
     assert "Optional chat (disabled on this mirror)" in priv
-    assert "uk-macro-ats-gate" in priv
-    assert "workers.dev/api" in priv
+    assert "retired" in priv.lower()
+    assert "macro-explorer" in priv or "Macro trend" in priv
     assert "Open-Meteo" in priv
     assert "LICENSE-portfolio.txt" in priv
 
@@ -182,6 +187,8 @@ def test_portfolio_footnotes_match_mirror_disclosure() -> None:
         "heat-dome.html",
         "thermal-compare.html",
         "bundlebuilder.html",
+        "macro-explorer.html",
+        "data-coverage.html",
         "ats-matcher.html",
         "privacy.html",
     ):
@@ -202,12 +209,18 @@ def test_heat_dome_stacks_map_above_charts_on_narrow() -> None:
     assert '.layout .col-left{order:2;}' in hd
 
 
-def test_ats_matcher_parses_non_json_backend_errors() -> None:
-    """ATS must not treat HTML error pages as JSON with d.error from API."""
-    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
-    assert "readAiResponse" in ats
-    assert "formatAiHttpError" in ats
-    assert ".json()" not in ats
+def test_public_hub_pages_do_not_load_ats_config_js() -> None:
+    """Active hub routes must not load portfolio/config.js (no public AI POST)."""
+    for rel in (
+        "index.html",
+        "demo.html",
+        "portfolio/beneish.html",
+        "portfolio/macro-explorer.html",
+        "portfolio/data-coverage.html",
+        "portfolio/privacy.html",
+    ):
+        html = (STATIC / rel).read_text(encoding="utf-8")
+        assert 'src="./config.js"' not in html and 'src="config.js"' not in html, rel
 
 
 def test_head_vertical_padding_preserves_wrap_horizontal_inset() -> None:
@@ -247,7 +260,7 @@ def test_portfolio_case_studies_use_wrap_cs_column() -> None:
         "heat-dome.html",
         "thermal-compare.html",
         "bundlebuilder.html",
-        "ats-matcher.html",
+        "data-coverage.html",
     ):
         html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
         assert 'class="wrap cs"' in html, name
@@ -263,28 +276,10 @@ def test_ats_workers_wrangler_enables_observability_logs() -> None:
 
 
 def test_ats_upstream_timeout_documented_in_worker_core() -> None:
-    """Backend uses server-side AbortController; mirror UI must not invent browser timeout."""
+    """Optional worker stack retained in repo; public hub does not expose ATS UI."""
     core = (ROOT / "workers" / "ats-api" / "src" / "ats-core.ts").read_text(encoding="utf-8")
     assert "UPSTREAM_TIMEOUT_MS" in core
     assert "24_000" in core
-    assert "AbortController" in core
     ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
     assert "AbortController" not in ats
-
-
-def test_ats_abort_errors_include_non_definitive_client_hint() -> None:
-    """Abort-like UI must not imply a single root cause; distinguish from gate 502 JSON."""
-    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
-    assert "function abortLikeSuffix" in ats
-    assert "upstream_timeout" in ats
-    assert "operation was aborted" in ats
-    assert "HTTP 502 JSON" in ats
-    assert "AbortController" not in ats
-
-
-def test_ats_remote_error_adds_verify_hint_for_server_diagnostics() -> None:
-    """When API returns JSON {error: '...GEMINI...'}, UI must label as remote message."""
-    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
-    assert "function formatRemoteApiError" in ats
-    assert "Remote API message" in ats
-    assert "formatRemoteApiError(d.error)" in ats
+    assert "fetch(" not in ats

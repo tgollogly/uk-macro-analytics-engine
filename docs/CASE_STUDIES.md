@@ -103,11 +103,22 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 - **Problem:** Compare “feels like” (or related) metrics across locations.
 - **Data:** Open-Meteo (keyless in upstream design); third-party requests from the browser.
 
-### AI ATS Resume Matcher
+### Macro trend explorer (this repo)
 
-- **Problem:** Score CV vs job text; optional generated text.
-- **Data:** Text you paste; POST to backend URL in [`config.js`](../static-site/portfolio/config.js).
-- **Known limitation from probes:** responses may be **blocked or non-JSON** (e.g. HTTP 403 / challenge) from some environments; **no guarantee** the feature completes from every host. No backend or secrets are changed from this repo.
+- **Problem:** Interactive YoY CPIH and PSNB views from committed pipeline exports.
+- **Data:** `static-site/demo/*.json` + `manifest.json` (ONS-derived snapshots; not live pull on the static host).
+- **Route:** [`macro-explorer.html`](../static-site/portfolio/macro-explorer.html).
+
+### Pipeline coverage explorer (this repo)
+
+- **Problem:** Document snapshot limitations (null YoY start, PSNB row coverage).
+- **Data:** Same committed JSON/manifest.
+- **Route:** [`data-coverage.html`](../static-site/portfolio/data-coverage.html).
+
+### AI ATS Resume Matcher (retired on public hub)
+
+- **Hub status:** `ats-matcher.html` is informational only — **no** `config.js`, **no** POST from the demo hub.
+- **Repo only:** optional Workers documented in [`ATS_API_WORKER.md`](ATS_API_WORKER.md) for developer review.
 
 ### BundleBuilder
 
@@ -135,10 +146,10 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 | ETL + SQL analytics | `src/data_fetcher.py`, `src/analytics.py`, DuckDB | No separate “silver layer” docs beyond governance notes |
 | Tests | `pytest` across `tests/` | Not exhaustive of every CSV edge case ONS might publish |
 | Dashboards | Streamlit + static Chart.js | Tableau / Power BI artefacts not committed (by design) |
-| Portfolio mirrors | Static HTML | ATS depends on external host policy |
+| Portfolio mirrors + macro demos | Static HTML + committed JSON | Custom domain cutover not executed here |
 
 ---
 
 ## Migration note (informational only)
 
-Replacing the production portfolio with **only** these six edge-hosted demos on a new main domain is a **separate** cutover (DNS, redirects, backend policy). This document does not perform that migration.
+Cutover to a custom domain for the seven-demo hub is documented in [`RELEASE_CUTOVER.md`](RELEASE_CUTOVER.md) (plan only). See [`PORTFOLIO_REPO_INVENTORY.md`](PORTFOLIO_REPO_INVENTORY.md) before archiving `tgollogly/portfolio`.

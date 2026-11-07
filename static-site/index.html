@@ -25,7 +25,7 @@
         ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
         ><span>Thomas Gollogly</span></a
       >
-      <a href="#hub">Six demos</a>
+      <a href="#hub">Demos</a>
       <a href="./demo.html">UK macro charts</a>
       <a href="./portfolio/privacy.html">Privacy</a>
     </nav>
@@ -39,14 +39,14 @@
         caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong> (rolling averages, YoY inflation, monthly PSNB totals), and visualises results in <strong>Streamlit</strong> or a <strong>static Chart.js</strong> snapshot — with <strong>pytest</strong> and <strong>CI</strong> on GitHub. For sources, limitations, and reproducible commands, see the repo <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md">case studies</a> (evidence-led; no employment outcome claims).
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#hub">Open project hub (six demos)</a>
+        <a class="btn btn-primary" href="#hub">Open project hub (seven demos)</a>
         <a class="btn btn-primary" href="./demo.html">UK macro — interactive charts</a>
         <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">This engine on GitHub</a>
         <a class="btn btn-secondary" href="https://github.com/tgollogly/portfolio">Portfolio source on GitHub</a>
       </div>
       <p class="hero-note hub-prose">
         <strong>UK Macro Analytics Engine:</strong> <code>./demo.html</code> plots a <strong>dated JSON snapshot</strong> (see <code>./demo/manifest.json</code> for UTC time and row counts) — not a live ONS pull in the edge browser. <strong>Streamlit</strong> can refresh from ONS when you run the Python app locally or hosted.
-        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; ATS POSTs to <strong>the URL in</strong> <code>./portfolio/config.js</code> (Cloudflare gate + private backend) on button click — see <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>. Optional chat is disabled on this mirror.
+        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; <strong>macro analytics</strong> pages use committed <code>./demo/*.json</code> snapshots only (not live ONS). Optional chat is disabled on this mirror. See <a href="./portfolio/privacy.html">Privacy notice</a>.
       </p>
     </div>
   </header>
@@ -54,7 +54,7 @@
     <div class="inner">
       <div class="site-notice" id="hub">
         <strong>Portfolio demos (mirrored).</strong>
-        The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). Your browser loads them as ordinary static files from this host (HTML/CSS/JS from the deployed bundle — no server-side app here). Data handling differs by demo (see each page and <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <strong>the URL in</strong> <code>./portfolio/config.js</code> (gate Worker) on button clicks only; success from this preview is not guaranteed (e.g. origin policy, usage caps, or browser behaviour may block or end the request — see privacy notice).
+        Seven interactive demos below (plus engineering cards). Portfolio HTML is mirrored from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> where noted; macro analytics pages are authored in this repo. No server-side app on this host — static files only. The <strong>ATS matcher is retired</strong> on this preview; see <a href="./portfolio/privacy.html">Privacy notice</a>.
       </div>
       <div class="hub-grid">
         <article class="hub-card">
@@ -82,13 +82,19 @@
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
         </article>
         <article class="hub-card">
-          <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
-          <p>Static UI; POST to <strong>the URL in</strong> <code>./portfolio/config.js</code> on click (gate Worker — response may fail if blocked).</p>
-          <a class="btn btn-primary" href="./portfolio/ats-matcher.html">Open ATS matcher</a>
-          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
+          <h2><span class="hub-tag">5 · Analytics</span> Macro trend explorer</h2>
+          <p>Filter CPIH YoY and monthly PSNB from committed pipeline JSON — chart, table, CSV download.</p>
+          <a class="btn btn-primary" href="./portfolio/macro-explorer.html">Open trend explorer</a>
+          <p class="hub-src">Data: <code>static-site/demo/*.json</code> + manifest</p>
         </article>
         <article class="hub-card">
-          <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
+          <h2><span class="hub-tag">6 · Analytics</span> Pipeline coverage</h2>
+          <p>Null YoY months, PSNB <code>row_count</code> flags, manifest limitations — snapshot QA view.</p>
+          <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage explorer</a>
+          <p class="hub-src">Data: <code>static-site/demo/manifest.json</code></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">7 · Docs</span> BundleBuilder</h2>
           <p>Court bundle layout / print; fictional matter details in-browser only.</p>
           <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
