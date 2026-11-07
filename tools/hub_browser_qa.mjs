@@ -17,7 +17,10 @@ const report = {
   errors: [],
   notes: [
     "Headless Chromium in agent VM — not parent Chrome at 400px.",
-    "axe-core full audit not run; spot checks for labels/focus/reduced-motion prefs only.",
+    "375px: hub card count + optional horizontal overflow check + hub screenshot only (not all 10 routes).",
+    "Desktop: full route load; deep macro + bundle PDF only on 1280 viewport.",
+    "a11y: privacy route + mobile pass get minimal spot checks (h1, skip); not WCAG / axe.",
+    "Browser context sets prefers-reduced-motion: reduce; no keyboard tab-order audit.",
   ],
 };
 
@@ -53,7 +56,20 @@ async function checkHub(page, vp) {
   if (demosNav < 1) pushError("hub", "missing Demos nav link");
   if (retired < 1) pushError("hub", "missing retired ATS copy on hub");
   await page.screenshot({ path: join(ARTIFACT_DIR, `hub-${vp.label}.png`), fullPage: true });
-  return { demoCards, retired, demosNav };
+  let overflow = null;
+  if (vp.label === "mobile375") {
+    overflow = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+    }));
+    if (overflow.scrollWidth > overflow.innerWidth + 2) {
+      pushError(
+        "hub-375-overflow",
+        `horizontal overflow scrollWidth=${overflow.scrollWidth} inner=${overflow.innerWidth}`,
+      );
+    }
+  }
+  return { demoCards, retired, demosNav, overflow };
 }
 
 async function checkMacroExplorer(page) {

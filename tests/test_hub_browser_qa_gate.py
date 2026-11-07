@@ -14,7 +14,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "tools" / "hub_browser_qa.mjs"
 
 
-@pytest.mark.skipif(os.environ.get("HUB_BROWSER_QA") != "1", reason="set HUB_BROWSER_QA=1 to run Playwright smoke")
+@pytest.mark.skipif(
+    os.environ.get("HUB_BROWSER_QA") != "1",
+    reason="set HUB_BROWSER_QA=1 to run Playwright smoke",
+)
 def test_hub_browser_qa_script_passes() -> None:
     assert SCRIPT.is_file()
     assert shutil.which("node"), "node required"
@@ -33,5 +36,6 @@ def test_hub_browser_qa_script_passes() -> None:
         timeout=300,
     )
     assert out.returncode == 0, out.stderr or out.stdout
-    report = json.loads((Path(env["HUB_QA_ARTIFACT_DIR"]) / "hub-browser-qa-report.json").read_text())
+    report_path = Path(env["HUB_QA_ARTIFACT_DIR"]) / "hub-browser-qa-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report.get("pass") is True, report.get("errors")
