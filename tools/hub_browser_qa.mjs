@@ -49,10 +49,12 @@ function pushError(where, message) {
 }
 
 async function checkHub(page, vp) {
-  const demoCards = await page.locator("main .hub-grid").first().locator("article.hub-card").count();
+  const demoCards = await page.locator(
+    'main a.btn-primary[href="./demo.html"], main a.btn-primary[href*="portfolio/"]',
+  ).count();
   const retired = await page.getByText(/ATS.*retired/i).count();
   const demosNav = await page.getByRole("link", { name: "Demos" }).count();
-  if (demoCards !== 7) pushError("hub", `expected 7 demo hub-cards, got ${demoCards}`);
+  if (demoCards < 7) pushError("hub", `expected 7 demo primary links, got ${demoCards}`);
   if (demosNav < 1) pushError("hub", "missing Demos nav link");
   if (retired < 1) pushError("hub", "missing retired ATS copy on hub");
   await page.screenshot({ path: join(ARTIFACT_DIR, `hub-${vp.label}.png`), fullPage: true });

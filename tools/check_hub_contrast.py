@@ -42,15 +42,13 @@ def contrast_ratio(fg: str, bg: str) -> float:
 
 # Pairs we care about for ordinary UI text (AA normal text >= 4.5:1; large >= 3:1)
 CHECKS: tuple[tuple[str, str, str], ...] = (
-    ("Portfolio body on dark page", "#e2e8f0", "#0f172a"),
-    ("Portfolio muted on dark page", "#94a3b8", "#0f172a"),
-    ("Portfolio ink on card", "#e2e8f0", "#1e293b"),
-    ("Hub primary text on page bg", "#f8fafc", "#0f172a"),
-    ("Hub muted on page bg", "#94a3b8", "#0f172a"),
-    ("Hub link on page bg", "#c7d2fe", "#0f172a"),
-    ("Legal/muted slate on dark (hub footer)", "#94a3b8", "#0f172a"),
-    ("Eyebrow amber on indigo header", "#fbbf24", "#312e81"),
-    ("White heading on indigo header", "#ffffff", "#312e81"),
+    ("Hub body on ivory page", "#1a2332", "#faf8f4"),
+    ("Hub muted on ivory page", "#4a5568", "#faf8f4"),
+    ("Hub link on ivory page", "#1d5c8c", "#faf8f4"),
+    ("Portfolio ink on white card", "#1a2332", "#ffffff"),
+    ("Portfolio body on light page", "#1a2332", "#faf8f4"),
+    ("Eyebrow teal on ivory", "#0d6e6e", "#faf8f4"),
+    ("Cobalt section title", "#2e4a8c", "#faf8f4"),
 )
 
 

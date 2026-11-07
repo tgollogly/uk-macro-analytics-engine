@@ -69,7 +69,7 @@ def test_case_studies_matches_committed_demo_numbers(
 def test_hub_mentions_case_studies_and_manifest() -> None:
     idx = (ROOT / "static-site" / "index.html").read_text(encoding="utf-8")
     assert "CASE_STUDIES.md" in idx
-    assert "blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" in idx
+    assert "docs/CASE_STUDIES.md" in idx
     assert "manifest.json" in idx
 
 

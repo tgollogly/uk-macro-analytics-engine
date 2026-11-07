@@ -14,8 +14,9 @@
 }
 
 .app-nav {
-  background: linear-gradient(180deg, var(--hub-palette-header) 0%, #1e1b4b 100%);
-  border-bottom: 2px solid var(--hub-palette-header-stroke);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hub-border);
   padding: 0.35rem var(--hub-content-pad, clamp(16px, 4vw, 24px));
   position: sticky;
   top: 0;
@@ -34,7 +35,7 @@
   box-sizing: border-box;
 }
 .app-nav .nav-title {
-  color: var(--hub-text);
+  color: var(--hub-palette-text-body);
   font-family: var(--hub-font-serif);
   font-size: 1rem;
   font-weight: 600;
