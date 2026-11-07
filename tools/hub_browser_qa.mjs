@@ -450,6 +450,22 @@ try {
 async function auditMotionEnabled(base) {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
+  await page.goto(`${base}/`, { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => document.body.classList.contains("is-motion-on"), {
+    timeout: 12000,
+  });
+  const hubAnim = await page.evaluate(() => {
+    const el = document.querySelector(".insight-feature.motion-in");
+    return {
+      motionOn: document.body.classList.contains("is-motion-on"),
+      animCount: el?.getAnimations?.().length ?? 0,
+    };
+  });
+  report.contrast.push({ route: "hub", viewport: "motion-default", hubAnim });
+  if (!hubAnim.motionOn) pushError("motion-hub", "body missing is-motion-on on hub");
+  if (hubAnim.animCount < 1) {
+    pushError("motion-hub", `expected running panel animation, got ${hubAnim.animCount}`);
+  }
   await page.goto(`${base}/portfolio/macro-explorer.html`, { waitUntil: "networkidle" });
   await page.waitForFunction(
     () => {
@@ -469,8 +485,8 @@ async function auditMotionEnabled(base) {
     hubMotionCss: [...document.styleSheets].some((s) => String(s.href || "").includes("hub-motion")),
   }));
   report.contrast.push({ route: "macro-explorer", viewport: "motion-default", motion });
-  if (!motion.reduced && (!motion.duration || motion.duration < 100)) {
-    pushError("motion", `expected chart animation duration, got ${motion.duration}`);
+  if (!motion.reduced && (!motion.duration || motion.duration < 400)) {
+    pushError("motion", `expected chart animation duration >= 400ms, got ${motion.duration}`);
   }
   await browser.close();
 }

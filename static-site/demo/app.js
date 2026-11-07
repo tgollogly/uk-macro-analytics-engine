@@ -9,7 +9,7 @@ import {
   chartJsLightOptions,
   chartUpdateMode,
 } from "../chart-light-theme.js";
-import { initViewTransitionMeta, pulseChartContainer } from "../hub-motion.js";
+import { initPageMotion, pulseChartContainer } from "../hub-motion.js";
 
 // ANALYTICS stage stroke (194, 65, 12) — CPIH YoY
 const CPIH_LINE = "#c2410c";
@@ -106,7 +106,7 @@ async function loadJson(url) {
 }
 
 function main() {
-  initViewTransitionMeta();
+  initPageMotion();
   if (typeof Chart === "undefined") {
     showErr("Chart.js failed to load. Check network or CDN.");
     return;

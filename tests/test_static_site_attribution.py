@@ -248,7 +248,7 @@ def test_compact_nav_avoids_full_width_third_row() -> None:
 
 def test_privacy_doc_shares_wrap_column_with_page_head() -> None:
     priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
-    assert 'class="wrap head"' in priv
+    assert 'class="wrap head' in priv
     assert 'class="wrap doc"' in priv
     site = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
     assert "min(760px" not in site.split(".doc", 1)[1].split("/* ---------- brand", 1)[0]
