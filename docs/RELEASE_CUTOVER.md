@@ -134,7 +134,7 @@ Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` 
 
 **Rollback (pre Safari-visible motion):** `main` `1b9948e` — Worker `7384a4c4-64b3-4d47-b07a-420320d3213a`.
 
-**Current:** see latest publish row after cache/explorer fix deploy.
+**Current:** `main` `281cf17` — Worker `73472629-4495-417c-abc2-5697c2f108d2` (**PR #18** cache + macro explorer).
 
 **Rollback (pre cache fix):** `main` `c8838cb` — Worker `aace6545-ae4e-4452-bc2d-2285fcb09726` (**PR #16**).
 
