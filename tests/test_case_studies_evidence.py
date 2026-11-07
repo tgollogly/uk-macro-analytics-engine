@@ -78,3 +78,18 @@ def test_demo_page_mentions_evidence_path() -> None:
     assert "manifest.json" in demo
     assert "CASE_STUDIES.md" in demo
     assert "blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" in demo
+
+
+def test_case_studies_page_links_rebuilt_summaries() -> None:
+    page = (ROOT / "static-site" / "case-studies.html").read_text(encoding="utf-8")
+    assert "manifest.json" in page
+    assert "reproducible analysis" in page
+    assert "chart-ni-costs" in page
+    assert "chart-trade-crude" in page
+
+
+def test_case_studies_doc_lists_rebuild_totals() -> None:
+    md = (ROOT / "docs" / "CASE_STUDIES.md").read_text(encoding="utf-8")
+    assert "447,682" in md
+    assert "CPA (08)" in md or "CPA 08" in md
+    assert "src/case_studies/prescribing.py" in md
