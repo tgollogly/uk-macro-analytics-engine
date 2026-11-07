@@ -53,8 +53,11 @@ Two Workers plus one **Durable Object (DO)** class in the **gate** script. The *
 
 ## Observability and retention
 
+Wrangler configs include `[observability]` with **Workers Logs** (`invocation_logs = true`) so gate/backend invocations can be queried in the dashboard **after redeploy** — prior deploys without this block may leave no retained log events.
+
 - Gate logs: `kind: ats_gate`, `mode`, `cvLen`, `jdLen`, `ipPresent` (boolean only).
 - Backend logs: `kind: ats_backend`, `mode`, `model`, `cvLen`, `jdLen`.
+- Upstream Gemini calls use a server-side `AbortController` at **`UPSTREAM_TIMEOUT_MS` (28s)** in `ats-core.ts` — distinct from the static mirror page, which has **no** `AbortController` on browser `fetch`.
 - Quota DO stores **numeric counters** and hashed window keys — **not** CV text.
 - Log **retention, sampling, and export** are determined by your Cloudflare account (Workers Logs, Logpush, etc.) — configure per policy.
 

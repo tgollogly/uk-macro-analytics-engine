@@ -4,7 +4,7 @@ import backend from "../src/backend";
 import type { GateEnv } from "../src/gate";
 import type { BackendEnv } from "../src/backend";
 import { signInternalRequest } from "../src/internal-auth";
-import { validateAtsShape } from "../src/ats-core";
+import { callGeminiText, UPSTREAM_TIMEOUT_MS, validateAtsShape } from "../src/ats-core";
 
 const mockCtx = {
   waitUntil: vi.fn(),
@@ -284,6 +284,25 @@ describe("ATS backend (private)", () => {
     expect(res.status).toBe(502);
   });
 
+  it("502 when upstream Gemini fetch aborts (server-side; surfaces as JSON error, not browser fetch throw)", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(
+      new DOMException("The operation was aborted.", "AbortError"),
+    );
+    const secret = "h";
+    const raw = JSON.stringify({ mode: "ats", cv: "c", jd: "d" });
+    const sig = await signInternalRequest(secret, "POST", "/internal/ats", raw, Date.now());
+    const env: BackendEnv = { ATS_INTERNAL_HMAC_SECRET: secret, GEMINI_API_KEY: "k" };
+    const req = new Request("https://internal/internal/ats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-ATS-Internal": sig },
+      body: raw,
+    });
+    const res = await backend.fetch(req, env, mockCtx);
+    expect(res.status).toBe(502);
+    const j = (await res.json()) as { error: string };
+    expect(j.error).toMatch(/aborted/i);
+  });
+
   it("429 when Gemini returns rate limit", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(JSON.stringify({ error: { message: "quota exceeded" } }), { status: 429 }),
@@ -299,6 +318,34 @@ describe("ATS backend (private)", () => {
     });
     const res = await backend.fetch(req, env, mockCtx);
     expect(res.status).toBe(429);
+  });
+});
+
+describe("callGeminiText upstream timeout", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation((_url: string, init?: RequestInit) => {
+        return new Promise((_, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            reject(new DOMException("The operation was aborted.", "AbortError"));
+          });
+        });
+      }),
+    );
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it(`aborts Gemini call after UPSTREAM_TIMEOUT_MS (${UPSTREAM_TIMEOUT_MS})`, async () => {
+    const pending = callGeminiText("key", "gemini-test", "prompt", 100, 0.1);
+    const rejected = expect(pending).rejects.toMatchObject({ name: "AbortError" });
+    await vi.advanceTimersByTimeAsync(UPSTREAM_TIMEOUT_MS + 1);
+    await rejected;
   });
 });
 

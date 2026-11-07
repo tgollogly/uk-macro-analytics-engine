@@ -253,6 +253,24 @@ def test_portfolio_case_studies_use_wrap_cs_column() -> None:
         assert 'class="wrap cs"' in html, name
 
 
+def test_ats_workers_wrangler_enables_observability_logs() -> None:
+    """Gate + backend wrangler should enable Workers Logs for post-mortems (deploy separately)."""
+    gate = (ROOT / "workers" / "ats-api" / "wrangler.toml").read_text(encoding="utf-8")
+    backend = (ROOT / "workers" / "ats-api" / "wrangler.backend.toml").read_text(encoding="utf-8")
+    for blob, name in ((gate, "gate"), (backend, "backend")):
+        assert "[observability]" in blob, name
+        assert "invocation_logs = true" in blob, name
+
+
+def test_ats_upstream_timeout_documented_in_worker_core() -> None:
+    """Backend uses server-side AbortController; mirror UI must not invent browser timeout."""
+    core = (ROOT / "workers" / "ats-api" / "src" / "ats-core.ts").read_text(encoding="utf-8")
+    assert "UPSTREAM_TIMEOUT_MS" in core
+    assert "AbortController" in core
+    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
+    assert "AbortController" not in ats
+
+
 def test_ats_abort_errors_include_non_definitive_client_hint() -> None:
     """Abort-like UI must not imply a single root cause; distinguish from gate 502 JSON."""
     ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
