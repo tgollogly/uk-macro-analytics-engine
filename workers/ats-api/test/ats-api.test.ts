@@ -220,6 +220,41 @@ describe("ATS gate", () => {
     expect(res.status).toBe(400);
   });
 
+  it("returns JSON 502 with CORS when backend service binding throws", async () => {
+    const secret = "test-hmac";
+    const quota: DurableObjectNamespace = {
+      idFromName: () => ({}) as DurableObjectId,
+      get: () => ({
+        fetch: async () =>
+          new Response(JSON.stringify({ allowed: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }),
+      }),
+    } as unknown as DurableObjectNamespace;
+    const svc: Fetcher = {
+      fetch: async () => {
+        throw new Error("service binding failed");
+      },
+    } as unknown as Fetcher;
+    const env: GateEnv = {
+      ATS_INTERNAL_HMAC_SECRET: secret,
+      ATS_SERVICE: svc,
+      ATS_QUOTA: quota,
+      ATS_ALLOWED_ORIGINS: "https://hub.example",
+    };
+    const req = jsonRequest(
+      "https://gate.example/api",
+      { origin: "https://hub.example" },
+      { mode: "ats", cv: "c", jd: "d" },
+    );
+    const res = await gate.fetch(req, env, mockCtx);
+    expect(res.status).toBe(502);
+    const j = (await res.json()) as { error: string };
+    expect(j.error).toContain("private worker");
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("https://hub.example");
+  });
+
   it("OPTIONS returns 204 for allowed origin", async () => {
     const env = makeGateEnv();
     const req = new Request("https://gate.example/api", {
@@ -284,7 +319,7 @@ describe("ATS backend (private)", () => {
     expect(res.status).toBe(502);
   });
 
-  it("502 when upstream Gemini fetch aborts (server-side; surfaces as JSON error, not browser fetch throw)", async () => {
+  it("502 upstream_timeout when Gemini fetch aborts server-side", async () => {
     vi.mocked(fetch).mockRejectedValueOnce(
       new DOMException("The operation was aborted.", "AbortError"),
     );
@@ -300,7 +335,7 @@ describe("ATS backend (private)", () => {
     const res = await backend.fetch(req, env, mockCtx);
     expect(res.status).toBe(502);
     const j = (await res.json()) as { error: string };
-    expect(j.error).toMatch(/aborted/i);
+    expect(j.error).toMatch(/upstream_timeout/i);
   });
 
   it("429 when Gemini returns rate limit", async () => {

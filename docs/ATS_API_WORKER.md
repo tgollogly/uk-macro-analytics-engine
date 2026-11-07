@@ -57,7 +57,8 @@ Wrangler configs include `[observability]` with **Workers Logs** (`invocation_lo
 
 - Gate logs: `kind: ats_gate`, `mode`, `cvLen`, `jdLen`, `ipPresent` (boolean only).
 - Backend logs: `kind: ats_backend`, `mode`, `model`, `cvLen`, `jdLen`.
-- Upstream Gemini calls use a server-side `AbortController` at **`UPSTREAM_TIMEOUT_MS` (28s)** in `ats-core.ts` — distinct from the static mirror page, which has **no** `AbortController` on browser `fetch`.
+- Upstream Gemini calls use a server-side `AbortController` at **`UPSTREAM_TIMEOUT_MS` (24s)** in `ats-core.ts` — distinct from the static mirror page, which has **no** `AbortController` on browser `fetch`. Timeouts return JSON `{ "error": "upstream_timeout: …" }` with HTTP **502** through the gate (not a bare browser `AbortError`), when the response completes in time.
+- Gate logs **`ats_gate_backend`** with `beStatus` after each backend response; binding failures log **`ats_gate_backend_fetch`** without bodies.
 - Quota DO stores **numeric counters** and hashed window keys — **not** CV text.
 - Log **retention, sampling, and export** are determined by your Cloudflare account (Workers Logs, Logpush, etc.) — configure per policy.
 

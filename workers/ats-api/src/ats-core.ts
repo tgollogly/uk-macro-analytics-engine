@@ -15,7 +15,8 @@ export const MAX_CV_CHARS = 60_000;
 export const MAX_JD_CHARS = 60_000;
 export const MAX_OUTPUT_ATS = 4096;
 export const MAX_OUTPUT_DOC = 8192;
-export const UPSTREAM_TIMEOUT_MS = 28_000;
+/** Stay under common ~30s browser/automation fetch cutoffs (gate + quota + Gemini). */
+export const UPSTREAM_TIMEOUT_MS = 24_000;
 
 export function isMode(s: string): s is Mode {
   return s === "ats" || s === "cover" || s === "cvimprove";

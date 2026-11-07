@@ -196,7 +196,43 @@ export default {
       }),
     );
 
-    const beRes = await env.ATS_SERVICE.fetch(internalReq);
+    let beRes: Response;
+    try {
+      beRes = await env.ATS_SERVICE.fetch(internalReq);
+    } catch (e) {
+      const detail = e instanceof Error ? e.message : "backend_unreachable";
+      ctx.waitUntil(
+        Promise.resolve().then(() => {
+          console.log(
+            JSON.stringify({
+              kind: "ats_gate_backend_fetch",
+              mode,
+              outcome: "error",
+              detail: String(detail).slice(0, 120),
+            }),
+          );
+        }),
+      );
+      return jsonError(
+        request,
+        env,
+        "Backend service unavailable — no response from private worker.",
+        502,
+      );
+    }
+
+    ctx.waitUntil(
+      Promise.resolve().then(() => {
+        console.log(
+          JSON.stringify({
+            kind: "ats_gate_backend",
+            mode,
+            beStatus: beRes.status,
+          }),
+        );
+      }),
+    );
+
     const headers = new Headers(beRes.headers);
     headers.set("Content-Type", beRes.headers.get("Content-Type") || "application/json; charset=utf-8");
     for (const [k, v] of Object.entries(corsHeadersForOrigin(origin))) {

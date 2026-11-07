@@ -266,6 +266,7 @@ def test_ats_upstream_timeout_documented_in_worker_core() -> None:
     """Backend uses server-side AbortController; mirror UI must not invent browser timeout."""
     core = (ROOT / "workers" / "ats-api" / "src" / "ats-core.ts").read_text(encoding="utf-8")
     assert "UPSTREAM_TIMEOUT_MS" in core
+    assert "24_000" in core
     assert "AbortController" in core
     ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
     assert "AbortController" not in ats
@@ -275,6 +276,7 @@ def test_ats_abort_errors_include_non_definitive_client_hint() -> None:
     """Abort-like UI must not imply a single root cause; distinguish from gate 502 JSON."""
     ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
     assert "function abortLikeSuffix" in ats
+    assert "upstream_timeout" in ats
     assert "operation was aborted" in ats
     assert "HTTP 502 JSON" in ats
     assert "AbortController" not in ats

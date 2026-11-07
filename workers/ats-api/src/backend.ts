@@ -130,7 +130,11 @@ export default {
         return jsonOk({ text });
       }
     } catch (e) {
+      const name = e instanceof Error ? e.name : "";
       const msg = e instanceof Error ? e.message : "Upstream error";
+      if (name === "AbortError" || /aborted/i.test(msg)) {
+        return jsonErr("upstream_timeout: Gemini call exceeded server time limit", 502);
+      }
       const status =
         /rate|429|quota/i.test(msg) ? 429 : /timeout|aborted|network|fetch/i.test(msg) ? 502 : 502;
       return jsonErr(msg, status);

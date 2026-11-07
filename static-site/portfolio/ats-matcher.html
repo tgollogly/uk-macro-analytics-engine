@@ -181,6 +181,9 @@ function abortLikeSuffix(){
 /** When JSON parses but the server put diagnostics in `error`, label it so UI is not read as local env diagnosis. */
 function formatRemoteApiError(raw){
   const s = String(raw||"");
+  if (/upstream_timeout/i.test(s)) {
+    return "Error: " + s + " — server ended the Gemini wait before a full model response; this is not the same as a client-only browser abort. Retry when load is lower, or check gate/backend logs for HTTP 502.";
+  }
   if (/AbortError|operation was aborted|request aborted|aborted/i.test(s)) {
     return "Error: " + s + abortLikeSuffix();
   }
