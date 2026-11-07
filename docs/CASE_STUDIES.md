@@ -139,6 +139,83 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 
 ---
 
+## 4. Northern Ireland GP prescribing (**rebuilt Nov 2026 — AI-assisted, not historical proof**)
+
+**Label:** Independent recreation in this repo from official Open Data NI CSV. It demonstrates traceability; it does **not** prove prior personal authorship of any earlier notebook.
+
+### Source
+
+| Field | Value |
+|--------|--------|
+| Dataset | [GP Prescribing Northern Ireland — August 2026](https://admin.opendatani.gov.uk/dataset/gp-prescribing-data/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135) |
+| Licence | UK Open Government Licence (OGL) |
+| Code | [`src/case_studies/prescribing.py`](../src/case_studies/prescribing.py) |
+| Checked-in summary | [`static-site/case-studies/ni-prescribing-2026-08-summary.json`](../static-site/case-studies/ni-prescribing-2026-08-summary.json) |
+| `generated_at_utc` (summary) | See JSON (`export_case_studies.py`) |
+| Input file (local cache, not in git) | `data/cache/case-studies/ni-gp-prescribing-2026-08.csv` |
+
+SHA-256 of the August 2026 CSV is recorded in `static-site/case-studies/manifest.json` after export.
+
+### Recomputed aggregates (August 2026, whole file)
+
+| Measure | Value |
+|---------|--------|
+| Detail rows | 447,682 |
+| Distinct practices | 304 |
+| Total items | 3,638,019 |
+| Gross cost (£) | 41,961,966.94 |
+| Actual cost (£) | 40,416,549.60 |
+| BNF ch.4 actual cost (“CNS” proxy) | 7,598,986.45 |
+| Tirzepatide items / actual cost | 9,352 / £2,096,263.00 |
+| Atorvastatin items | 152,303 |
+
+### Methods and limits
+
+- DuckDB `read_csv` with **latin-1** encoding and explicit column names (pound sign in headers).
+- **Items** are dispensing lines, not patients or events; **Actual cost** is contractor reimbursement, not full NHS spend.
+- Tirzepatide / atorvastatin matched on presentation/VMP/AMP name contains.
+
+**Reproduce:**
+
+```bash
+pip install -r requirements.txt
+# CSV lands in data/cache/ (gitignored) on first run:
+PYTHONPATH=. python tools/export_case_studies.py
+pytest tests/test_case_studies_rebuild.py -q
+```
+
+---
+
+## 5. UK trade — energy-related CPA (08) lines (**rebuilt Nov 2026 — AI-assisted**)
+
+**Label:** Primary source is [CPA (08) publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current) (`cpapublicationq22026august.xlsx`), worksheets **2. Exports quarter** and **4. Imports quarter**, **current prices (CP)**, seasonally adjusted. **CPA (08) is not SITC.** PDF YoY claims are mapped in [`EVIDENCE_HANDOFF.md`](./EVIDENCE_HANDOFF.md); unmatched lines stay **not validated**, not debunked via a different series.
+
+### Source
+
+| Field | Value |
+|--------|--------|
+| CPA (08) dataset | [Publication tables — CPA 08](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current) |
+| Bulletin context | [UK trade: June 2026](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026) |
+| Code | [`src/case_studies/energy_trade.py`](../src/case_studies/energy_trade.py) |
+| Summary JSON | [`static-site/case-studies/uk-energy-trade-q2-2026-summary.json`](../static-site/case-studies/uk-energy-trade-q2-2026-summary.json) |
+| SITC substitute (QoQ only) | [Trade publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current) sheet `2 - Quarterly CP` |
+
+### Recomputed Q2 2026 vs Q2 2025 YoY (CPA, £bn levels)
+
+| CPA line | Q2 2025 | Q2 2026 | YoY % |
+|----------|---------|---------|-------|
+| 06.1 Crude petroleum exports | 2.421 | 7.271 | +200.3 |
+| 06 Crude petroleum & natural gas imports | 8.551 | 11.680 | +36.6 |
+| 19.2 Refined petroleum products imports | 5.327 | 9.239 | +73.4 |
+| Total goods exports | 94.721 | 107.153 | +13.1 |
+| Total goods imports | 155.278 | 171.197 | +10.3 |
+
+PDF headline **crude exports +109% to £5.4bn** does **not** match CPA **06.1** on this vintage — see claim matrix in JSON `original_pdf_claim_check`.
+
+**Reproduce:** `PYTHONPATH=. python tools/export_case_studies.py` then `pytest tests/test_case_studies_rebuild.py -q`.
+
+---
+
 ## Readiness vs gaps (evidence-based)
 
 | Area | Evidence in repo | Gap |
@@ -146,7 +223,7 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 | ETL + SQL analytics | `src/data_fetcher.py`, `src/analytics.py`, DuckDB | No separate “silver layer” docs beyond governance notes |
 | Tests | `pytest` across `tests/` | Not exhaustive of every CSV edge case ONS might publish |
 | Dashboards | Streamlit + static Chart.js | Tableau / Power BI artefacts not committed (by design) |
-| Portfolio mirrors + macro demos | Static HTML + committed JSON | Custom domain cutover not executed here |
+| Portfolio mirrors + macro demos | Static HTML + committed JSON | NI + energy summaries committed; full CSV/xlsx remain local cache |
 
 ---
 

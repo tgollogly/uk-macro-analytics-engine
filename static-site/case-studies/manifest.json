@@ -1,0 +1,29 @@
+{
+  "generated_at_utc": "2026-11-07T17:59:00Z",
+  "rebuild_label": "AI-assisted recreation in uk-macro-analytics-engine (Nov 2026)",
+  "sources": {
+    "ni_prescribing": {
+      "title": "GP Prescribing Northern Ireland - August 2026",
+      "resource_page": "https://admin.opendatani.gov.uk/dataset/gp-prescribing-data/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135",
+      "download_url": "https://admin.opendatani.gov.uk/dataset/a7b76920-bc0a-48fd-9abf-dc5ad0999886/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135/download/05.-gp-prescribing-august-2026.csv",
+      "licence": "UK Open Government Licence (OGL)",
+      "sha256": "8c0b76e3bc41c672a7496756a81647b008ab6d9341b340fca2c859acfd026886",
+      "local_cache": "data/cache/case-studies/ni-gp-prescribing-2026-08.csv"
+    },
+    "ons_trade_tables_sitc_substitute": {
+      "title": "UK trade publication tables (Aug 2026 vintage)",
+      "dataset_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current",
+      "download_url": "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current/tradepublicationtables2026aug.xlsx",
+      "bulletin_url": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026",
+      "sha256": "d40efd7b66051b03e3d9afcb609a163994e971904359c0f80ed5f865a508b6f6",
+      "local_cache": "data/cache/case-studies/tradepublicationtables2026aug.xlsx"
+    },
+    "ons_cpa08": {
+      "title": "Trade in goods: CPA (08) exports and imports",
+      "dataset_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current",
+      "download_url": "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current/cpapublicationq22026august.xlsx",
+      "sha256": "682e034620ccf7d53b24d126ea6d2978339b025f23b9951a71276b9e35b22202",
+      "local_cache": "data/cache/case-studies/cpapublicationq22026august.xlsx"
+    }
+  }
+}

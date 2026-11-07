@@ -1,0 +1,53 @@
+{
+  "period_label": "2026-08",
+  "source_url": "https://admin.opendatani.gov.uk/dataset/a7b76920-bc0a-48fd-9abf-dc5ad0999886/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135/download/05.-gp-prescribing-august-2026.csv",
+  "licence": "UK Open Government Licence (OGL)",
+  "detail_rows": 447682,
+  "distinct_practices": 304,
+  "total_items": 3638019,
+  "gross_cost_gbp": 41961966.94,
+  "actual_cost_gbp": 40416549.6,
+  "bnf_chapter_04_actual_cost_gbp": 7598986.45,
+  "tirzepatide_items": 9352,
+  "tirzepatide_actual_cost_gbp": 2096263.0,
+  "atorvastatin_items": 152303,
+  "atorvastatin_actual_cost_gbp": 175013.42,
+  "notes": [
+    "Rebuilt Nov 2026 (AI-assisted); not proof of prior personal code.",
+    "Rows are practice \u00d7 presentation dispensed lines, not patients or dispensing events.",
+    "Actual Cost is contractor reimbursement; Gross Cost is list \u2014 not full NHS spend.",
+    "BNF chapter 4 used for 'CNS' therapy-area cost (actual cost sum).",
+    "Tirzepatide matched on presentation/VMP/AMP name; atorvastatin likewise."
+  ],
+  "generated_at_utc": "2026-11-07T17:59:00Z",
+  "sha256_source_csv": "8c0b76e3bc41c672a7496756a81647b008ab6d9341b340fca2c859acfd026886",
+  "sanity_checks": {
+    "detail_rows": 447682,
+    "distinct_practices": 304,
+    "year_min": 2026,
+    "year_max": 2026,
+    "month_min": 8,
+    "month_max": 8,
+    "total_items": 3638019,
+    "total_quantity": 363117702.0,
+    "sum_actual_cost_gbp": 40416549.6030003,
+    "sum_gross_cost_gbp": 41961966.93900046,
+    "rows_actual_gt_gross": 0,
+    "column_definitions": {
+      "total_items": "Prescription items (lines), not patients",
+      "total_quantity": "Dispensed quantity in presentation units",
+      "actual_cost_gbp": "Actual Cost \u2014 reimbursement to contractors",
+      "gross_cost_gbp": "Gross Cost \u2014 list ingredient cost",
+      "bnf_chapter": "BNF chapter code for therapy-area grouping"
+    },
+    "drug_match_rules": {
+      "tirzepatide": "presentation OR vmp_nm OR amp_nm ILIKE '%tirzepatide%'",
+      "atorvastatin": "presentation OR vmp_nm OR amp_nm ILIKE '%atorvastatin%'",
+      "cns_proxy": "sum(actual_cost_gbp) WHERE bnf_chapter = 4"
+    }
+  },
+  "linkedin_screenshot_comparison": {
+    "status": "independent_recompute",
+    "note": "Aug 2026 OpenDataNI aggregates below closely match reported screenshot totals; Not proof of prior authorship \u2014 public CSV supports similar magnitudes."
+  }
+}
