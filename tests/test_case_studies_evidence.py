@@ -78,3 +78,17 @@ def test_demo_page_mentions_evidence_path() -> None:
     assert "manifest.json" in demo
     assert "CASE_STUDIES.md" in demo
     assert "blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" in demo
+
+
+def test_case_studies_page_links_rebuilt_summaries() -> None:
+    page = (ROOT / "static-site" / "case-studies.html").read_text(encoding="utf-8")
+    assert "ni-prescribing-2026-08-summary.json" in page
+    assert "uk-energy-trade-q2-2026-summary.json" in page
+    assert "AI-assisted" in page
+
+
+def test_case_studies_doc_lists_rebuild_totals() -> None:
+    md = (ROOT / "docs" / "CASE_STUDIES.md").read_text(encoding="utf-8")
+    assert "447,682" in md
+    assert "82.6%" in md
+    assert "src/case_studies/prescribing.py" in md

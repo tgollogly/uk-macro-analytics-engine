@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Case studies — evidence-led analyst work | Thomas Gollogly</title>
+  <meta name="description" content="UK macro pipeline plus AI-assisted Nov 2026 rebuilds of NI GP prescribing (Aug 2026) and UK SITC 3 Fuels trade (Q2 2026 CPA) from official open data — committed JSON summaries." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tgollogly.dev/case-studies.html" />
+  <meta property="og:title" content="Case studies — UK macro analytics (evidence-led)" />
+  <meta property="og:description" content="Verified ONS macro pipeline demos. Additional open-data studies documented when reproducible sources are in the repository." />
+  <meta property="og:image" content="https://tgollogly.dev/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://tgollogly.dev/og-preview.png" />
+  <link rel="stylesheet" href="./hub-tokens.css?v=20251107c1" />
+  <link rel="stylesheet" href="./shell-shared.css?v=20251107c1" />
+  <link rel="stylesheet" href="./hub-pages.css?v=20251107c1" />
+  <link rel="stylesheet" href="./hub-motion.css?v=20251107c1" />
+</head>
+<body class="page-shell">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="app-nav" role="banner">
+    <nav class="nav-inner" aria-label="Primary">
+      <a class="nav-title" href="./index.html"
+        ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
+        ><span>Thomas Gollogly</span></a
+      >
+      <a href="./index.html#story">Data story</a>
+      <a href="./index.html#hub">Demos</a>
+      <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Full CASE_STUDIES.md</a>
+    </nav>
+  </header>
+
+  <header class="hero motion-in">
+    <div class="inner motion-in">
+      <p class="hero-eyebrow">Junior reporting &amp; data analyst evidence</p>
+      <h1>Case studies with <span class="hero-title-warm">sources</span>, not <span class="hero-title-accent">headlines</span></h1>
+      <p class="lead">
+        Verified numbers come from <strong>committed JSON</strong> and <code>pytest</code>. NI prescribing and UK fuels trade were <strong>rebuilt Nov 2026</strong> (AI-assisted) from Open Data NI and ONS tables — not proof of earlier personal code.
+      </p>
+    </div>
+  </header>
+
+  <main class="hub-main" id="main">
+    <div class="inner">
+      <h2 class="hub-section-title">Verified in this repository</h2>
+      <div class="hub-grid-demos">
+        <article class="hub-card hub-card-feature motion-in">
+          <h2><span class="hub-tag">Macro</span> UK CPIH &amp; PSNB pipeline</h2>
+          <p>ONS CSV → DuckDB → exports → static Chart.js demos. Numbers match <code>static-site/demo/manifest.json</code>.</p>
+          <a class="btn btn-primary" href="./demo.html">Open macro charts</a>
+          <a class="btn btn-secondary" href="./portfolio/macro-explorer.html">Trend explorer</a>
+        </article>
+        <article class="hub-card motion-in">
+          <h2><span class="hub-tag">Quality</span> Coverage &amp; limitations</h2>
+          <p>Null YoY months, PSNB row counts, and manifest limitations — computed from the same JSON bundle.</p>
+          <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage</a>
+        </article>
+      </div>
+
+      <h2 class="hub-section-title">Rebuilt from official data (Nov 2026)</h2>
+      <div class="hub-grid-demos">
+        <article class="hub-card motion-in">
+          <h2><span class="hub-tag">NI</span> GP prescribing — Aug 2026</h2>
+          <p>Open Data NI CSV → DuckDB aggregates. <strong>3,638,019</strong> items across <strong>304</strong> practices; actual cost <strong>£40.4m</strong> (see JSON for tirzepatide / BNF ch.4).</p>
+          <a class="btn btn-primary" href="./case-studies/ni-prescribing-2026-08-summary.json">Summary JSON</a>
+          <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md#4-northern-ireland-gp-prescribing-rebuilt-nov-2026--ai-assisted-not-historical-proof">Methods (§4)</a>
+        </article>
+        <article class="hub-card motion-in">
+          <h2><span class="hub-tag">ONS</span> SITC 3 Fuels — Q2 2026 CPA</h2>
+          <p>Publication tables sheet <code>2 - Quarterly CP</code>. Fuel exports <strong>£7.8bn → £14.3bn</strong> Q1–Q2 2026 (+82.6% QoQ). Crude-only PDF claims differ — see handoff.</p>
+          <a class="btn btn-primary" href="./case-studies/uk-energy-trade-q2-2026-summary.json">Summary JSON</a>
+          <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md#5-uk-trade-in-goods--sitc-3-fuels-rebuilt-nov-2026--ai-assisted">Methods (§5)</a>
+        </article>
+      </div>
+      <div class="site-notice motion-in">
+        <p>Provenance: <a href="./case-studies/manifest.json">manifest.json</a> (SHA-256). Compare screenshot/PDF claims in
+          <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/EVIDENCE_HANDOFF.md">EVIDENCE_HANDOFF.md</a>.</p>
+      </div>
+
+      <h2 class="hub-section-title hub-grid-secondary">Reviewer docs</h2>
+      <div class="hub-grid">
+        <article class="hub-card motion-in">
+          <h2><span class="hub-pill">GitHub</span> CASE_STUDIES.md</h2>
+          <p class="hub-prose" style="font-size:0.9rem;color:var(--shell-muted)">Methods, snapshot table, mirrored demos, blocked §4–5.</p>
+          <a class="btn btn-primary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Read on GitHub</a>
+        </article>
+        <article class="hub-card motion-in">
+          <h2><span class="hub-pill">Handoff</span> EVIDENCE_HANDOFF.md</h2>
+          <p class="hub-prose" style="font-size:0.9rem;color:var(--shell-muted)">Accepted/rejected claims, CV bullets, LinkedIn suggestions (text only).</p>
+          <a class="btn btn-primary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/EVIDENCE_HANDOFF.md">Read on GitHub</a>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner hub-prose">
+      <p><a href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a> · <a href="./index.html">Hub</a> · <a href="./portfolio/privacy.html">Privacy</a></p>
+      <p class="legal-block">AI-assisted site build; macro metrics from committed pipeline exports only.</p>
+    </div>
+  </footer>
+  <script type="module">
+    import { initPageMotion } from "./hub-motion.js?v=20251107c1";
+    initPageMotion();
+  </script>
+</body>
+</html>

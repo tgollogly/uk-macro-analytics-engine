@@ -1,0 +1,45 @@
+{
+  "period": "2026-Q2",
+  "measure": "Current prices (CPA), seasonally adjusted, \u00a3 million in table \u2192 \u00a3 billion here",
+  "source_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current",
+  "bulletin_url": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026",
+  "xlsx_file": "tradepublicationtables2026aug.xlsx",
+  "fuels_exports_world": {
+    "direction": "Exports",
+    "commodity": "SITC 3 Fuels",
+    "area": "Total World",
+    "series_id": "BOPN",
+    "q1_2026_gbp_m": 7.819,
+    "q2_2026_gbp_m": 14.276,
+    "qoq_change_gbp_m": 6.5,
+    "qoq_change_pct": 82.6
+  },
+  "fuels_imports_world": {
+    "direction": "Imports",
+    "commodity": "SITC 3 Fuels",
+    "area": "Total World",
+    "series_id": "BQAT",
+    "q1_2026_gbp_m": 16.717,
+    "q2_2026_gbp_m": 22.572,
+    "qoq_change_gbp_m": 5.9,
+    "qoq_change_pct": 35.0
+  },
+  "fuels_balance_world": {
+    "direction": "Balance",
+    "commodity": "SITC 3 Fuels",
+    "area": "Total World",
+    "series_id": "ELBG",
+    "q1_2026_gbp_m": -8.898,
+    "q2_2026_gbp_m": -8.296,
+    "qoq_change_gbp_m": 0.6,
+    "qoq_change_pct": -6.8
+  },
+  "notes": [
+    "Rebuilt Nov 2026 from ONS publication tables worksheet '2 - Quarterly CP' (table 2A).",
+    "SITC 3 Fuels aggregates mineral fuels; not an official 'energy balance' total.",
+    "QoQ compares Q2 2026 vs Q1 2026 levels \u2014 not the same as bulletin prose on country/commodity deltas.",
+    "Do not mix current price (value) with chained volume (CVM) without labelling."
+  ],
+  "generated_at_utc": "2026-11-07T17:50:22Z",
+  "sha256_source_xlsx": "d40efd7b66051b03e3d9afcb609a163994e971904359c0f80ed5f865a508b6f6"
+}

@@ -139,6 +139,81 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 
 ---
 
+## 4. Northern Ireland GP prescribing (**rebuilt Nov 2026 — AI-assisted, not historical proof**)
+
+**Label:** Independent recreation in this repo from official Open Data NI CSV. It demonstrates traceability; it does **not** prove prior personal authorship of any earlier notebook.
+
+### Source
+
+| Field | Value |
+|--------|--------|
+| Dataset | [GP Prescribing Northern Ireland — August 2026](https://admin.opendatani.gov.uk/dataset/gp-prescribing-data/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135) |
+| Licence | UK Open Government Licence (OGL) |
+| Code | [`src/case_studies/prescribing.py`](../src/case_studies/prescribing.py) |
+| Checked-in summary | [`static-site/case-studies/ni-prescribing-2026-08-summary.json`](../static-site/case-studies/ni-prescribing-2026-08-summary.json) |
+| `generated_at_utc` (summary) | See JSON (`export_case_studies.py`) |
+| Input file (local cache, not in git) | `data/cache/case-studies/ni-gp-prescribing-2026-08.csv` |
+
+SHA-256 of the August 2026 CSV is recorded in `static-site/case-studies/manifest.json` after export.
+
+### Recomputed aggregates (August 2026, whole file)
+
+| Measure | Value |
+|---------|--------|
+| Detail rows | 447,682 |
+| Distinct practices | 304 |
+| Total items | 3,638,019 |
+| Gross cost (£) | 41,961,966.94 |
+| Actual cost (£) | 40,416,549.60 |
+| BNF ch.4 actual cost (“CNS” proxy) | 7,598,986.45 |
+| Tirzepatide items / actual cost | 9,352 / £2,096,263.00 |
+| Atorvastatin items | 152,303 |
+
+### Methods and limits
+
+- DuckDB `read_csv` with **latin-1** encoding and explicit column names (pound sign in headers).
+- **Items** are dispensing lines, not patients or events; **Actual cost** is contractor reimbursement, not full NHS spend.
+- Tirzepatide / atorvastatin matched on presentation/VMP/AMP name contains.
+
+**Reproduce:**
+
+```bash
+pip install -r requirements.txt
+# CSV lands in data/cache/ (gitignored) on first run:
+PYTHONPATH=. python tools/export_case_studies.py
+pytest tests/test_case_studies_rebuild.py -q
+```
+
+---
+
+## 5. UK trade in goods — SITC 3 Fuels (**rebuilt Nov 2026 — AI-assisted**)
+
+**Label:** Recreation from ONS **publication tables** (current prices, quarterly CPA sheet). Aggregates **SITC 3 Fuels (Total World)** exports/imports/balance — not the full “energy balance” or crude/refined split from bulletin prose.
+
+### Source
+
+| Field | Value |
+|--------|--------|
+| Dataset (current) | [UK trade publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current) |
+| Bulletin context | [UK trade: June 2026](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026) (Q2 2026 goods) |
+| Worksheet | `2 - Quarterly CP` (table 2A), £m → £bn in summary |
+| Code | [`src/case_studies/energy_trade.py`](../src/case_studies/energy_trade.py) |
+| Summary JSON | [`static-site/case-studies/uk-energy-trade-q2-2026-summary.json`](../static-site/case-studies/uk-energy-trade-q2-2026-summary.json) |
+
+### Recomputed Q1→Q2 2026 (SITC 3 Fuels, Total World, £bn)
+
+| Series | Q1 2026 | Q2 2026 | QoQ % (summary) |
+|--------|---------|---------|-----------------|
+| Exports | 7.819 | 14.276 | +82.6% |
+| Imports | 16.717 | 22.572 | +35.0% |
+| Balance | −8.898 | −8.296 | deficit narrows £0.6bn |
+
+Screenshot narrative citing **+109% exports** and **£5.4bn** change used a different slice or rounding — see [`EVIDENCE_HANDOFF.md`](./EVIDENCE_HANDOFF.md) for accept/reject vs PDF claims. **Do not** force JSON to match old PDF.
+
+**Reproduce:** same `tools/export_case_studies.py` flow as §4.
+
+---
+
 ## Readiness vs gaps (evidence-based)
 
 | Area | Evidence in repo | Gap |
@@ -146,7 +221,7 @@ Upstream MIT licence: [`static-site/portfolio/LICENSE-portfolio.txt`](../static-
 | ETL + SQL analytics | `src/data_fetcher.py`, `src/analytics.py`, DuckDB | No separate “silver layer” docs beyond governance notes |
 | Tests | `pytest` across `tests/` | Not exhaustive of every CSV edge case ONS might publish |
 | Dashboards | Streamlit + static Chart.js | Tableau / Power BI artefacts not committed (by design) |
-| Portfolio mirrors + macro demos | Static HTML + committed JSON | Custom domain cutover not executed here |
+| Portfolio mirrors + macro demos | Static HTML + committed JSON | NI + energy summaries committed; full CSV/xlsx remain local cache |
 
 ---
 
