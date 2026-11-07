@@ -134,11 +134,9 @@ Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` 
 
 **Rollback (pre Safari-visible motion):** `main` `1b9948e` — Worker `7384a4c4-64b3-4d47-b07a-420320d3213a`.
 
-**Current:** `main` `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b` (**PR #15**).
+**Current:** `main` `d94bf2f` — Worker `aace6545-ae4e-4452-bc2d-2285fcb09726` (**PR #16** story + colour).
 
-## Striking data-story + editorial colour (2026-11-07)
-
-**Rollback (pre-story-effects):** `main` `c9361b3` / `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b`.
+**Rollback (pre-PR16):** `main` `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b` (**PR #15**).
 
 Documented in `docs/STORY_EFFECTS_REFERENCE.md`. Physical iPhone Safari not verified; Playwright WebKit blocked in agent VM (missing OS deps).
 
