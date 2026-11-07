@@ -109,6 +109,12 @@ Owner approved publishing the light editorial shell to the **existing** apex (`t
 
 **Validation:** `node tools/hub_browser_qa.mjs` — pass on workers.dev; apex may return Cloudflare bot challenge to headless `curl` (verify hub in a normal browser).
 
+## Sitewide contrast fix (2026-11-07)
+
+**Rollback (pre-contrast prod):** `main` `9b9c0e0` / doc `7c3f66c` — Worker `f7260861-1dc6-42e2-820a-40756afd8558`.
+
+Root cause: portfolio `--ink` stayed at dark-theme `#e2e8f0`; Chart.js legend/ticks hard-coded to slate. Fixed via `var(--hub-text)`, `chart-light-theme.js`, and rendered-route contrast in `tools/hub_browser_qa.mjs`.
+
 ## Automated checks (repo)
 
 - `pytest` (includes static/macro attribution; optional `HUB_BROWSER_QA=1` Playwright gate)

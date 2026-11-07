@@ -77,6 +77,7 @@ import {
   loadMacroBundle, filterByRange, parseMonth, rowsToCsv, downloadText,
   fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
 } from "./assets/macro-analytics.js";
+import { chartJsLightOptions, assertLightChartTheme } from "../chart-light-theme.js";
 
 let bundle = null;
 let chart = null;
@@ -114,16 +115,12 @@ function render(){
   chart = new Chart(ctx, {
     type: "line",
     data: { labels, datasets: [{ label, data: values, borderColor: color, backgroundColor: color + "33", fill: true, tension: 0.12, spanGaps: false, pointRadius: 0, borderWidth: 2 }] },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: "index", intersect: false },
-      plugins: { legend: { labels: { color: "#e2e8f0" } } },
-      scales: {
-        x: { ticks: { color: "#94a3b8", maxTicksLimit: 10 }, grid: { color: "#334155" } },
-        y: { ticks: { color: "#94a3b8" }, grid: { color: "#334155" } },
-      },
-    },
+    options: chartJsLightOptions({
+      scales: { x: { ticks: { maxTicksLimit: 10 } } },
+    }),
   });
+  const themeAudit = assertLightChartTheme(chart);
+  if (!themeAudit.ok) console.warn("macro-explorer chart theme", themeAudit);
   const preview = sliceTablePreview(rows);
   const tb = document.querySelector("#tbl tbody");
   tb.innerHTML = preview.display.map((r) => {

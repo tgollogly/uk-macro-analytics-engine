@@ -1,19 +1,14 @@
 /**
  * Client-side charts from static-site/demo/*.json (pipeline exports).
  * Chart.js 4 — MIT. No fabricated data: all points from JSON.
- *
- * Colours: architecture stage strokes from tools/regen_readme_images.py render_architecture
- * (ANALYTICS + EXPORTS) for distinct, accessible series on dark UI.
  */
+
+import { CHART_AXIS_TITLE, assertLightChartTheme, chartJsLightOptions } from "../chart-light-theme.js";
 
 // ANALYTICS stage stroke (194, 65, 12) — CPIH YoY
 const CPIH_LINE = "#c2410c";
 // EXPORTS stage stroke (22, 101, 52) — PSNB
 const PSNB_LINE = "#166534";
-
-const TICK_MUTED = "#64748b"; // slate-500, between TEXT_MUTED and BORDER in generator
-const GRID = "#475569"; // slate-600
-const LEGEND = "#e2e8f0";
 
 function showErr(msg) {
   const el = document.getElementById("error");
@@ -46,7 +41,7 @@ function chartTickBudget() {
 function buildChart(canvas, labels, values, yLabel, borderColor) {
   const ctx = canvas.getContext("2d");
   const fillAlpha = "33";
-  return new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type: "line",
     data: {
       labels,
@@ -64,15 +59,11 @@ function buildChart(canvas, labels, values, yLabel, borderColor) {
         },
       ],
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
+    options: chartJsLightOptions({
       layout: {
         padding: { left: 4, right: 10, top: 4, bottom: 2 },
       },
-      interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { labels: { color: LEGEND, boxWidth: 14 } },
         tooltip: {
           callbacks: {
             title: (items) => items[0]?.label ?? "",
@@ -82,26 +73,24 @@ function buildChart(canvas, labels, values, yLabel, borderColor) {
       scales: {
         x: {
           ticks: {
-            color: TICK_MUTED,
-            maxRotation: 45,
-            minRotation: 0,
-            autoSkip: true,
             maxTicksLimit: chartTickBudget(),
           },
-          grid: { color: GRID },
         },
         y: {
-          ticks: { color: TICK_MUTED },
-          grid: { color: GRID },
           title: {
             display: window.innerWidth >= 400,
             text: yLabel,
-            color: LEGEND,
+            color: CHART_AXIS_TITLE,
           },
         },
       },
-    },
+    }),
   });
+  const audit = assertLightChartTheme(chart);
+  if (!audit.ok && typeof console !== "undefined") {
+    console.warn("chart theme audit", audit);
+  }
+  return chart;
 }
 
 async function loadJson(url) {

@@ -15,7 +15,7 @@
   --raised: var(--hub-bg-raised);
 
   --strong: var(--hub-text);
-  --ink: #e2e8f0;
+  --ink: var(--hub-text);
   --muted: var(--hub-text-secondary);
   --faint: var(--hub-text-tertiary);
 
@@ -280,6 +280,37 @@ button.chip:hover,
 .hint {
   font-size: 12.5px;
   color: var(--faint);
+}
+
+/* ---------- form controls (light shell; Safari month/date text) ---------- */
+input,
+select,
+textarea {
+  color: var(--ink);
+  accent-color: var(--accent);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime-local"] {
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
+}
+select option {
+  color: var(--ink);
+  background-color: var(--card);
+}
+select:disabled,
+input:disabled,
+textarea:disabled {
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted);
+  opacity: 0.85;
 }
 
 /* ---------- site foot ---------- */
