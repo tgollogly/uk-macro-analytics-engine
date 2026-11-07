@@ -3,240 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
   <title>UK Macro Analytics Engine — portfolio demo</title>
   <meta name="description" content="Open ONS macro data: validation, DuckDB, Parquet, Streamlit dashboard, tests and CI." />
   <!--
     README generator palette (tools/regen_readme_images.py): BG #fefce8, HEADER #312e81,
-    HEADER_STROKE #4338ca, ACCENT_BADGE #fbbf24, TEXT_MUTED #64748b (slate), OUTLINE #4f46e5.
-    Shared tokens: ./hub-tokens.css (same hex as generator + architecture.svg).
-    Below: dark UI using those hues (indigo header / amber accent / slate text).
+    HEADER_STROKE #4338ca, ACCENT_BADGE #fbbf24, TEXT_MUTED #64748b, OUTLINE #4f46e5.
+    Shared: ./hub-tokens.css + ./hub-pages.css (dark shell, same hues as README/architecture.svg).
   -->
   <link rel="stylesheet" href="./hub-tokens.css" />
+  <link rel="stylesheet" href="./hub-pages.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --palette-bg-canvas: var(--hub-palette-bg-canvas);
-      --palette-header: var(--hub-palette-header);
-      --palette-header-stroke: var(--hub-palette-header-stroke);
-      --palette-accent-warm: var(--hub-palette-accent-warm);
-      --palette-text-muted: var(--hub-palette-text-muted);
-      --palette-outline: var(--hub-palette-outline);
-      --bg-page: var(--hub-bg-page);
-      --bg-card: var(--hub-bg-elevated);
-      --border: var(--hub-border);
-      --text: var(--hub-text);
-      --muted: var(--hub-text-secondary);
-      --link: var(--hub-link);
-      --font: var(--hub-font-sans);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: var(--font);
-      background: var(--bg-page);
-      background-image: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(49, 46, 129, 0.45) 0%, var(--bg-page) 55%);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    a:focus-visible,
-    button:focus-visible { outline: 2px solid var(--hub-focus-ring); outline-offset: var(--hub-focus-offset); }
-    .wrap { margin: 0 auto; padding: 0 1.25rem; max-width: min(68rem, 100%); }
-    .site-header {
-      background: linear-gradient(180deg, var(--palette-header) 0%, #1e1b4b 100%);
-      border-bottom: 2px solid var(--palette-header-stroke);
-      padding: 2.75rem 0 1.5rem;
-    }
-    .eyebrow {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--palette-accent-warm);
-      font-weight: 600;
-      margin: 0 0 0.5rem;
-    }
-    h1 {
-      font-family: var(--hub-font-serif);
-      font-size: clamp(1.5rem, 4.5vw, 2.1rem);
-      font-weight: 700;
-      margin: 0 0 0.75rem;
-      line-height: 1.25;
-    }
-    .lead {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 42rem;
-      margin: 0;
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-    }
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.65rem 1.2rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: filter 0.15s ease, transform 0.1s ease;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--palette-header-stroke), var(--palette-outline));
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(67, 56, 202, 0.35);
-    }
-    .btn-primary:hover { filter: brightness(1.08); }
-    .btn-secondary {
-      background: var(--bg-card);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { border-color: var(--palette-header-stroke); color: var(--link); }
-    .note {
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-      max-width: 42rem;
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-    }
-    main { padding: 2rem 0 3.5rem; }
-    .grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    }
-    .card {
-      background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-page) 100%);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.35rem 1.25rem;
-      min-width: 0;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    }
-    .card h2 {
-      font-family: var(--hub-font-sans);
-      font-size: 1rem;
-      margin: 0 0 0.5rem;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-    .card p { margin: 0; font-size: 0.9rem; color: var(--muted); word-wrap: break-word; overflow-wrap: anywhere; }
-    .pill {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.45rem;
-      border-radius: 6px;
-      background: rgba(251, 191, 36, 0.2);
-      color: var(--palette-accent-warm);
-    }
-    .list-clean {
-      margin: 0.75rem 0 0;
-      padding-left: 1.1rem;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-    .list-clean li { margin-bottom: 0.35rem; }
-    .hub-tag {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.45rem;
-      border-radius: 6px;
-      background: rgba(79, 70, 229, 0.2);
-      color: var(--link);
-    }
-    .hub-card .src {
-      font-size: 0.78rem;
-      color: var(--palette-text-muted);
-      margin-top: 0.75rem;
-    }
-    .hub-card .src a { color: var(--link); }
-    .site-notice {
-      font-size: 0.82rem;
-      color: var(--muted);
-      background: rgba(30, 27, 75, 0.5);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.15rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.55;
-    }
-    .site-notice strong { color: #e2e8f0; }
-    .site-footer {
-      padding: 2rem 0;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.8rem;
-      text-align: center;
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-    }
-    .site-footer a { color: var(--link); }
-    .legal-block {
-      margin-top: 1rem;
-      font-size: 0.78rem;
-      line-height: 1.55;
-      color: var(--palette-text-muted);
-      max-width: 48rem;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    code {
-      font-family: var(--hub-font-mono);
-      font-size: 0.82em;
-      background: var(--hub-code-bg);
-      padding: 0.12em 0.4em;
-      border-radius: 4px;
-      border: 1px solid var(--bg-card);
-      word-break: break-all;
-    }
-    /* Prose <code> only — never “badge” inside CTAs (matches other hub cards) */
-    .btn code {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      background: transparent;
-      padding: 0;
-      border: none;
-      color: inherit;
-      word-break: normal;
-    }
-    @media (max-width: 480px) {
-      .site-header { padding-top: 1.75rem; }
-      .hero-actions { flex-direction: column; align-items: stretch; }
-      .btn { width: 100%; }
-    }
-  </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="wrap">
-      <p class="eyebrow">Portfolio demo hub · static assets</p>
+<body class="page-shell">
+  <header class="hero" style="background:linear-gradient(180deg, var(--shell-header) 0%, #1e1b4b 100%);border-bottom:2px solid var(--shell-header-stroke);padding-bottom:1.5rem">
+    <div class="inner">
+      <p class="hero-eyebrow">Portfolio demo hub · static assets</p>
       <h1>Thomas Gollogly — project demos</h1>
       <p class="lead">
         Pulls <strong>official ONS CSVs</strong> (inflation &amp; public borrowing), validates structure,
-        caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong> (rolling averages, YoY inflation, monthly PSNB totals), and visualises results in <strong>Streamlit</strong> or a <strong>static Chart.js</strong> snapshot — with <strong>pytest</strong> and <strong>CI</strong> on GitHub. For sources, limitations, and reproducible commands, see the repo <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" style="color:var(--link)">case studies</a> (evidence-led; no employment outcome claims).
+        caches <strong>Parquet</strong>, runs analytics in <strong>DuckDB</strong> (rolling averages, YoY inflation, monthly PSNB totals), and visualises results in <strong>Streamlit</strong> or a <strong>static Chart.js</strong> snapshot — with <strong>pytest</strong> and <strong>CI</strong> on GitHub. For sources, limitations, and reproducible commands, see the repo <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md">case studies</a> (evidence-led; no employment outcome claims).
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#hub">Open project hub (six demos)</a>
@@ -244,100 +32,103 @@
         <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">This engine on GitHub</a>
         <a class="btn btn-secondary" href="https://github.com/tgollogly/portfolio">Portfolio source on GitHub</a>
       </div>
-      <p class="note">
+      <p class="hero-note hub-prose">
         <strong>UK Macro Analytics Engine:</strong> <code>./demo.html</code> plots a <strong>dated JSON snapshot</strong> (see <code>./demo/manifest.json</code> for UTC time and row counts) — not a live ONS pull in the edge browser. <strong>Streamlit</strong> can refresh from ONS when you run the Python app locally or hosted.
-        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio" style="color:var(--link)">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; ATS POSTs to <strong>the URL in</strong> <code>./portfolio/config.js</code> (Cloudflare gate + private backend) on button click — see <a href="./portfolio/privacy.html" style="color:var(--link)">Privacy &amp; AI notice</a>. Optional chat is disabled on this mirror.
+        <strong>Mirrored portfolio demos:</strong> from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) — Beneish uses <strong>illustrative</strong> inputs; Heat/Thermal call <strong>live</strong> public weather APIs; Bundle uses <strong>fictional</strong> matter text; ATS POSTs to <strong>the URL in</strong> <code>./portfolio/config.js</code> (Cloudflare gate + private backend) on button click — see <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>. Optional chat is disabled on this mirror.
       </p>
     </div>
   </header>
-  <main class="wrap">
-    <div class="site-notice" id="hub">
-      <strong>Portfolio demos (mirrored).</strong>
-      The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). This host serves those files from disk. Data handling differs by demo (see each page and <a href="./portfolio/privacy.html" style="color:var(--link)">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <strong>the URL in</strong> <code>./portfolio/config.js</code> (gate Worker) on button clicks only; connectivity from this preview has not been verified.
-    </div>
-    <div class="grid">
-      <article class="card hub-card">
-        <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
-        <p>ONS CPIH YoY and monthly PSNB totals (DuckDB SQL) — static demo uses committed JSON snapshot + manifest.</p>
-        <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open macro demo</a>
-        <p class="src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
-      </article>
-      <article class="card hub-card">
-        <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
-        <p>Eight-factor model in-browser; use illustrative/sample figures unless you supply real data you may use.</p>
-        <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
-        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
-      </article>
-      <article class="card hub-card">
-        <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
-        <p>Open-Meteo, MapLibre, RainViewer — third-party APIs (see privacy notice).</p>
-        <a class="btn btn-primary" href="./portfolio/heat-dome.html" style="margin-top:0.75rem;display:inline-flex">Open heat dashboard</a>
-        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
-      </article>
-      <article class="card hub-card">
-        <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
-        <p>Multi-location compare using Open-Meteo (third-party; see notice).</p>
-        <a class="btn btn-primary" href="./portfolio/thermal-compare.html" style="margin-top:0.75rem;display:inline-flex">Open thermal compare</a>
-        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
-      </article>
-      <article class="card hub-card">
-        <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
-        <p>Static UI; POST to <strong>the URL in</strong> <code>./portfolio/config.js</code> on click (gate Worker — response may fail if blocked).</p>
-        <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
-        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
-      </article>
-      <article class="card hub-card">
-        <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
-        <p>Court bundle layout / print; fictional matter details in-browser only.</p>
-        <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
-        <p class="src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
-      </article>
-    </div>
-    <div class="grid" style="margin-top:1rem">
-      <article class="card">
-        <h2><span class="pill">Interactive</span> Streamlit dashboard</h2>
-        <p>Plotly charts, downloadable CSV exports, rolling windows, and a plain-language read of the latest pull. Data refreshes when you run a fresh pipeline pull from ONS URLs in the repo config.</p>
-        <ul class="list-clean">
-          <li>Run locally: <code>streamlit run streamlit_app.py</code></li>
-          <li>Host (free): <a href="https://share.streamlit.io/" style="color:var(--link)">Streamlit Community Cloud</a></li>
-          <li>Requires network access to ONS for a fresh pull</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2><span class="pill">Pipeline</span> Engineering</h2>
-        <p>Parquet cache, DuckDB SQL views, exports (CSV/JSON/Parquet), tests and CI — README architecture diagram.</p>
-        <ul class="list-clean">
-          <li>Tests: <code>pytest -q</code></li>
-          <li>Lint: <code>ruff check</code></li>
-          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" style="color:var(--link)">Case studies (evidence, limits, exercise)</a></li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2><span class="pill">This page</span> Static + CDN</h2>
-        <p>Deploy this folder on Vercel with root <code>static-site/</code> or via Workers Static Assets (see repo docs). It complements Streamlit (long-running Python — not edge Workers).</p>
-        <ul class="list-clean">
-          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/VERCEL.md" style="color:var(--link)">docs/VERCEL.md</a></li>
-          <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CLOUDFLARE_STATIC.md" style="color:var(--link)">docs/CLOUDFLARE_STATIC.md</a></li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2><span class="pill">Legal</span> Portfolio (mirrored)</h2>
-        <p style="font-size:0.88rem;color:var(--muted)">Upstream portfolio README: demos are for <strong>demonstration only</strong>. See <a href="./portfolio/privacy.html" style="color:var(--link)">Privacy &amp; AI notice (mirror)</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/LICENSE" style="color:var(--link)">portfolio MIT licence</a> (copyright year as in that file).</p>
-      </article>
+  <main class="hub-main">
+    <div class="inner">
+      <div class="site-notice" id="hub">
+        <strong>Portfolio demos (mirrored).</strong>
+        The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). This host serves those files from disk. Data handling differs by demo (see each page and <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <strong>the URL in</strong> <code>./portfolio/config.js</code> (gate Worker) on button clicks only; connectivity from this preview has not been verified.
+      </div>
+      <div class="hub-grid">
+        <article class="hub-card">
+          <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
+          <p>ONS CPIH YoY and monthly PSNB totals (DuckDB SQL) — static demo uses committed JSON snapshot + manifest.</p>
+          <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open macro demo</a>
+          <p class="hub-src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
+          <p>Eight-factor model in-browser; use illustrative/sample figures unless you supply real data you may use.</p>
+          <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
+          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
+          <p>Open-Meteo, MapLibre, RainViewer — third-party APIs (see privacy notice).</p>
+          <a class="btn btn-primary" href="./portfolio/heat-dome.html" style="margin-top:0.75rem;display:inline-flex">Open heat dashboard</a>
+          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
+          <p>Multi-location compare using Open-Meteo (third-party; see notice).</p>
+          <a class="btn btn-primary" href="./portfolio/thermal-compare.html" style="margin-top:0.75rem;display:inline-flex">Open thermal compare</a>
+          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
+          <p>Static UI; POST to <strong>the URL in</strong> <code>./portfolio/config.js</code> on click (gate Worker — response may fail if blocked).</p>
+          <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
+          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
+          <p>Court bundle layout / print; fictional matter details in-browser only.</p>
+          <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
+          <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
+        </article>
+      </div>
+      <div class="hub-grid" style="margin-top:1rem">
+        <article class="hub-card">
+          <h2><span class="hub-pill">Interactive</span> Streamlit dashboard</h2>
+          <p>Plotly charts, downloadable CSV exports, rolling windows, and a plain-language read of the latest pull. Data refreshes when you run a fresh pipeline pull from ONS URLs in the repo config.</p>
+          <ul class="list-clean">
+            <li>Run locally: <code>streamlit run streamlit_app.py</code></li>
+            <li>Host (free): <a href="https://share.streamlit.io/">Streamlit Community Cloud</a></li>
+            <li>Requires network access to ONS for a fresh pull</li>
+          </ul>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-pill">Pipeline</span> Engineering</h2>
+          <p>Parquet cache, DuckDB SQL views, exports (CSV/JSON/Parquet), tests and CI — README architecture diagram.</p>
+          <ul class="list-clean">
+            <li>Tests: <code>pytest -q</code></li>
+            <li>Lint: <code>ruff check</code></li>
+            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md">Case studies (evidence, limits, exercise)</a></li>
+          </ul>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-pill">This page</span> Static + CDN</h2>
+          <p>Deploy this folder on Vercel with root <code>static-site/</code> or via Workers Static Assets (see repo docs). It complements Streamlit (long-running Python — not edge Workers).</p>
+          <ul class="list-clean">
+            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/VERCEL.md">docs/VERCEL.md</a></li>
+            <li><a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CLOUDFLARE_STATIC.md">docs/CLOUDFLARE_STATIC.md</a></li>
+          </ul>
+        </article>
+        <article class="hub-card">
+          <h2><span class="hub-pill">Legal</span> Portfolio (mirrored)</h2>
+          <p style="font-size:0.88rem;color:var(--shell-muted)">Upstream portfolio README: demos are for <strong>demonstration only</strong>. See <a href="./portfolio/privacy.html">Privacy &amp; AI notice (mirror)</a> and <a href="https://github.com/tgollogly/portfolio/blob/main/LICENSE">portfolio MIT licence</a> (copyright year as in that file).</p>
+        </article>
+      </div>
     </div>
   </main>
-  <!-- Legal text below is verbatim from README.md “Legal — licence & disclaimer” (reviewed repo wording). -->
-  <footer class="site-footer wrap">
-    <p>
-      Copyright <strong>© 2025 Thomas Gollogly</strong>. The <strong>source code and documentation</strong> in this repository are licensed under the
-      <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/LICENSE">MIT License</a>.
-    </p>
-    <p>
-      Official UK statistics accessed via configured URLs (e.g. <strong>Office for National Statistics</strong>) are <strong>© Crown copyright</strong> and made available under the
-      <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>. This project <strong>does not</strong> grant you rights in those statistics beyond what the publisher licences. See <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/NOTICE.md">NOTICE.md</a>.
-    </p>
-    <div class="legal-block">
-      The <strong>Software</strong> and any <strong>outputs</strong> (figures, exports, dashboards) are provided <strong>“as is”</strong>, without warranty of any kind. They are <strong>not</strong> official ONS releases, <strong>not</strong> financial, investment, tax, or legal advice, and <strong>not</strong> a substitute for professional judgment or the <strong>original</strong> publications on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. <strong>ONS revises</strong> series; always check the publisher for authoritative figures.
+  <footer class="site-footer">
+    <div class="inner hub-prose">
+      <p>
+        Copyright <strong>© 2025 Thomas Gollogly</strong>. The <strong>source code and documentation</strong> in this repository are licensed under the
+        <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/LICENSE">MIT License</a>.
+      </p>
+      <p>
+        Official UK statistics accessed via configured URLs (e.g. <strong>Office for National Statistics</strong>) are <strong>© Crown copyright</strong> and made available under the
+        <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>. This project <strong>does not</strong> grant you rights in those statistics beyond what the publisher licences. See <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/NOTICE.md">NOTICE.md</a>.
+      </p>
+      <div class="legal-block">
+        The <strong>Software</strong> and any <strong>outputs</strong> (figures, exports, dashboards) are provided <strong>“as is”</strong>, without warranty of any kind. They are <strong>not</strong> official ONS releases, <strong>not</strong> financial, investment, tax, or legal advice, and <strong>not</strong> a substitute for professional judgment or the <strong>original</strong> publications on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. <strong>ONS revises</strong> series; always check the publisher for authoritative figures.
+      </div>
     </div>
   </footer>
 </body>

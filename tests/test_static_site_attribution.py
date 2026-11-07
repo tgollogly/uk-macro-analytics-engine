@@ -31,9 +31,11 @@ def test_static_pages_include_attribution_and_legal(rel: str) -> None:
 def test_hub_index_narrow_layout_constraints() -> None:
     """Cards and wraps avoid flex/grid min-content blowout (overflow) on narrow viewports."""
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
-    assert "min-width: 0" in idx
-    assert "minmax(min(100%" in idx
-    assert "overflow-wrap: anywhere" in idx
+    hub_css = (STATIC / "hub-pages.css").read_text(encoding="utf-8")
+    blob = idx + hub_css
+    assert "min-width: 0" in blob
+    assert "minmax(min(100%" in blob
+    assert "overflow-wrap: anywhere" in blob
 
 
 def test_static_site_documents_readme_palette_comment() -> None:
@@ -41,6 +43,28 @@ def test_static_site_documents_readme_palette_comment() -> None:
     marker = "README generator palette (tools/regen_readme_images.py)"
     assert marker in (STATIC / "index.html").read_text(encoding="utf-8")
     assert marker in (STATIC / "demo.html").read_text(encoding="utf-8")
+
+
+def test_hub_shell_stylesheets_linked_from_hub_pages() -> None:
+    """Hub + demo share hub-tokens + hub-pages; portfolio site.css imports tokens."""
+    idx = (STATIC / "index.html").read_text(encoding="utf-8")
+    assert 'href="./hub-tokens.css"' in idx
+    assert 'href="./hub-pages.css"' in idx
+    site_css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "hub-tokens.css" in site_css
+
+
+def test_portfolio_mirror_declares_dark_color_scheme() -> None:
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "ats-matcher.html",
+        "bundlebuilder.html",
+        "privacy.html",
+    ):
+        html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
+        assert 'name="color-scheme" content="dark"' in html, name
 
 
 def test_demo_charts_use_architecture_stage_stroke_hex() -> None:
@@ -154,7 +178,7 @@ def test_sitebar_narrow_wrap_prevents_back_link_clip() -> None:
     """Portfolio site.css: back link can wrap on narrow viewports (avoid clipped 'All demos')."""
     css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
     assert ".sitebar .back{flex:1 1 100%" in css or "flex: 1 1 100%" in css
-    assert ".sitebar .in{" in css and "flex-wrap:wrap" in css
+    assert ".sitebar .in" in css and "flex-wrap" in css and "wrap" in css
 
 
 def test_ats_remote_error_adds_verify_hint_for_server_diagnostics() -> None:

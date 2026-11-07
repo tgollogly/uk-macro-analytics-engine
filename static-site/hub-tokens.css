@@ -1,53 +1,77 @@
 /* =====================================================================
    Shared design tokens — static-site hub + portfolio mirror + macro demo
    Canonical hex values come from tools/regen_readme_images.py (poster palette)
-   and architecture.svg (same HEADER / OUTLINE / ACCENT_BADGE / BG canvas).
-   Do not invent colours here; add new tokens only when matching those sources.
+   and architecture.svg (HEADER / OUTLINE / ACCENT_BADGE / BG canvas).
+   Extended “shell” values below derive only from that same indigo/slate/amber
+   family — no new marketing palette.
    ===================================================================== */
 
 :root {
   /* --- README / hero / architecture (regen_readme_images.py) --- */
-  --hub-palette-bg-canvas: #fefce8; /* BG — amber-50 warm canvas */
-  --hub-palette-header: #312e81; /* HEADER — indigo-900 */
-  --hub-palette-header-stroke: #4338ca; /* HEADER_STROKE — indigo-700 */
-  --hub-palette-accent-warm: #fbbf24; /* ACCENT_BADGE — amber-400 */
-  --hub-palette-text-muted: #64748b; /* TEXT_MUTED — slate-500 */
-  --hub-palette-text-body: #1e293b; /* TEXT_BODY — slate-800 */
-  --hub-palette-outline: #4f46e5; /* OUTLINE — indigo-600 */
-  --hub-palette-subtitle-on-header: #c7d2fe; /* SUBTITLE_ON_HEADER / indigo-200 */
+  --hub-palette-bg-canvas: #fefce8; /* BG — poster canvas (reference / light accents) */
+  --hub-palette-header: #312e81; /* indigo-900 */
+  --hub-palette-header-stroke: #4338ca; /* indigo-700 */
+  --hub-palette-accent-warm: #fbbf24; /* amber-400 — focus ring + eyebrow */
+  --hub-palette-text-muted: #64748b; /* slate-500 */
+  --hub-palette-text-body: #1e293b; /* slate-800 — reserved for light surfaces */
+  --hub-palette-outline: #4f46e5; /* indigo-600 — primary action */
+  --hub-palette-subtitle-on-header: #c7d2fe; /* indigo-200 */
 
-  /* --- Dark “shell” for hub index + macro demo (same hues, slate surfaces) --- */
+  /* --- Dark product shell (slate + indigo) --- */
   --hub-bg-page: #0f172a; /* slate-900 */
-  --hub-bg-elevated: #1e293b; /* slate-800 — cards, inputs */
+  --hub-bg-deep: #0b1120; /* slightly below page for depth */
+  --hub-bg-elevated: #1e293b; /* slate-800 — cards */
+  --hub-bg-raised: #273549; /* between 800/700 — inputs, table stripe hover */
   --hub-border: #334155; /* slate-700 */
-  --hub-text: #f8fafc; /* slate-50 — primary on dark */
+  --hub-border-subtle: #1e293b;
+  --hub-text: #f8fafc; /* slate-50 */
   --hub-text-secondary: #94a3b8; /* slate-400 */
-  --hub-link: #c7d2fe; /* indigo-200 — links on dark */
-  --hub-code-bg: #0c1222; /* inset code blocks on dark */
+  --hub-text-tertiary: #64748b; /* slate-500 */
+  --hub-link: #a5b4fc; /* indigo-300 — readable on dark */
+  --hub-link-hover: #c7d2fe;
+  --hub-code-bg: #0c1524;
+  --hub-overlay-float: rgba(30, 41, 59, 0.94);
 
-  /* --- Focus (visible on both dark UI and light portfolio) --- */
+  /* --- Focus (keyboard) --- */
   --hub-focus-ring: var(--hub-palette-accent-warm);
-  --hub-focus-offset: 3px;
+  --hub-focus-offset: 2px;
 
-  /* --- Semantic UI (light surfaces; portfolio forms / messages) --- */
-  --hub-semantic-ok: #0c7a5e;
-  --hub-semantic-ok-soft: #e6f5f0;
-  --hub-semantic-warn: #9a6700;
-  --hub-semantic-warn-soft: #fdf6e3;
-  --hub-semantic-err: #b3261e;
-  --hub-semantic-err-soft: #fdf3f2;
+  /* --- Semantic — text/UI (same hues; soft fills for dark surfaces) --- */
+  --hub-semantic-ok: #34d399;
+  --hub-semantic-ok-soft: rgba(16, 185, 129, 0.12);
+  --hub-semantic-warn: #fbbf24;
+  --hub-semantic-warn-soft: rgba(251, 191, 36, 0.12);
+  --hub-semantic-err: #f87171;
+  --hub-semantic-err-soft: rgba(248, 113, 113, 0.12);
 
-  /* --- Semantic on dark (demo error banner, alerts) --- */
-  --hub-dark-err-bg: #450a0a;
+  /* --- Demo alerts (macro / forms) --- */
+  --hub-dark-err-bg: rgba(69, 10, 10, 0.85);
   --hub-dark-err-border: #991b1b;
   --hub-dark-err-text: #fecaca;
 
-  /* --- Typography (matches portfolio mirror: Inter + system) --- */
+  /* --- Type --- */
   --hub-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --hub-font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --hub-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
-  /* --- Chart.js macro demo (unchanged semantics — architecture stage strokes) --- */
-  --hub-chart-cpih: #c2410c; /* ANALYTICS stage stroke */
-  --hub-chart-psnb: #166534; /* EXPORTS stage stroke */
+  /* --- Layout + motion --- */
+  --hub-radius-sm: 10px;
+  --hub-radius-md: 14px;
+  --hub-radius-lg: 18px;
+  --hub-shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 4px 20px rgba(0, 0, 0, 0.35);
+  --hub-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --hub-transition: 170ms ease;
+  --hub-transition-slow: 220ms ease;
+
+  /* --- Chart.js macro demo (semantic — architecture stage strokes) --- */
+  --hub-chart-cpih: #c2410c;
+  --hub-chart-psnb: #166534;
+
+  /* --- Weather / heat band scale (meaning) — unchanged hues --- */
+  --hub-heat-comfort: #0c7a5e;
+  --hub-heat-caution: #9a6700;
+  --hub-heat-xcaution: #d1622e;
+  --hub-heat-danger: #b3261e;
+  --hub-heat-extreme: #7b1fa2;
+  --hub-heat-cool: #2f6fb0;
 }
