@@ -77,7 +77,12 @@ import {
   loadMacroBundle, filterByRange, parseMonth, rowsToCsv, downloadText,
   fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
 } from "./assets/macro-analytics.js";
-import { chartJsLightOptions, assertLightChartTheme } from "../chart-light-theme.js";
+import {
+  chartJsLightOptions,
+  assertLightChartTheme,
+  chartUpdateMode,
+} from "../chart-light-theme.js";
+import { pulseChartContainer } from "../hub-motion.js";
 
 let bundle = null;
 let chart = null;
@@ -111,14 +116,35 @@ function render(){
       ? "CPIH YoY from pipeline DuckDB export (L522); nulls where 12m lag missing — see Data coverage demo."
       : "PSNB monthly total_net_borrowing_gbp_m (DZLS); row_count>1 means multiple CSV lines summed that month.";
   const ctx = document.getElementById("chart");
-  if (chart) chart.destroy();
-  chart = new Chart(ctx, {
-    type: "line",
-    data: { labels, datasets: [{ label, data: values, borderColor: color, backgroundColor: color + "33", fill: true, tension: 0.12, spanGaps: false, pointRadius: 0, borderWidth: 2 }] },
-    options: chartJsLightOptions({
-      scales: { x: { ticks: { maxTicksLimit: 10 } } },
-    }),
-  });
+  const dataset = {
+    label,
+    data: values,
+    borderColor: color,
+    backgroundColor: color + "33",
+    fill: true,
+    tension: 0.12,
+    spanGaps: false,
+    pointRadius: 0,
+    borderWidth: 2,
+  };
+  pulseChartContainer(".chartbox");
+  if (chart) {
+    chart.data.labels = labels;
+    const ds = chart.data.datasets[0];
+    ds.label = dataset.label;
+    ds.data = dataset.data;
+    ds.borderColor = dataset.borderColor;
+    ds.backgroundColor = dataset.backgroundColor;
+    chart.update(chartUpdateMode());
+  } else {
+    chart = new Chart(ctx, {
+      type: "line",
+      data: { labels, datasets: [dataset] },
+      options: chartJsLightOptions({
+        scales: { x: { ticks: { maxTicksLimit: 10 } } },
+      }),
+    });
+  }
   const themeAudit = assertLightChartTheme(chart);
   if (!themeAudit.ok) console.warn("macro-explorer chart theme", themeAudit);
   const preview = sliceTablePreview(rows);

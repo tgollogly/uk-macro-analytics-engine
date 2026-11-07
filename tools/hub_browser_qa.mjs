@@ -338,10 +338,12 @@ async function runViewport(vp) {
       await auditMacroChartTheme(page, "chart-psnb", name, vp.label);
     } else if (name === "bundlebuilder" && vp.label === "desktop") {
       vpOut.routes[name] = await checkBundlePdf(page);
+      await page.emulateMedia({ media: "screen", colorScheme: "light" });
     } else if (name === "ats-retired") {
       await checkAtsRetired(page);
     }
 
+    await page.emulateMedia({ media: "screen", colorScheme: "light" });
     await auditRouteContrast(page, name, vp.label);
 
     if (vp.label === "mobile375" || name === "privacy") {
@@ -403,6 +405,56 @@ try {
 } catch (e) {
   report.notes.push(`webkit400 skipped: ${String(e).slice(0, 120)}`);
 }
+
+async function auditMotionEnabled(base) {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.goto(`${base}/portfolio/macro-explorer.html`, { waitUntil: "networkidle" });
+  await page.waitForFunction(
+    () => {
+      const t = document.getElementById("view-summary")?.textContent || "";
+      return t.length > 40 && !/Loading|Adjust filters/.test(t);
+    },
+    { timeout: 20000 },
+  );
+  const before = await page.evaluate(() => Chart.getChart("chart")?.options?.animation?.duration);
+  await page.locator("#window").selectOption("24");
+  await page.locator("#apply").click();
+  await page.waitForTimeout(500);
+  const motion = await page.evaluate(() => ({
+    reduced: matchMedia("(prefers-reduced-motion: reduce)").matches,
+    duration: Chart.getChart("chart")?.options?.animation?.duration,
+    viewTransitionMeta: !!document.querySelector('meta[name="view-transition"]'),
+    hubMotionCss: [...document.styleSheets].some((s) => String(s.href || "").includes("hub-motion")),
+  }));
+  report.contrast.push({ route: "macro-explorer", viewport: "motion-default", motion });
+  if (!motion.reduced && (!motion.duration || motion.duration < 100)) {
+    pushError("motion", `expected chart animation duration, got ${motion.duration}`);
+  }
+  await browser.close();
+}
+
+async function auditMotionReduced(base) {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto(`${base}/portfolio/macro-explorer.html`, { waitUntil: "networkidle" });
+  await page.waitForFunction(() => typeof Chart !== "undefined" && Chart.getChart("chart"), {
+    timeout: 20000,
+  });
+  const motion = await page.evaluate(() => ({
+    reduced: matchMedia("(prefers-reduced-motion: reduce)").matches,
+    duration: Chart.getChart("chart")?.options?.animation?.duration,
+  }));
+  report.contrast.push({ route: "macro-explorer", viewport: "motion-reduce", motion });
+  if (motion.duration !== 0) {
+    pushError("motion-reduce", `expected duration 0, got ${motion.duration}`);
+  }
+  await browser.close();
+}
+
+await auditMotionEnabled(report.base);
+await auditMotionReduced(report.base);
 
 report.pass = report.errors.length === 0;
 writeFileSync(join(ARTIFACT_DIR, "hub-browser-qa-report.json"), JSON.stringify(report, null, 2));

@@ -115,6 +115,14 @@ Owner approved publishing the light editorial shell to the **existing** apex (`t
 
 Root cause: portfolio `--ink` stayed at dark-theme `#e2e8f0`; Chart.js legend/ticks hard-coded to slate. Fixed via `var(--hub-text)`, `chart-light-theme.js`, and rendered-route contrast in `tools/hub_browser_qa.mjs`.
 
+## Dashboard-inspired panels + motion (2026-11-07)
+
+**Rollback (pre motion/orca pass):** Worker `58ffd470-5c57-429c-94b5-564bf299bda5` / `main` `41a4cf4`.
+
+Visual reference: [Orca Sales Management Dashboard (Dribbble)](https://dribbble.com/shots/23470931-Orca-Sales-Management-Dashboard) — page 403 in agent `curl`; Playwright captured a Dribbble **browse** grid, not the shot art. Patterns applied **originally**: cool gray canvas, white elevated panels, left accent rail, KPI insight cards, chart update animation (`chart.update('active')`), `hub-motion.css` view-transition meta (Chromium), `prefers-reduced-motion` off switch.
+
+Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` (browse fallback — not copied pixels).
+
 ## Automated checks (repo)
 
 - `pytest` (includes static/macro attribution; optional `HUB_BROWSER_QA=1` Playwright gate)

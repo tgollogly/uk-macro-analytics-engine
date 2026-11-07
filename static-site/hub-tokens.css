@@ -13,7 +13,8 @@
   --hub-palette-outline: #1d5c8c;
   --hub-palette-subtitle-on-header: #e8f0f8;
 
-  --hub-bg-page: #faf8f4;
+  --hub-bg-page: #f4f6f9;
+  --hub-bg-page-warm: #faf8f4;
   --hub-bg-deep: #f3f0ea;
   --hub-bg-elevated: #ffffff;
   --hub-bg-raised: #f7f5f1;
@@ -66,4 +67,9 @@
 
   --hub-editorial-teal: #0d6e6e;
   --hub-editorial-cobalt: #2e4a8c;
+
+  /* Dashboard panel rhythm (original layout; Orca-like hierarchy, not branded) */
+  --hub-panel-surface: #ffffff;
+  --hub-panel-rail: linear-gradient(180deg, var(--hub-editorial-teal) 0%, var(--hub-editorial-cobalt) 100%);
+  --hub-panel-shadow: 0 1px 2px rgba(26, 35, 50, 0.05), 0 16px 40px rgba(46, 74, 140, 0.08);
 }

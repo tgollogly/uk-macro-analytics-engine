@@ -8,12 +8,34 @@ export const CHART_TICK = "#4a5568";
 export const CHART_GRID = "#c8cdd4";
 export const CHART_AXIS_TITLE = "#1a2332";
 
+export function prefersReducedMotion() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** Chart.js update mode: animated when motion allowed. */
+export function chartUpdateMode() {
+  return prefersReducedMotion() ? "none" : "active";
+}
+
+export function chartMotionMs() {
+  return prefersReducedMotion() ? 0 : 480;
+}
+
 /** @param {import('chart.js').ChartConfiguration['options']} [extra] */
 export function chartJsLightOptions(extra = {}) {
+  const duration = chartMotionMs();
   return {
     responsive: true,
     maintainAspectRatio: false,
     interaction: { mode: "index", intersect: false },
+    animation: duration
+      ? { duration }
+      : { duration: 0 },
+    transitions: {
+      active: { animation: { duration } },
+      resize: { animation: { duration: prefersReducedMotion() ? 0 : 280 } },
+    },
     plugins: {
       legend: { labels: { color: CHART_LEGEND, boxWidth: 14 } },
       tooltip: {
