@@ -38,8 +38,13 @@ COMPARE_QUARTER_PRIOR = "2025 Q2"
 COMPARE_QUARTER_CURRENT = "2026 Q2"
 
 CPA_CRUDE_EXPORT = "06.1 Crude petroleum"
-CPA_CRUDE_GAS_IMPORT = "06 Crude petroleum & natural gas"
-CPA_REFINED_IMPORT = "19.2 Refined petroleum products"
+CPA_CRUDE_GAS = "06 Crude petroleum & natural gas"
+CPA_REFINED = "19.2 Refined petroleum products"
+# Legacy aliases
+CPA_CRUDE_GAS_IMPORT = CPA_CRUDE_GAS
+CPA_REFINED_IMPORT = CPA_REFINED
+ENERGY_TRADE_BASKET_IMPORTS = (CPA_CRUDE_GAS, CPA_REFINED)
+ENERGY_TRADE_BASKET_EXPORTS = (CPA_CRUDE_GAS, CPA_REFINED)
 CPA_TOTAL_EXPORTS = "Total exports"
 CPA_TOTAL_IMPORTS = "Total imports"
 
@@ -120,7 +125,8 @@ class EnergyTradeAnalysis:
     cpa_refined_imports: CpaQuarterLevel
     cpa_total_goods_exports: CpaQuarterLevel
     cpa_total_goods_imports: CpaQuarterLevel
-    cpa_energy_trade_balance: dict[str, float]
+    cpa_energy_trade_balance: dict[str, Any]
+    cpa_energy_import_growth: dict[str, Any]
     pdf_claim_check: tuple[dict[str, Any], ...]
     sitc3_fuels_substitute: dict[str, Any] | None
     notes: tuple[str, ...]
@@ -140,6 +146,7 @@ class EnergyTradeAnalysis:
             "cpa_total_goods_exports": _cpa_row_dict(self.cpa_total_goods_exports),
             "cpa_total_goods_imports": _cpa_row_dict(self.cpa_total_goods_imports),
             "cpa_energy_trade_balance": self.cpa_energy_trade_balance,
+            "cpa_energy_import_growth": self.cpa_energy_import_growth,
             "original_pdf_claim_check": list(self.pdf_claim_check),
             "sitc3_fuels_substitute_qoq_only": self.sitc3_fuels_substitute,
             "notes": list(self.notes),
@@ -175,15 +182,46 @@ def _sum_cpa(ws: Any, labels: tuple[str, ...], idx: int) -> float:
     return total / 1000.0
 
 
+def _energy_import_total(ws: Any, i_col: int) -> float:
+    return _sum_cpa(ws, ENERGY_TRADE_BASKET_IMPORTS, i_col)
+
+
+def _energy_export_total(ws: Any, i_col: int) -> float:
+    return _sum_cpa(ws, ENERGY_TRADE_BASKET_EXPORTS, i_col)
+
+
 def _energy_balance_q(
     exp_ws: Any, imp_ws: Any, i_prior: int, i_curr: int
 ) -> tuple[float, float]:
-    """Exports minus imports for CPA 06 + 19.2, £bn (repo definition)."""
+    """Exports minus imports for CPA 06 + 19.2, £bn (single basket)."""
 
-    labels = (CPA_CRUDE_GAS_IMPORT, CPA_REFINED_IMPORT)
-    prior_bal = _sum_cpa(exp_ws, labels, i_prior) - _sum_cpa(imp_ws, labels, i_prior)
-    curr_bal = _sum_cpa(exp_ws, labels, i_curr) - _sum_cpa(imp_ws, labels, i_curr)
+    prior_bal = _energy_export_total(exp_ws, i_prior) - _energy_import_total(imp_ws, i_prior)
+    curr_bal = _energy_export_total(exp_ws, i_curr) - _energy_import_total(imp_ws, i_curr)
     return round(prior_bal, 3), round(curr_bal, 3)
+
+
+def _energy_import_growth_block(
+    imp_ws: Any,
+    goods_imp: CpaQuarterLevel,
+    i_prior: int,
+    i_curr: int,
+) -> dict[str, Any]:
+    prior = _energy_import_total(imp_ws, i_prior)
+    curr = _energy_import_total(imp_ws, i_curr)
+    delta = round(curr - prior, 3)
+    goods_delta = goods_imp.yoy_change_gbp_b
+    share = round(delta / goods_delta * 100, 1) if goods_delta else None
+    return {
+        "basket_definition": (
+            "CPA imports: 06 Crude petroleum & natural gas plus "
+            "19.2 Refined petroleum products (no double-count of 06.1/06.2)"
+        ),
+        "prior_q_gbp_b": round(prior, 3),
+        "current_q_gbp_b": round(curr, 3),
+        "yoy_import_delta_gbp_b": delta,
+        "total_goods_import_delta_gbp_b": goods_delta,
+        "share_of_goods_import_growth_pct": share,
+    }
 
 
 def _pdf_checks(
@@ -194,20 +232,19 @@ def _pdf_checks(
     goods_imp: CpaQuarterLevel,
     bal_prior: float,
     bal_curr: float,
+    energy_growth: dict[str, Any],
 ) -> tuple[dict[str, Any], ...]:
     imp_delta = goods_imp.yoy_change_gbp_b
-    crude_gas_delta = crude_gas_imp.yoy_change_gbp_b
-    energy_share = (
-        round(crude_gas_delta / imp_delta * 100, 1) if imp_delta else None
-    )
+    vintage = "cpapublicationq22026august.xlsx (ONS CPA 08, quarterly CP)"
     return (
         {
-            "claim": "Crude exports +109% YoY to £5.4bn (PDF)",
+            "claim": "Crude exports +109% YoY to £5.4bn (prior workbook)",
             "comparable_series": CPA_CRUDE_EXPORT,
             "recomputed_yoy_pct": crude.yoy_change_pct,
             "recomputed_current_q_gbp_b": crude.current_q_gbp_b,
-            "validation": "not_validated_as_stated",
-            "comment": "CPA 06.1 Q2 YoY differs on both % and level vs PDF wording.",
+            "validation": "not_reproduced_from_cited_workbook",
+            "pinned_vintage": vintage,
+            "comment": "Compared to CPA 06.1 on pinned vintage; workbook not in repo.",
         },
         {
             "claim": "Crude+gas imports +35.8% YoY to £11.7bn (PDF)",
@@ -235,13 +272,14 @@ def _pdf_checks(
             "comment": "ONS bulletin may use a wider energy basket; not assumed correct.",
         },
         {
-            "claim": "Energy +£6.6bn of +£15bn goods import growth, 44% (PDF)",
-            "comparable_series": "CPA 06 import delta / total goods import delta",
-            "recomputed_energy_import_delta_gbp_b": crude_gas_delta,
+            "claim": "Energy +£6.6bn of +£15bn goods import growth, 44% (prior workbook)",
+            "comparable_series": energy_growth["basket_definition"],
+            "recomputed_energy_import_delta_gbp_b": energy_growth["yoy_import_delta_gbp_b"],
             "recomputed_total_goods_import_delta_gbp_b": imp_delta,
-            "recomputed_share_pct": energy_share,
-            "validation": "not_validated_as_stated",
-            "comment": "Share ~20% on CPA 06 only; PDF energy scope unknown.",
+            "recomputed_share_pct": energy_growth["share_of_goods_import_growth_pct"],
+            "validation": "close_on_basket",
+            "pinned_vintage": vintage,
+            "comment": "Same CPA 06+19.2 import basket as energy balance block.",
         },
         {
             "claim": "Goods exports £101.7bn, imports £171bn (PDF)",
@@ -270,10 +308,11 @@ def parse_cpa08_energy_trade(
 
     crude_exp = _cpa_row(exp_ws, CPA_CRUDE_EXPORT, "Exports", i_prior, i_curr)
     crude_gas_imp = _cpa_row(imp_ws, CPA_CRUDE_GAS_IMPORT, "Imports", i_prior, i_curr)
-    refined_imp = _cpa_row(imp_ws, CPA_REFINED_IMPORT, "Imports", i_prior, i_curr)
+    refined_imp = _cpa_row(imp_ws, CPA_REFINED, "Imports", i_prior, i_curr)
     goods_exp = _cpa_row(exp_ws, CPA_TOTAL_EXPORTS, "Exports", i_prior, i_curr)
     goods_imp = _cpa_row(imp_ws, CPA_TOTAL_IMPORTS, "Imports", i_prior, i_curr)
     bal_prior, bal_curr = _energy_balance_q(exp_ws, imp_ws, i_prior, i_curr)
+    energy_growth = _energy_import_growth_block(imp_ws, goods_imp, i_prior, i_curr)
     wb.close()
 
     sitc_sub: dict[str, Any] | None = None
@@ -306,13 +345,24 @@ def parse_cpa08_energy_trade(
         cpa_total_goods_exports=goods_exp,
         cpa_total_goods_imports=goods_imp,
         cpa_energy_trade_balance={
-            "definition": "CPA 06 + 19.2 exports minus imports (repo, not ONS headline)",
+            "basket_definition": (
+                "CPA 06 + 19.2 on both exports and imports "
+                "(same lines as import-growth basket)"
+            ),
             "prior_q_gbp_b": bal_prior,
             "current_q_gbp_b": bal_curr,
             "yoy_change_gbp_b": round(bal_curr - bal_prior, 3),
         },
+        cpa_energy_import_growth=energy_growth,
         pdf_claim_check=_pdf_checks(
-            crude_exp, crude_gas_imp, refined_imp, goods_exp, goods_imp, bal_prior, bal_curr
+            crude_exp,
+            crude_gas_imp,
+            refined_imp,
+            goods_exp,
+            goods_imp,
+            bal_prior,
+            bal_curr,
+            energy_growth,
         ),
         sitc3_fuels_substitute=sitc_sub,
         notes=(

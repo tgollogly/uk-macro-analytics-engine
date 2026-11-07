@@ -82,9 +82,10 @@ def test_demo_page_mentions_evidence_path() -> None:
 
 def test_case_studies_page_links_rebuilt_summaries() -> None:
     page = (ROOT / "static-site" / "case-studies.html").read_text(encoding="utf-8")
-    assert "ni-prescribing-2026-08-summary.json" in page
-    assert "uk-energy-trade-q2-2026-summary.json" in page
-    assert "AI-assisted" in page
+    assert "manifest.json" in page
+    assert "reproducible analysis" in page
+    assert "chart-ni-costs" in page
+    assert "chart-trade-crude" in page
 
 
 def test_case_studies_doc_lists_rebuild_totals() -> None:

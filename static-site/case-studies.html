@@ -4,103 +4,143 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>Case studies — evidence-led analyst work | Thomas Gollogly</title>
-  <meta name="description" content="UK macro pipeline plus AI-assisted Nov 2026 rebuilds of NI GP prescribing (Aug 2026) and UK SITC 3 Fuels trade (Q2 2026 CPA) from official open data — committed JSON summaries." />
+  <title>Case studies — public data, reproducible analysis</title>
+  <meta name="description" content="Exploring Open Data NI prescribing and ONS CPA trade with clear definitions, charts from validated summaries, and linked methods." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tgollogly.dev/case-studies.html" />
-  <meta property="og:title" content="Case studies — UK macro analytics (evidence-led)" />
-  <meta property="og:description" content="Verified ONS macro pipeline demos. Additional open-data studies documented when reproducible sources are in the repository." />
+  <meta property="og:title" content="Case studies — reproducible open-data analysis" />
+  <meta property="og:description" content="NI prescribing costs and UK crude exports from official datasets — question, method, findings, limits." />
   <meta property="og:image" content="https://tgollogly.dev/og-preview.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://tgollogly.dev/og-preview.png" />
   <link rel="stylesheet" href="./hub-tokens.css?v=20251107c1" />
   <link rel="stylesheet" href="./shell-shared.css?v=20251107c1" />
   <link rel="stylesheet" href="./hub-pages.css?v=20251107c1" />
   <link rel="stylesheet" href="./hub-motion.css?v=20251107c1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+  <script type="module" src="./case-studies/app.js?v=20251107d1"></script>
+  <style>
+    .page-shell {
+      background-image:
+        radial-gradient(ellipse 80% 50% at 10% -5%, rgba(232, 168, 48, 0.12), transparent 55%),
+        radial-gradient(ellipse 70% 45% at 95% 0%, rgba(29, 92, 140, 0.1), transparent 50%),
+        var(--shell-page);
+    }
+    .cs-study {
+      background: var(--shell-surface);
+      border: 1px solid var(--shell-border);
+      border-radius: var(--hub-radius-lg);
+      padding: 1.25rem 1.35rem 1.5rem;
+      box-shadow: var(--hub-card-shadow, 0 12px 40px rgba(15, 23, 42, 0.06));
+    }
+    .cs-study h2 { margin-top: 0; font-family: Fraunces, Georgia, serif; }
+    .cs-meta { font-size: 0.9rem; color: var(--shell-muted); margin: 0.35rem 0 1rem; }
+    .cs-block { margin: 0.75rem 0; }
+    .cs-block strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--shell-muted); margin-bottom: 0.2rem; }
+    .cs-chart { min-height: 220px; margin: 1rem 0 0.5rem; }
+    .cs-findings { font-size: 1.05rem; color: var(--hub-text, #0f172a); font-weight: 600; }
+    details.cs-reviewer { margin-top: 2rem; border: 1px dashed var(--shell-border); border-radius: var(--hub-radius-md); padding: 0.75rem 1rem; }
+    details.cs-reviewer summary { cursor: pointer; font-weight: 600; }
+  </style>
 </head>
 <body class="page-shell">
   <a class="skip" href="#main">Skip to content</a>
   <header class="app-nav" role="banner">
     <nav class="nav-inner" aria-label="Primary">
-      <a class="nav-title" href="./index.html"
-        ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
-        ><span>Thomas Gollogly</span></a
-      >
-      <a href="./index.html#story">Data story</a>
+      <a class="nav-title" href="./index.html"><span>Thomas Gollogly</span></a>
       <a href="./index.html#hub">Demos</a>
-      <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Full CASE_STUDIES.md</a>
+      <a href="./demo.html">UK macro</a>
     </nav>
   </header>
 
   <header class="hero motion-in">
     <div class="inner motion-in">
-      <p class="hero-eyebrow">Junior reporting &amp; data analyst evidence</p>
-      <h1>Case studies with <span class="hero-title-warm">sources</span>, not <span class="hero-title-accent">headlines</span></h1>
+      <p class="hero-eyebrow">Open-data case studies</p>
+      <h1>Exploring public data with <span class="hero-title-warm">clear</span>, <span class="hero-title-accent">reproducible</span> analysis</h1>
       <p class="lead">
-        Verified numbers come from <strong>committed JSON</strong> and <code>pytest</code>. NI prescribing and UK fuels trade were <strong>rebuilt Nov 2026</strong> (AI-assisted) from Open Data NI and ONS tables — not proof of earlier personal code.
+        Two worked examples from official publishers: what question I asked, how the file was aggregated,
+        what the numbers show, and where the limits are. Built as a personal portfolio piece in
+        <strong>November 2026</strong> (AI-assisted workflow; methods and data are in the GitHub repo).
       </p>
     </div>
   </header>
 
   <main class="hub-main" id="main">
-    <div class="inner">
-      <h2 class="hub-section-title">Verified in this repository</h2>
-      <div class="hub-grid-demos">
-        <article class="hub-card hub-card-feature motion-in">
-          <h2><span class="hub-tag">Macro</span> UK CPIH &amp; PSNB pipeline</h2>
-          <p>ONS CSV → DuckDB → exports → static Chart.js demos. Numbers match <code>static-site/demo/manifest.json</code>.</p>
-          <a class="btn btn-primary" href="./demo.html">Open macro charts</a>
-          <a class="btn btn-secondary" href="./portfolio/macro-explorer.html">Trend explorer</a>
-        </article>
-        <article class="hub-card motion-in">
-          <h2><span class="hub-tag">Quality</span> Coverage &amp; limitations</h2>
-          <p>Null YoY months, PSNB row counts, and manifest limitations — computed from the same JSON bundle.</p>
-          <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage</a>
-        </article>
-      </div>
+    <div class="inner" style="display:grid;gap:1.5rem;">
+      <article class="cs-study motion-in" id="study-ni">
+        <p class="hub-tag">Northern Ireland</p>
+        <h2>How much did GP prescribing cost in August 2026?</h2>
+        <p class="cs-meta">
+          Source:
+          <a href="https://admin.opendatani.gov.uk/dataset/gp-prescribing-data/resource/2f8e6dd8-ef10-4442-94db-5e5f74b5c135">Open Data NI — GP prescribing Aug 2026</a>
+          · Code: <code>src/case_studies/prescribing.py</code>
+        </p>
+        <div class="cs-block">
+          <strong>Question</strong>
+          <p>What was the scale of dispensing (items) and reimbursement (actual vs gross cost) across NI practices for one month?</p>
+        </div>
+        <div class="cs-block">
+          <strong>Method</strong>
+          <p>DuckDB over the published CSV (latin-1 headers). <em>Items</em> = prescription lines, not patients.
+            <em>Actual cost</em> = contractor reimbursement; <em>gross cost</em> = list ingredient cost.</p>
+        </div>
+        <div class="cs-chart"><canvas id="chart-ni-costs" role="img" aria-label="Bar chart of actual versus gross prescribing cost"></canvas></div>
+        <p class="cs-findings" id="ni-findings">Loading findings…</p>
+        <div class="cs-block">
+          <strong>Limits</strong>
+          <p>One month snapshot; therapy-area cuts (e.g. BNF chapter 4) are defined in repo docs — not a clinical outcome study.</p>
+        </div>
+      </article>
 
-      <h2 class="hub-section-title">Rebuilt from official data (Nov 2026)</h2>
-      <div class="hub-grid-demos">
-        <article class="hub-card motion-in">
-          <h2><span class="hub-tag">NI</span> GP prescribing — Aug 2026</h2>
-          <p>Open Data NI CSV → DuckDB aggregates. <strong>3,638,019</strong> items across <strong>304</strong> practices; actual cost <strong>£40.4m</strong> (see JSON for tirzepatide / BNF ch.4).</p>
-          <a class="btn btn-primary" href="./case-studies/ni-prescribing-2026-08-summary.json">Summary JSON</a>
-          <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md#4-northern-ireland-gp-prescribing-rebuilt-nov-2026--ai-assisted-not-historical-proof">Methods (§4)</a>
-        </article>
-        <article class="hub-card motion-in">
-          <h2><span class="hub-tag">ONS</span> CPA (08) energy — Q2 2026 YoY</h2>
-          <p>Official <strong>CPA 06.1 crude exports</strong> Q2 2026 <strong>£7.27bn</strong> (+200% YoY vs Q2 2025). PDF crude +109% claims are <em>not validated here</em> — see handoff; SITC QoQ is labelled substitute only.</p>
-          <a class="btn btn-primary" href="./case-studies/uk-energy-trade-q2-2026-summary.json">Summary JSON</a>
-          <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md#5-uk-trade-in-goods--sitc-3-fuels-rebuilt-nov-2026--ai-assisted">Methods (§5)</a>
-        </article>
-      </div>
-      <div class="site-notice motion-in">
-        <p>Provenance: <a href="./case-studies/manifest.json">manifest.json</a> (SHA-256). Compare screenshot/PDF claims in
-          <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/EVIDENCE_HANDOFF.md">EVIDENCE_HANDOFF.md</a>.</p>
-      </div>
+      <article class="cs-study motion-in" id="study-trade">
+        <p class="hub-tag">United Kingdom trade</p>
+        <h2>How did crude petroleum exports move year-on-year?</h2>
+        <p class="cs-meta">
+          Source:
+          <a href="https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current">ONS CPA (08) tables</a>
+          (vintage <code>cpapublicationq22026august.xlsx</code>) · Code: <code>src/case_studies/energy_trade.py</code>
+        </p>
+        <div class="cs-block">
+          <strong>Question</strong>
+          <p>On an apples-to-apples basis, what happened to <strong>CPA 06.1 Crude petroleum exports</strong> between Q2 2025 and Q2 2026 at <strong>current prices (CP)</strong>?</p>
+        </div>
+        <div class="cs-block">
+          <strong>Method</strong>
+          <p>Read quarterly CP sheets from the pinned CPA (08) workbook — product taxonomy CPA, not SITC.
+            Compare the <em>same row</em> across consecutive Q2 quarters.</p>
+        </div>
+        <div class="cs-chart"><canvas id="chart-trade-crude" role="img" aria-label="Bar chart of crude export values Q2 2025 versus Q2 2026"></canvas></div>
+        <p class="cs-findings" id="trade-findings">Loading findings…</p>
+        <div class="cs-block">
+          <strong>Limits</strong>
+          <p>One commodity line only; wider “energy” baskets (e.g. imports of crude+gas and refined fuels) are documented in the JSON summary for reviewers.</p>
+        </div>
+      </article>
 
-      <h2 class="hub-section-title hub-grid-secondary">Reviewer docs</h2>
-      <div class="hub-grid">
-        <article class="hub-card motion-in">
-          <h2><span class="hub-pill">GitHub</span> CASE_STUDIES.md</h2>
-          <p class="hub-prose" style="font-size:0.9rem;color:var(--shell-muted)">Methods, snapshot table, mirrored demos, blocked §4–5.</p>
-          <a class="btn btn-primary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Read on GitHub</a>
-        </article>
-        <article class="hub-card motion-in">
-          <h2><span class="hub-pill">Handoff</span> EVIDENCE_HANDOFF.md</h2>
-          <p class="hub-prose" style="font-size:0.9rem;color:var(--shell-muted)">Accepted/rejected claims, CV bullets, LinkedIn suggestions (text only).</p>
-          <a class="btn btn-primary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/EVIDENCE_HANDOFF.md">Read on GitHub</a>
-        </article>
-      </div>
+      <article class="hub-card motion-in">
+        <h2 class="hub-section-title">Also in this portfolio</h2>
+        <p>UK CPIH &amp; PSNB macro pipeline with interactive charts and a full methods write-up.</p>
+        <a class="btn btn-primary" href="./demo.html">UK macro demo</a>
+        <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Methods on GitHub</a>
+      </article>
+
+      <details class="cs-reviewer motion-in">
+        <summary>Reviewer notes (hashes, tests, prior workbook)</summary>
+        <p class="hub-prose" style="margin-top:0.75rem;font-size:0.9rem;">
+          Committed summaries: <a href="./case-studies/manifest.json">manifest.json</a>.
+          Prior narrative PDF/workbook is <strong>not</strong> in this repo — comparison tables use the pinned ONS vintage only
+          (<a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/cursor/case-study-evidence-handoff-9407/docs/EVIDENCE_HANDOFF.md">EVIDENCE_HANDOFF.md</a>).
+          Local recompute: <code>PYTHONPATH=. python tools/export_case_studies.py</code> then <code>pytest -q</code>.
+        </p>
+      </details>
     </div>
   </main>
 
   <footer class="site-footer">
     <div class="inner hub-prose">
-      <p><a href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a> · <a href="./index.html">Hub</a> · <a href="./portfolio/privacy.html">Privacy</a></p>
-      <p class="legal-block">AI-assisted site build; macro metrics from committed pipeline exports only.</p>
+      <p><a href="./index.html">Hub</a> · <a href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a></p>
     </div>
   </footer>
   <script type="module">

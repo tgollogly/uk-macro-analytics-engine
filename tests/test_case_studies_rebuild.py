@@ -86,13 +86,23 @@ def test_cpa08_crude_yoy_from_xlsx() -> None:
     assert imp.yoy_change_pct == pytest.approx(36.6, abs=0.3)
 
 
-def test_energy_json_has_pdf_claim_map_not_false_debunk(energy_summary: dict) -> None:
+def test_energy_basket_consistent_import_growth(energy_summary: dict) -> None:
+    growth = energy_summary["cpa_energy_import_growth"]
+    bal = energy_summary["cpa_energy_trade_balance"]
+    assert "06" in growth["basket_definition"] and "19.2" in growth["basket_definition"]
+    assert "06" in bal["basket_definition"]
+    assert growth["share_of_goods_import_growth_pct"] == pytest.approx(44.2, abs=0.3)
+    checks = energy_summary["original_pdf_claim_check"]
+    energy_claim = next(c for c in checks if "44%" in c["claim"])
+    assert energy_claim["validation"] == "close_on_basket"
+    assert energy_claim["recomputed_share_pct"] == pytest.approx(44.2, abs=0.3)
+
+
+def test_energy_json_has_workbook_claim_map(energy_summary: dict) -> None:
     checks = energy_summary["original_pdf_claim_check"]
     crude_claim = next(c for c in checks if "Crude exports" in c["claim"])
-    assert crude_claim["validation"] == "not_validated_as_stated"
-    assert "SITC" not in crude_claim["comment"]
-    assert energy_summary["cp_measure"].startswith("Classification")
-    assert energy_summary.get("sitc3_fuels_substitute_qoq_only")
+    assert crude_claim["validation"] == "not_reproduced_from_cited_workbook"
+    assert crude_claim.get("pinned_vintage")
 
 
 @pytest.mark.skipif(not CPA08.is_file(), reason="CPA08 not cached")

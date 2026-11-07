@@ -21,9 +21,13 @@ Period for trade: **Q2 2026 vs Q2 2025 YoY** unless noted. Values in **£ billio
 | Energy **+£6.6bn** of **+£15bn** goods imports (**44%**) | CPA 06 import delta **£3.13bn** / total goods import delta **£15.92bn** | share **~19.7%** | — | **Not validated as stated** |
 | Goods exports **£101.7bn**, imports **£171bn** | CPA **Total exports/imports** Q2 2026 | exports **£107.15bn**, imports **£171.20bn** | — | Imports **close**; exports differ |
 
-**Explicit substitute (not CPA recreation):** SITC 3 Fuels, Table 2A, **QoQ Q1→Q2 2026 only** — exports +82.6% QoQ. Useful context only; **must not** be used to falsify the PDF crude **YoY** line.
+**Energy import growth (44% claim):** Uses the **same basket** as the energy balance — CPA **06** crude+gas imports **plus 19.2** refined imports (no overlap with 06.1). On vintage `cpapublicationq22026august.xlsx`, YoY import delta ≈ **£7.04bn** of **£15.92bn** total goods import growth → **~44.2%** share (`cpa_energy_import_growth` in JSON).
 
-**Evidence JSON:** `static-site/case-studies/uk-energy-trade-q2-2026-summary.json` → `original_pdf_claim_check`.
+**Prior workbook:** Narrative PDF not in repo — lines marked **`not_reproduced_from_cited_workbook`** on pinned ONS vintage, not “wrong because revisions”.
+
+**SITC substitute:** Table 2A QoQ only — reviewer JSON, not public headline.
+
+**Evidence JSON:** `static-site/case-studies/uk-energy-trade-q2-2026-summary.json`.
 
 ### Northern Ireland GP prescribing (Aug 2026)
 
@@ -61,7 +65,20 @@ Featured → case studies **after** your approval. Energy bullets should cite **
 
 ---
 
-## E. PR #19 scope (review only)
+## E. Test execution (agent environment, Nov 2026)
+
+| Check | Result |
+|-------|--------|
+| Command | `PYTHONPATH=. pytest -q` → **86 passed, 1 skipped** (Nov 2026 agent run) |
+| NI full CSV | **Yes — recomputed** on cached `data/cache/case-studies/ni-gp-prescribing-2026-08.csv` (**447,682** rows) |
+| NI SHA-256 | `8c0b76e3bc41c672a7496756a81647b008ab6d9341b340fca2c859acfd026886` (manifest) |
+| NI fixture-only | **200-row sample** tests control totals only — not a stand-in for full file |
+| CI without cache | Skips full-file tests (`pytest.skip`); committed JSON from last local export |
+| ONS vintage | `cpapublicationq22026august.xlsx` + `tradepublicationtables2026aug.xlsx` in local cache |
+
+If raw download is blocked in CI, full verification depends on cached provenance above — re-run `tools/export_case_studies.py` on a machine with network.
+
+## F. PR #19 scope (review only)
 
 - `src/case_studies/energy_trade.py` — CPA (08) primary; SITC substitute labelled.
 - `tools/export_case_studies.py` — downloads CPA08 + trade tables + NI CSV.

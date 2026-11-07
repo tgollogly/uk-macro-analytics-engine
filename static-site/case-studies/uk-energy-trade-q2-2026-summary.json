@@ -52,19 +52,28 @@
     "yoy_change_pct": 10.3
   },
   "cpa_energy_trade_balance": {
-    "definition": "CPA 06 + 19.2 exports minus imports (repo, not ONS headline)",
+    "basket_definition": "CPA 06 + 19.2 on both exports and imports (same lines as import-growth basket)",
     "prior_q_gbp_b": -7.957,
     "current_q_gbp_b": -7.666,
     "yoy_change_gbp_b": 0.291
   },
+  "cpa_energy_import_growth": {
+    "basket_definition": "CPA imports: 06 Crude petroleum & natural gas plus 19.2 Refined petroleum products (no double-count of 06.1/06.2)",
+    "prior_q_gbp_b": 13.878,
+    "current_q_gbp_b": 20.919,
+    "yoy_import_delta_gbp_b": 7.041,
+    "total_goods_import_delta_gbp_b": 15.919,
+    "share_of_goods_import_growth_pct": 44.2
+  },
   "original_pdf_claim_check": [
     {
-      "claim": "Crude exports +109% YoY to \u00a35.4bn (PDF)",
+      "claim": "Crude exports +109% YoY to \u00a35.4bn (prior workbook)",
       "comparable_series": "06.1 Crude petroleum",
       "recomputed_yoy_pct": 200.3,
       "recomputed_current_q_gbp_b": 7.271,
-      "validation": "not_validated_as_stated",
-      "comment": "CPA 06.1 Q2 YoY differs on both % and level vs PDF wording."
+      "validation": "not_reproduced_from_cited_workbook",
+      "pinned_vintage": "cpapublicationq22026august.xlsx (ONS CPA 08, quarterly CP)",
+      "comment": "Compared to CPA 06.1 on pinned vintage; workbook not in repo."
     },
     {
       "claim": "Crude+gas imports +35.8% YoY to \u00a311.7bn (PDF)",
@@ -92,13 +101,14 @@
       "comment": "ONS bulletin may use a wider energy basket; not assumed correct."
     },
     {
-      "claim": "Energy +\u00a36.6bn of +\u00a315bn goods import growth, 44% (PDF)",
-      "comparable_series": "CPA 06 import delta / total goods import delta",
-      "recomputed_energy_import_delta_gbp_b": 3.129,
+      "claim": "Energy +\u00a36.6bn of +\u00a315bn goods import growth, 44% (prior workbook)",
+      "comparable_series": "CPA imports: 06 Crude petroleum & natural gas plus 19.2 Refined petroleum products (no double-count of 06.1/06.2)",
+      "recomputed_energy_import_delta_gbp_b": 7.041,
       "recomputed_total_goods_import_delta_gbp_b": 15.919,
-      "recomputed_share_pct": 19.7,
-      "validation": "not_validated_as_stated",
-      "comment": "Share ~20% on CPA 06 only; PDF energy scope unknown."
+      "recomputed_share_pct": 44.2,
+      "validation": "close_on_basket",
+      "pinned_vintage": "cpapublicationq22026august.xlsx (ONS CPA 08, quarterly CP)",
+      "comment": "Same CPA 06+19.2 import basket as energy balance block."
     },
     {
       "claim": "Goods exports \u00a3101.7bn, imports \u00a3171bn (PDF)",
@@ -149,7 +159,7 @@
     "SITC 3 Fuels (publication Table 2A) is an explicit substitute for QoQ context only.",
     "Do not treat SITC % change as proof the PDF crude YoY claim is wrong."
   ],
-  "generated_at_utc": "2026-11-07T17:56:43Z",
+  "generated_at_utc": "2026-11-07T17:59:00Z",
   "sha256_source_cpa08_xlsx": "682e034620ccf7d53b24d126ea6d2978339b025f23b9951a71276b9e35b22202",
   "sha256_source_trade_tables_xlsx": "d40efd7b66051b03e3d9afcb609a163994e971904359c0f80ed5f865a508b6f6"
 }
