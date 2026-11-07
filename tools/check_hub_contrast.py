@@ -42,6 +42,7 @@ def contrast_ratio(fg: str, bg: str) -> float:
 
 # Pairs we care about for ordinary UI text (AA normal text >= 4.5:1; large >= 3:1)
 CHECKS: tuple[tuple[str, str, str], ...] = (
+    ("Hub body on dashboard canvas", "#1a2332", "#f4f6f9"),
     ("Hub body on ivory page", "#1a2332", "#faf8f4"),
     ("Hub muted on ivory page", "#4a5568", "#faf8f4"),
     ("Hub link on ivory page", "#1d5c8c", "#faf8f4"),

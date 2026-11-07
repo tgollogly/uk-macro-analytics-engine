@@ -3,7 +3,13 @@
  * Chart.js 4 — MIT. No fabricated data: all points from JSON.
  */
 
-import { CHART_AXIS_TITLE, assertLightChartTheme, chartJsLightOptions } from "../chart-light-theme.js";
+import {
+  CHART_AXIS_TITLE,
+  assertLightChartTheme,
+  chartJsLightOptions,
+  chartUpdateMode,
+} from "../chart-light-theme.js";
+import { initViewTransitionMeta, pulseChartContainer } from "../hub-motion.js";
 
 // ANALYTICS stage stroke (194, 65, 12) — CPIH YoY
 const CPIH_LINE = "#c2410c";
@@ -100,6 +106,7 @@ async function loadJson(url) {
 }
 
 function main() {
+  initViewTransitionMeta();
   if (typeof Chart === "undefined") {
     showErr("Chart.js failed to load. Check network or CDN.");
     return;
@@ -179,8 +186,14 @@ function main() {
         const slice = tailSlice(cpih, n);
         const labels = slice.map((r) => r.obs_date);
         const vals = slice.map((r) => (r.yoy_pct === null ? null : r.yoy_pct));
-        if (chartCpih) chartCpih.destroy();
-        chartCpih = buildChart(canvasCpih, labels, vals, "YoY %", CPIH_LINE);
+        pulseChartContainer("#chart-cpih");
+        if (chartCpih) {
+          chartCpih.data.labels = labels;
+          chartCpih.data.datasets[0].data = vals;
+          chartCpih.update(chartUpdateMode());
+        } else {
+          chartCpih = buildChart(canvasCpih, labels, vals, "YoY %", CPIH_LINE);
+        }
 
         const last = lastValidYoY(slice);
         const k = document.getElementById("cpih-kpi");
@@ -199,8 +212,14 @@ function main() {
         const slice = tailSlice(psnb, n);
         const labels = slice.map((r) => r.obs_date);
         const vals = slice.map((r) => r.total_net_borrowing_gbp_m);
-        if (chartPsnb) chartPsnb.destroy();
-        chartPsnb = buildChart(canvasPsnb, labels, vals, "£m", PSNB_LINE);
+        pulseChartContainer("#chart-psnb");
+        if (chartPsnb) {
+          chartPsnb.data.labels = labels;
+          chartPsnb.data.datasets[0].data = vals;
+          chartPsnb.update(chartUpdateMode());
+        } else {
+          chartPsnb = buildChart(canvasPsnb, labels, vals, "£m", PSNB_LINE);
+        }
 
         const last = lastPsnb(slice);
         const k = document.getElementById("psnb-kpi");

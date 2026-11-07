@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./hub-tokens.css" />
   <link rel="stylesheet" href="./shell-shared.css" />
   <link rel="stylesheet" href="./hub-pages.css" />
+  <link rel="stylesheet" href="./hub-motion.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -61,7 +62,7 @@
       </section>
 
       <div class="insight-feature-grid" id="insights" aria-live="polite">
-        <article class="insight-feature" id="insight-cpih">
+        <article class="insight-feature dash-panel" id="insight-cpih" data-insight="cpih">
           <p class="story-q">Inflation snapshot</p>
           <h3>CPIH year-on-year</h3>
           <div class="spark-wrap">
@@ -71,7 +72,7 @@
           <p class="provenance" id="prov-cpih"></p>
           <p class="limit">Limitation: YoY is null where a 12-month lag is unavailable; ONS may revise history.</p>
         </article>
-        <article class="insight-feature" id="insight-psnb">
+        <article class="insight-feature dash-panel" id="insight-psnb" data-insight="psnb">
           <p class="story-q">Fiscal snapshot</p>
           <h3>PSNB monthly (ex banks)</h3>
           <div class="spark-wrap">
@@ -161,12 +162,15 @@
   </footer>
 
   <script type="module">
+    import { initViewTransitionMeta, markInsightsReady } from "./hub-motion.js";
     import {
       computeMacroStory,
       sparklineYoY,
       sparklinePsnb,
       drawSparkline,
     } from "./hub-insights.js";
+
+    initViewTransitionMeta();
 
     const fmtPct = (x) =>
       x == null ? "—" : `${Number(x).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
@@ -208,6 +212,7 @@
         }
         document.getElementById("prov-psnb").textContent =
           `Source: ONS DZLS via pipeline export · ${story.psnbRows} rows · snapshot UTC ${story.asOfUtc}`;
+        markInsightsReady();
       })
       .catch((e) => {
         document.getElementById("takeaway-cpih").textContent = `Could not load snapshot: ${e.message}`;
