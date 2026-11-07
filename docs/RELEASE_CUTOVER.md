@@ -1,13 +1,13 @@
 # Release cutover and rollback (plan only — requires separate approval)
 
-**Status:** Preview release candidate on Worker `uk-macro-analytics-landing` — **no** production hostname cutover, **no** `main` merge, **no** portfolio archive, **no** mail/DNS edits in this doc.
+**Status:** Production apex `tgollogly.dev` is bound to Worker `uk-macro-analytics-landing` (verified Cloudflare Workers Domains API, 7 Nov 2026 ~13:34 UTC). **No** rebinding, mail, or DNS changes in this doc.
 
 ## Resource inventory (read-only API, 7 Nov 2026)
 
 | Resource | Name / hostname | Role today | Cutover impact |
 |----------|-----------------|------------|----------------|
-| **Production portfolio Worker** | `portfolio1` | Serves current `tgollogly.dev` static portfolio | **Would be replaced or bypassed** when apex points at new hub |
-| **Preview hub Worker** | `uk-macro-analytics-landing` | `https://uk-macro-analytics-landing.thomasgolloglypagesdev.workers.dev` | **Target** for approved cutover |
+| **Production hub Worker** | `uk-macro-analytics-landing` | Serves `tgollogly.dev` + `*.workers.dev` preview host | **Current** production hub; rollback via Worker deployment |
+| **Legacy portfolio Worker** | `portfolio1` | No active Workers custom domain on `tgollogly.dev` (API) | **Not** serving apex; do not rebind without explicit approval |
 | **Longshots Worker** | `uk-longshot-finder` | `longshots.tgollogly.dev` (workers custom domain) | **Unchanged** — do not rebind |
 | **ATS gate/backend** (optional) | `uk-macro-ats-gate`, `uk-macro-ats-backend` | Not linked from public hub on preview | **Unchanged** unless explicitly decommissioned later |
 | **Zone** | `tgollogly.dev` (Cloudflare zone id `08afc81b081715e9698b6cd112af9be5`) | DNS + Workers custom domains | User edits routes/domains in dashboard |
@@ -16,10 +16,10 @@
 
 | Hostname | Binds to Worker | Notes |
 |----------|-----------------|-------|
-| `tgollogly.dev` | `portfolio1` | Apex / primary portfolio host today |
-| `longshots.tgollogly.dev` | `uk-longshot-finder` | Keep as-is |
+| `tgollogly.dev` | `uk-macro-analytics-landing` | Apex / primary hub (domain id `1d36becf7c31c18cbd5cc5761663429b7c241cb0`) |
+| `longshots.tgollogly.dev` | `uk-longshot-finder` | Keep as-is (domain id `bc7ee0babcab0a1f22cd117fc82b64dddd679bde`) |
 
-Per-script **route tables** returned empty from API for `portfolio1`, `uk-macro-analytics-landing`, and `uk-longshot-finder` — traffic for the apex is driven by **Workers Custom Domains** above, not legacy route patterns (verify in dashboard before change).
+Per-script **route tables** returned empty from API for `uk-macro-analytics-landing`, `uk-longshot-finder`, and `portfolio1` — apex traffic is driven by **Workers Custom Domains** above, not legacy route patterns.
 
 ### DNS records (same zone — mail preserved)
 
