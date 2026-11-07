@@ -46,12 +46,44 @@ def test_static_site_documents_readme_palette_comment() -> None:
 
 
 def test_hub_shell_stylesheets_linked_from_hub_pages() -> None:
-    """Hub + demo share hub-tokens + hub-pages; portfolio site.css imports tokens."""
+    """Hub + demo share hub-tokens + shell-shared + hub-pages; portfolio site.css imports shell."""
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
+    demo = (STATIC / "demo.html").read_text(encoding="utf-8")
     assert 'href="./hub-tokens.css"' in idx
+    assert 'href="./shell-shared.css"' in idx
     assert 'href="./hub-pages.css"' in idx
+    assert 'href="./shell-shared.css"' in demo
     site_css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
     assert "hub-tokens.css" in site_css
+    assert "shell-shared.css" in site_css
+
+
+def test_hub_pages_avoids_duplicate_shell_import() -> None:
+    """shell-shared is linked from HTML; hub-pages should not @import it again."""
+    hub_pages = (STATIC / "hub-pages.css").read_text(encoding="utf-8")
+    assert '@import url("./shell-shared.css")' not in hub_pages
+
+
+def test_hub_cards_do_not_force_row_height_stretch() -> None:
+    """Avoid min-height:100% on grid cards (causes overlap when row tracks differ)."""
+    hub_pages = (STATIC / "hub-pages.css").read_text(encoding="utf-8")
+    assert "min-height: 100%" not in hub_pages.split(".hub-card {", 1)[1].split("}", 1)[0]
+
+
+def test_portfolio_pages_include_shared_nav_and_back_link() -> None:
+    needle_nav = 'class="app-nav"'
+    needle_back = 'class="nav-back"'
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "ats-matcher.html",
+        "privacy.html",
+    ):
+        html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
+        assert needle_nav in html, name
+        assert needle_back in html, name
 
 
 def test_portfolio_mirror_declares_dark_color_scheme() -> None:
@@ -176,11 +208,12 @@ def test_ats_matcher_parses_non_json_backend_errors() -> None:
     assert ".json()" not in ats
 
 
-def test_sitebar_narrow_wrap_prevents_back_link_clip() -> None:
-    """Portfolio site.css: back link can wrap on narrow viewports (avoid clipped 'All demos')."""
-    css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
-    assert ".sitebar .back{flex:1 1 100%" in css or "flex: 1 1 100%" in css
-    assert ".sitebar .in" in css and "flex-wrap" in css and "wrap" in css
+def test_nav_back_wraps_on_narrow_viewport() -> None:
+    """Shared shell: nav-back can wrap on narrow viewports (avoid clipped back link)."""
+    shell = (STATIC / "shell-shared.css").read_text(encoding="utf-8")
+    assert ".app-nav .nav-back" in shell
+    assert "flex: 1 1 100%" in shell
+    assert "nav-inner" in shell and "flex-wrap" in shell
 
 
 def test_ats_remote_error_adds_verify_hint_for_server_diagnostics() -> None:

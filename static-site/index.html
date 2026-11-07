@@ -9,9 +9,10 @@
   <!--
     README generator palette (tools/regen_readme_images.py): BG #fefce8, HEADER #312e81,
     HEADER_STROKE #4338ca, ACCENT_BADGE #fbbf24, TEXT_MUTED #64748b, OUTLINE #4f46e5.
-    Shared: ./hub-tokens.css + ./hub-pages.css (dark shell, same hues as README/architecture.svg).
+    Shared: ./hub-tokens.css + ./shell-shared.css + ./hub-pages.css (dark shell, same hues as README/architecture.svg).
   -->
   <link rel="stylesheet" href="./hub-tokens.css" />
+  <link rel="stylesheet" href="./shell-shared.css" />
   <link rel="stylesheet" href="./hub-pages.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +21,10 @@
 <body class="page-shell">
   <header class="app-nav" role="banner">
     <nav class="nav-inner" aria-label="Primary">
-      <span class="nav-title">Thomas Gollogly</span>
+      <a class="nav-title" href="./index.html"
+        ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
+        ><span>Thomas Gollogly</span></a
+      >
       <a href="#hub">Six demos</a>
       <a href="./demo.html">UK macro charts</a>
       <a href="./portfolio/privacy.html">Privacy</a>

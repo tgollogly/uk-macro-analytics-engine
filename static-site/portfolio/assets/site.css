@@ -1,4 +1,5 @@
 @import url("../../hub-tokens.css");
+@import url("../../shell-shared.css");
 
 /* =====================================================================
    site.css — colour, type, shell for portfolio mirror demos (dark product UI).
@@ -70,7 +71,6 @@
 }
 html {
   forced-color-adjust: none;
-  overflow-x: clip;
 }
 html,
 body {
@@ -160,78 +160,6 @@ code {
 }
 .tg-mark text {
   fill: #fff;
-}
-
-/* ---------- site bar ---------- */
-.sitebar {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  transition: border-color var(--hub-transition);
-}
-.sitebar .in {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 var(--hub-content-pad);
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.sitebar .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: clamp(17px, 0.5vw + 16px, 19px);
-  color: var(--strong);
-  min-width: 0;
-  flex: 1 1 auto;
-}
-.sitebar .brand:hover {
-  text-decoration: none;
-  color: var(--hub-link-hover);
-}
-.sitebar .back {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--muted);
-  white-space: nowrap;
-  flex: 0 1 auto;
-  min-width: 0;
-  text-align: right;
-  padding: 8px 0;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-.sitebar .back:hover {
-  color: var(--strong);
-  text-decoration: none;
-}
-@media (max-width: 420px) {
-  .sitebar .in {
-    padding: 10px 12px;
-    gap: 10px;
-    height: auto;
-  }
-  .sitebar .back {
-    flex: 1 1 100%;
-    text-align: left;
-    white-space: normal;
-    max-width: 100%;
-  }
-}
-@media (max-width: 400px) {
-  .sitebar .brand span {
-    display: none;
-  }
 }
 
 /* ---------- page head ---------- */
@@ -501,7 +429,7 @@ select:focus {
 
 /* ---------- print ---------- */
 @media print {
-  .sitebar,
+  .app-nav,
   .sitefoot,
   #chatBtn,
   #chatPanel {

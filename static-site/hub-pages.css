@@ -1,6 +1,6 @@
 @import url("./hub-tokens.css");
 
-/* Hub index + UK macro demo — shared shell (no portfolio mirror rules). */
+/* Hub index + UK macro demo — layout. Load shell-shared.css before this file in HTML. */
 
 :root {
   --shell-page: var(--hub-bg-page);
@@ -16,9 +16,6 @@
   --shell-font: var(--hub-font-sans);
 }
 
-html {
-  overflow-x: clip;
-}
 .page-shell {
   margin: 0;
   min-height: 100vh;
@@ -28,7 +25,6 @@ html {
   color: var(--shell-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
   min-width: 0;
 }
 
@@ -39,45 +35,6 @@ html {
   outline-offset: 2px;
 }
 
-.app-nav {
-  background: linear-gradient(180deg, var(--shell-header) 0%, #1e1b4b 100%);
-  border-bottom: 2px solid var(--shell-header-stroke);
-  padding: 0.65rem var(--hub-content-pad);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-.app-nav .nav-inner {
-  max-width: min(72rem, 100%);
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.25rem;
-  min-width: 0;
-}
-.app-nav .nav-title {
-  color: var(--shell-text);
-  font-family: var(--hub-font-serif);
-  font-size: 1.02rem;
-  font-weight: 600;
-  margin-right: auto;
-  min-width: 0;
-}
-.app-nav a {
-  color: var(--shell-link);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.92rem;
-  white-space: nowrap;
-  transition: color var(--hub-transition);
-}
-.app-nav a:hover {
-  color: var(--hub-link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 .hero {
   padding: clamp(2rem, 4vw, 2.75rem) 0 clamp(1.25rem, 3vw, 1.5rem);
 }
@@ -85,6 +42,8 @@ html {
   margin: 0 auto;
   padding: 0 var(--hub-content-pad);
   max-width: min(68rem, 100%);
+  width: 100%;
+  box-sizing: border-box;
 }
 .hero-eyebrow {
   font-size: 0.75rem;
@@ -118,8 +77,9 @@ html {
 }
 .hero-actions .btn {
   flex: 1 1 auto;
-  min-width: min(100%, 12rem);
+  min-width: 0;
   max-width: 100%;
+  box-sizing: border-box;
   text-align: center;
   white-space: normal;
   line-height: 1.35;
@@ -200,11 +160,14 @@ html {
   margin: 0 auto;
   padding: 0 var(--hub-content-pad);
   max-width: min(68rem, 100%);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .hub-grid {
   display: grid;
   gap: 1rem;
+  align-items: start;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
 }
 
@@ -216,12 +179,11 @@ html {
   border-radius: var(--hub-radius-md);
   padding: 1.35rem 1.25rem;
   min-width: 0;
-  min-height: 100%;
   box-shadow: var(--hub-shadow-sm);
 }
 .hub-card .btn-primary {
-  margin-top: auto;
-  align-self: flex-start;
+  margin-top: 0.85rem;
+  align-self: stretch;
 }
 .hub-card h2 {
   font-family: var(--shell-font);
@@ -296,8 +258,9 @@ html {
 }
 .site-footer .inner {
   margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 1.25rem);
+  padding: 0 var(--hub-content-pad);
   max-width: min(68rem, 100%);
+  box-sizing: border-box;
 }
 .site-footer a {
   color: var(--shell-link);
@@ -335,8 +298,9 @@ html {
 .demo-main {
   max-width: min(72rem, 100%);
   margin: 0 auto;
-  padding: 1.5rem clamp(0.75rem, 3vw, 1.25rem) 3rem;
+  padding: 1.5rem var(--hub-content-pad) 3rem;
   min-width: 0;
+  box-sizing: border-box;
 }
 .demo-main h1 {
   font-family: var(--hub-font-serif);
@@ -358,7 +322,9 @@ html {
   }
   .hero-actions .btn {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
+    flex: 1 1 100%;
   }
 }
 @media (max-width: 480px) {
