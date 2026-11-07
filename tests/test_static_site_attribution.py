@@ -46,15 +46,16 @@ def test_static_site_documents_readme_palette_comment() -> None:
 
 def test_hub_shell_stylesheets_linked_from_hub_pages() -> None:
     """Hub + demo share hub-tokens + shell-shared + hub-pages; portfolio site.css imports shell."""
+    build = (STATIC / "hub-asset-build.txt").read_text(encoding="utf-8").strip()
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
     demo = (STATIC / "demo.html").read_text(encoding="utf-8")
-    assert 'href="./hub-tokens.css"' in idx
-    assert 'href="./shell-shared.css"' in idx
-    assert 'href="./hub-pages.css"' in idx
-    assert 'href="./shell-shared.css"' in demo
+    assert f'href="./hub-tokens.css?v={build}"' in idx
+    assert f'href="./shell-shared.css?v={build}"' in idx
+    assert f'href="./hub-pages.css?v={build}"' in idx
+    assert f'href="./shell-shared.css?v={build}"' in demo
     site_css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
-    assert "hub-tokens.css" in site_css
-    assert "shell-shared.css" in site_css
+    assert f"hub-tokens.css?v={build}" in site_css
+    assert f"shell-shared.css?v={build}" in site_css
 
 
 def test_hub_pages_avoids_duplicate_shell_import() -> None:

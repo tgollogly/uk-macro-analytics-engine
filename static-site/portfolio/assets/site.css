@@ -1,6 +1,6 @@
-@import url("../../hub-tokens.css");
-@import url("../../hub-motion.css");
-@import url("../../shell-shared.css");
+@import url("../../hub-tokens.css?v=20251107c1");
+@import url("../../hub-motion.css?v=20251107c1");
+@import url("../../shell-shared.css?v=20251107c1");
 
 /* =====================================================================
    site.css — colour, type, shell for portfolio mirror demos (dark product UI).

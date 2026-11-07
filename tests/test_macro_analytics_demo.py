@@ -36,6 +36,36 @@ def test_macro_explorer_documents_table_preview_cap() -> None:
     assert "capped at" in html
 
 
+def test_select_explorer_rows_window_syncs_effective_months() -> None:
+    """Window preset slices first; From/To must match visible chart range."""
+    code = """
+import { selectExplorerRows } from './static-site/portfolio/assets/macro-analytics.js';
+const base = Array.from({ length: 120 }, (_, i) => ({
+  obs_date: `20${String(16 + Math.floor(i / 12)).slice(-2)}-${String((i % 12) + 1).padStart(2, '0')}-01`,
+  total_net_borrowing_gbp_m: i,
+}));
+const win = selectExplorerRows(base, { windowValue: '24', fromMonth: '2016-10', toMonth: '2026-09' });
+if (win.rows.length !== 24) throw new Error('expected 24 rows');
+if (win.effectiveFrom !== win.rows[0].obs_date.slice(0, 7)) throw new Error('from');
+if (win.effectiveTo !== win.rows[win.rows.length - 1].obs_date.slice(0, 7)) throw new Error('to');
+if (win.effectiveFrom === '2016-10') throw new Error('stale cpih-default from month');
+"""
+    out = subprocess.run(
+        ["node", "--input-type=module", "-e", code],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert out.returncode == 0, out.stderr or out.stdout
+
+
+def test_macro_explorer_defaults_to_24_month_window() -> None:
+    html = (STATIC / "portfolio" / "macro-explorer.html").read_text(encoding="utf-8")
+    assert 'value="24" selected' in html
+    assert "selectExplorerRows" in html
+
+
 def test_slice_table_preview_six_and_capped_ranges() -> None:
     """Regression: 6-row range shows all 6; 120-row range caps table at 24."""
     code = """
