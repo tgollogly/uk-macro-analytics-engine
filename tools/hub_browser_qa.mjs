@@ -282,7 +282,6 @@ async function runViewport(vp) {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
-    reducedMotion: "reduce",
     ...(vp.label === "mobile375" && devices["iPhone 13"]?.userAgent
       ? { userAgent: devices["iPhone 13"].userAgent }
       : {}),
@@ -312,6 +311,9 @@ async function runViewport(vp) {
 
   for (const { name, path } of ROUTES.slice(1)) {
     const url = `${report.base}${path}`;
+    if (name === "ats-retired" || name === "privacy") {
+      await page.goto("about:blank");
+    }
     const resp = await page.goto(url, { waitUntil: "domcontentloaded" });
     const status = resp?.status();
     if (status && status >= 400) pushError(name, `HTTP ${status} for ${path}`);
@@ -339,6 +341,8 @@ async function runViewport(vp) {
     } else if (name === "bundlebuilder" && vp.label === "desktop") {
       vpOut.routes[name] = await checkBundlePdf(page);
       await page.emulateMedia({ media: "screen", colorScheme: "light" });
+      // Reset print emulation bleed (Chromium retains computed colours on next origin navigation).
+      await page.goto("about:blank");
     } else if (name === "ats-retired") {
       await checkAtsRetired(page);
     }
