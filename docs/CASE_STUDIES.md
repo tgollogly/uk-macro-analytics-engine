@@ -66,6 +66,10 @@ CI mirrors this in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
 ---
 
+## 2a. Monthly macro visual story (`static-site/macro-story.html`)
+
+**Preview-only PR** — not on production until owner publishes. Uses `static-site/demo/macro-story.json` exported via `tools/export_macro_story.py` from the same CPIH/PSNB snapshot. Heatmap (YoY **rate** by calendar month), PSNB monthly bars, partial FY compare, computed findings with “does not prove” limits. Full filters remain in `macro-explorer.html`.
+
 ## 2. Static browser demo (`static-site/demo.html`)
 
 ### What it shows

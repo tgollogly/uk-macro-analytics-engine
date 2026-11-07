@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Monthly macro patterns — CPIH &amp; PSNB snapshot story</title>
+  <meta name="description" content="Seasonal CPIH heatmap, borrowing lumps, and FY comparisons from the committed ONS snapshot — patterns without invented causes." />
+  <link rel="stylesheet" href="./hub-tokens.css?v=20251107d2" />
+  <link rel="stylesheet" href="./shell-shared.css?v=20251107d2" />
+  <link rel="stylesheet" href="./hub-pages.css?v=20251107d2" />
+  <link rel="stylesheet" href="./hub-motion.css?v=20251107d2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+  <script type="module" src="./macro-story/story.js?v=20251107d3"></script>
+  <style>
+    .page-shell {
+      background:
+        radial-gradient(ellipse 70% 45% at 0% 0%, rgba(11, 94, 85, 0.12), transparent 55%),
+        radial-gradient(ellipse 65% 40% at 100% 5%, rgba(49, 46, 129, 0.1), transparent 50%),
+        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(232, 168, 48, 0.08), transparent 45%),
+        var(--shell-page);
+    }
+    .ms-panel {
+      background: var(--shell-surface);
+      border: 1px solid var(--shell-border);
+      border-radius: var(--hub-radius-lg);
+      padding: 1.1rem 1.25rem 1.35rem;
+      margin: 0 0 1.25rem;
+      box-shadow: 0 16px 48px rgba(15, 23, 42, 0.06);
+    }
+    .ms-panel h2 { font-family: Fraunces, Georgia, serif; margin: 0.25rem 0 0.5rem; font-size: 1.35rem; }
+    .ms-q { color: var(--shell-muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 0.35rem; }
+    .ms-chart { min-height: 240px; max-height: 360px; position: relative; margin-top: 0.75rem; }
+    .ms-heatmap { width: 100%; border-collapse: collapse; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+    .ms-heatmap th, .ms-heatmap td { border: 1px solid var(--shell-border); padding: 0.35rem 0.25rem; text-align: center; }
+    .ms-heatmap th { background: var(--shell-page); font-weight: 600; }
+    .ms-heatmap td[data-empty="true"] { color: var(--shell-muted); background: transparent; }
+    .ms-legend { font-size: 0.85rem; color: var(--shell-muted); margin: 0.6rem 0 0; }
+    .ms-finding { border-left: 4px solid var(--hub-chart-cpih, #d64f2a); padding: 0 0 0 0.85rem; margin: 0 0 1rem; }
+    .ms-finding:nth-child(even) { border-left-color: var(--hub-chart-psnb, #0b5e55); }
+    .ms-tag { font-size: 0.75rem; font-weight: 700; color: var(--hub-title-accent, #312e81); margin: 0; }
+    .ms-limit { font-size: 0.88rem; color: var(--shell-muted); }
+    .ms-meta { font-size: 0.78rem; color: var(--shell-muted); }
+    #findings-grid { display: grid; gap: 0.25rem; }
+    @media (min-width: 900px) { #findings-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 400px) { .ms-heatmap { font-size: 0.62rem; } }
+  </style>
+</head>
+<body class="page-shell">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="app-nav" role="banner">
+    <nav class="nav-inner" aria-label="Primary">
+      <a class="nav-title" href="./index.html"><span>Thomas Gollogly</span></a>
+      <a href="./index.html#hub">Demos</a>
+      <a href="./demo.html">Macro charts</a>
+      <a href="./portfolio/macro-explorer.html">Trend explorer</a>
+    </nav>
+  </header>
+
+  <header class="hero motion-in">
+    <div class="inner">
+      <p class="hero-eyebrow">ONS snapshot · patterns not causes</p>
+      <h1>What the <span class="hero-title-warm">monthly</span> macro data <span class="hero-title-accent">shows</span></h1>
+      <p class="lead">
+        Heatmaps, turning points, and borrowing comparisons built from the same committed JSON as the hub demos.
+        Every label is a <strong>rate or £m flow</strong> from the pipeline — not live ONS and not an explanation of why policy moved.
+      </p>
+      <p class="hero-note" id="story-asof" aria-live="polite">Loading snapshot time…</p>
+    </div>
+  </header>
+
+  <main class="hub-main" id="main">
+    <div class="inner">
+      <section class="ms-panel motion-in" aria-labelledby="findings-h">
+        <p class="ms-q">Findings (computed)</p>
+        <h2 id="findings-h">Plain-English headlines from the snapshot</h2>
+        <div id="findings-grid"></div>
+      </section>
+
+      <section class="ms-panel motion-in" aria-labelledby="heat-h">
+        <p class="ms-q">Question → visual</p>
+        <h2 id="heat-h">Does inflation <em>rate</em> vary by calendar month?</h2>
+        <p>Each cell is CPIH <strong>year-on-year %</strong> (how fast prices grew vs a year ago). A lower rate does not mean prices fell.</p>
+        <div id="heatmap-host"></div>
+      </section>
+
+      <section class="ms-panel motion-in" aria-labelledby="cpih-h">
+        <h2 id="cpih-h">CPIH rate — last 24 months with local peaks/troughs</h2>
+        <p>Gold points mark local peaks or troughs in the YoY series (change vs prior month in <strong>percentage points</strong> listed below).</p>
+        <div class="ms-chart"><canvas id="chart-cpih" role="img" aria-label="CPIH YoY percent last twenty-four months"></canvas></div>
+        <ul id="turning-list" class="hub-prose" style="font-size:0.9rem;margin-top:0.75rem;"></ul>
+      </section>
+
+      <section class="ms-panel motion-in" aria-labelledby="psnb-h">
+        <h2 id="psnb-h">PSNB monthly borrowing — lumps and scale</h2>
+        <p>Teal bars: positive monthly net borrowing in £m (ex banks). Monthly series is volatile; compare to FY cumulative with care.</p>
+        <div class="ms-chart"><canvas id="chart-psnb" role="img" aria-label="PSNB monthly borrowing last twenty-four months"></canvas></div>
+        <p id="fy-compare" class="hub-prose" hidden><strong>Partial FY compare:</strong> <span id="fy-text"></span></p>
+      </section>
+
+      <p class="hub-prose" style="font-size:0.9rem;">
+        <a href="./portfolio/macro-explorer.html">Open trend explorer</a> for filters, tables, and CSV export.
+        <a href="./portfolio/data-coverage.html">Coverage &amp; limitations</a>.
+      </p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner hub-prose">
+      <p><a href="./index.html">Hub</a> · <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">Methods</a></p>
+    </div>
+  </footer>
+  <script type="module">
+    import { initPageMotion } from "./hub-motion.js?v=20251107d2";
+    initPageMotion();
+  </script>
+</body>
+</html>

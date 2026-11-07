@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
-  <script type="module" src="./case-studies/app.js?v=20251107d2"></script>
+  <script type="module" src="./case-studies/app.js?v=20251107d3"></script>
   <style>
     .page-shell {
       background-image:
@@ -28,24 +28,67 @@
         radial-gradient(ellipse 70% 45% at 95% 0%, rgba(29, 92, 140, 0.1), transparent 50%),
         var(--shell-page);
     }
+    .case-studies-page .hub-main .inner {
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
     .cs-study {
       background: var(--shell-surface);
       border: 1px solid var(--shell-border);
       border-radius: var(--hub-radius-lg);
-      padding: 1.25rem 1.35rem 1.5rem;
+      padding: 1.25rem 1rem 1.5rem;
       box-shadow: var(--hub-card-shadow, 0 12px 40px rgba(15, 23, 42, 0.06));
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: clip;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      box-sizing: border-box;
     }
-    .cs-study h2 { margin-top: 0; font-family: Fraunces, Georgia, serif; }
-    .cs-meta { font-size: 0.9rem; color: var(--shell-muted); margin: 0.35rem 0 1rem; }
+    .cs-study h2 {
+      margin-top: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+    .cs-meta {
+      font-size: 0.9rem;
+      color: var(--shell-muted);
+      margin: 0.35rem 0 1rem;
+      overflow-wrap: anywhere;
+    }
+    .cs-meta a, .cs-meta code { overflow-wrap: anywhere; word-break: break-word; }
     .cs-block { margin: 0.75rem 0; }
     .cs-block strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--shell-muted); margin-bottom: 0.2rem; }
-    .cs-chart { min-height: 220px; margin: 1rem 0 0.5rem; }
+    .cs-chart {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: 240px;
+      margin: 1rem 0 0.35rem;
+      overflow: hidden;
+    }
+    .cs-chart canvas {
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+    }
+    .cs-chart-caption {
+      font-size: 0.85rem;
+      color: var(--shell-muted);
+      margin: 0 0 0.5rem;
+      overflow-wrap: anywhere;
+    }
     .cs-findings { font-size: 1.05rem; color: var(--hub-text, #0f172a); font-weight: 600; }
     details.cs-reviewer { margin-top: 2rem; border: 1px dashed var(--shell-border); border-radius: var(--hub-radius-md); padding: 0.75rem 1rem; }
     details.cs-reviewer summary { cursor: pointer; font-weight: 600; }
   </style>
 </head>
-<body class="page-shell">
+<body class="page-shell case-studies-page">
   <a class="skip" href="#main">Skip to content</a>
   <header class="app-nav" role="banner">
     <nav class="nav-inner" aria-label="Primary">
@@ -87,6 +130,7 @@
             <em>Actual cost</em> = contractor reimbursement; <em>gross cost</em> = list ingredient cost.</p>
         </div>
         <div class="cs-chart"><canvas id="chart-ni-costs" role="img" aria-label="Bar chart of actual versus gross prescribing cost"></canvas></div>
+        <p class="cs-chart-caption" id="ni-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="ni-findings">Loading findings…</p>
         <div class="cs-block">
           <strong>Limits</strong>
@@ -112,6 +156,7 @@
             Compare the <em>same row</em> across consecutive Q2 quarters.</p>
         </div>
         <div class="cs-chart"><canvas id="chart-trade-crude" role="img" aria-label="Bar chart of crude export values Q2 2025 versus Q2 2026"></canvas></div>
+        <p class="cs-chart-caption" id="trade-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="trade-findings">Loading findings…</p>
         <div class="cs-block">
           <strong>Limits</strong>
