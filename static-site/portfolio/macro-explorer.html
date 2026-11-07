@@ -14,7 +14,7 @@
   .toolbar label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);}
   .toolbar input,.toolbar select{min-height:44px;padding:8px 10px;border-radius:var(--hub-radius-sm);border:1px solid var(--line);background:var(--raised);color:var(--ink);}
   .chartbox{position:relative;height:min(52vh,420px);min-height:260px;margin:16px 0;}
-  .meta{font-size:13px;color:var(--faint);line-height:1.55;margin:0 0 12px;max-width:72ch;}
+  .meta{font-size:15px;color:var(--muted);line-height:1.65;margin:0 0 12px;max-width:72ch;}
   .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--hub-radius-md);}
   table.data{width:100%;border-collapse:collapse;font-size:13px;font-family:var(--mono);}
   table.data th,table.data td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);}
@@ -83,7 +83,7 @@ import {
   assertLightChartTheme,
   chartUpdateMode,
 } from "../chart-light-theme.js?v=20251107d2";
-import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107d2";
+import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107d4";
 
 initPageMotion();
 

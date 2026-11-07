@@ -15,37 +15,41 @@
   <link rel="stylesheet" href="./hub-tokens.css?v=20251107d2" />
   <link rel="stylesheet" href="./shell-shared.css?v=20251107d2" />
   <link rel="stylesheet" href="./hub-pages.css?v=20251107d2" />
-  <link rel="stylesheet" href="./hub-motion.css?v=20251107d2" />
+  <link rel="stylesheet" href="./hub-motion.css?v=20251107d4" />
+  <link rel="stylesheet" href="./hub-visual-polish.css?v=20251107d4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
-  <script type="module" src="./case-studies/app.js?v=20251107d2"></script>
+  <script type="module" src="./case-studies/app.js?v=20251107d4"></script>
   <style>
     .page-shell {
       background-image:
-        radial-gradient(ellipse 80% 50% at 10% -5%, rgba(232, 168, 48, 0.12), transparent 55%),
-        radial-gradient(ellipse 70% 45% at 95% 0%, rgba(29, 92, 140, 0.1), transparent 50%),
+        radial-gradient(ellipse 80% 50% at 10% -5%, rgba(193, 127, 58, 0.12), transparent 55%),
+        radial-gradient(ellipse 70% 45% at 95% 0%, rgba(46, 74, 140, 0.1), transparent 50%),
         var(--shell-page);
     }
     .cs-study {
       background: var(--shell-surface);
       border: 1px solid var(--shell-border);
       border-radius: var(--hub-radius-lg);
-      padding: 1.25rem 1.35rem 1.5rem;
-      box-shadow: var(--hub-card-shadow, 0 12px 40px rgba(15, 23, 42, 0.06));
+      padding: clamp(1.1rem, 4vw, 1.45rem);
+      box-shadow: var(--hub-shadow-md);
     }
-    .cs-study h2 { margin-top: 0; font-family: Fraunces, Georgia, serif; }
-    .cs-meta { font-size: 0.9rem; color: var(--shell-muted); margin: 0.35rem 0 1rem; }
-    .cs-block { margin: 0.75rem 0; }
-    .cs-block strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--shell-muted); margin-bottom: 0.2rem; }
-    .cs-chart { min-height: 220px; margin: 1rem 0 0.5rem; }
-    .cs-findings { font-size: 1.05rem; color: var(--hub-text, #0f172a); font-weight: 600; }
+    .cs-block strong {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--hub-accent-cobalt);
+      margin-bottom: 0.25rem;
+    }
+    .cs-findings { font-size: clamp(1rem, 3.6vw, 1.12rem); font-weight: 600; line-height: 1.45; }
     details.cs-reviewer { margin-top: 2rem; border: 1px dashed var(--shell-border); border-radius: var(--hub-radius-md); padding: 0.75rem 1rem; }
     details.cs-reviewer summary { cursor: pointer; font-weight: 600; }
   </style>
 </head>
-<body class="page-shell">
+<body class="page-shell case-studies-page">
   <a class="skip" href="#main">Skip to content</a>
   <header class="app-nav" role="banner">
     <nav class="nav-inner" aria-label="Primary">
@@ -67,9 +71,10 @@
     </div>
   </header>
 
-  <main class="hub-main" id="main">
+  <main class="hub-main" id="main" data-async-root data-load-state="loading">
+    <p class="async-status" data-async-status aria-live="polite" style="padding:0 var(--hub-content-pad);"></p>
     <div class="inner" style="display:grid;gap:1.5rem;">
-      <article class="cs-study motion-in" id="study-ni">
+      <article class="cs-study reveal-section motion-in" id="study-ni">
         <p class="hub-tag">Northern Ireland</p>
         <h2>How much did GP prescribing cost in August 2026?</h2>
         <p class="cs-meta">
@@ -86,7 +91,8 @@
           <p>DuckDB over the published CSV (latin-1 headers). <em>Items</em> = prescription lines, not patients.
             <em>Actual cost</em> = contractor reimbursement; <em>gross cost</em> = list ingredient cost.</p>
         </div>
-        <div class="cs-chart"><canvas id="chart-ni-costs" role="img" aria-label="Bar chart of actual versus gross prescribing cost"></canvas></div>
+        <div class="chartbox cs-chart"><canvas id="chart-ni-costs" role="img" aria-label="Bar chart of actual versus gross prescribing cost"></canvas></div>
+        <p class="cs-chart-caption" id="ni-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="ni-findings">Loading findings…</p>
         <div class="cs-block">
           <strong>Limits</strong>
@@ -94,7 +100,7 @@
         </div>
       </article>
 
-      <article class="cs-study motion-in" id="study-trade">
+      <article class="cs-study reveal-section motion-in" id="study-trade">
         <p class="hub-tag">United Kingdom trade</p>
         <h2>How did crude petroleum exports move year-on-year?</h2>
         <p class="cs-meta">
@@ -111,7 +117,8 @@
           <p>Read quarterly CP sheets from the pinned CPA (08) workbook — product taxonomy CPA, not SITC.
             Compare the <em>same row</em> across consecutive Q2 quarters.</p>
         </div>
-        <div class="cs-chart"><canvas id="chart-trade-crude" role="img" aria-label="Bar chart of crude export values Q2 2025 versus Q2 2026"></canvas></div>
+        <div class="chartbox cs-chart"><canvas id="chart-trade-crude" role="img" aria-label="Bar chart of crude export values Q2 2025 versus Q2 2026"></canvas></div>
+        <p class="cs-chart-caption" id="trade-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="trade-findings">Loading findings…</p>
         <div class="cs-block">
           <strong>Limits</strong>
@@ -143,9 +150,5 @@
       <p><a href="./index.html">Hub</a> · <a href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a></p>
     </div>
   </footer>
-  <script type="module">
-    import { initPageMotion } from "./hub-motion.js?v=20251107d2";
-    initPageMotion();
-  </script>
 </body>
 </html>
