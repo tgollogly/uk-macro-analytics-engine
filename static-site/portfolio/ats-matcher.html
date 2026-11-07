@@ -54,8 +54,9 @@
   .loader{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:8px;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .about{margin-top:34px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;}
-  .about h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 8px;}
-  .about p{margin:0 0 8px;color:var(--muted);font-size:14.5px;}
+  .about h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--hub-link);margin:0 0 8px;}
+  .about p{margin:0 0 8px;color:var(--muted);font-size:14.5px;line-height:1.62;}
+  .about p strong{color:var(--strong);}
   @media(max-width:900px){.grid,.cols{grid-template-columns:1fr;}}
 
   @media(max-width:640px){
@@ -133,7 +134,7 @@
   .gen h3{font-size:15px;color:var(--strong);margin:0 0 4px;}
   .genhint{color:var(--faint);font-size:13.5px;margin:0 0 14px;}
   .genbtns{display:flex;flex-wrap:wrap;gap:12px;}
-  .genbtn{font-family:inherit;font-weight:600;font-size:15px;background:var(--card);color:var(--accent);border:1.5px solid var(--accent);border-radius:11px;padding:12px 18px;cursor:pointer;transition:.15s;}
+  .genbtn{font-family:inherit;font-weight:600;font-size:15px;background:var(--card);color:var(--accent);border:1.5px solid var(--accent);border-radius:11px;padding:12px 18px;cursor:pointer;transition:filter var(--hub-transition,170ms ease),background var(--hub-transition,170ms ease),border-color var(--hub-transition,170ms ease),color var(--hub-transition,170ms ease);}
   .genbtn:hover{background:var(--accent);color:#fff;}
   .genbtn:disabled{opacity:.55;cursor:default;}
   .genout{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);}
@@ -177,6 +178,19 @@ function formatRemoteApiError(raw){
     : "";
   return "Error: "+s+hint;
 }
+/** Map fetch/parse failures to something actionable without assuming cause (timeouts vs policy vs user navigation). */
+function formatFetchError(err, label){
+  const name = (err && err.name) ? String(err.name) : "";
+  const msg = (err && err.message) ? String(err.message) : String(err||"failed");
+  const base = label + ": " + msg;
+  if (/AbortError/i.test(name) || /aborted/i.test(msg)) {
+    return base + " — the browser ended the fetch before a response arrived (e.g. navigation/refresh, request cancelled, or a client-side timeout in your environment). Check DevTools Network for the POST status and whether a response body was returned; do not assume server-side vs client-side cause from this message alone.";
+  }
+  if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
+    return base + " — browser could not complete the request (offline, blocked, TLS/proxy, or CORS preflight failure). Confirm the POST appears in DevTools with a status code.";
+  }
+  return base;
+}
 function bandColour(s){ return s>=75?"var(--ok)":s>=50?"var(--warn)":"var(--err)"; }
 function verdict(s){
   if(s>=75) return ["Strong match","Your CV lines up well with this job. Tighten the few missing keywords and apply."];
@@ -212,7 +226,7 @@ $("go").addEventListener("click", async ()=>{
     $("missing").innerHTML=(d.missing||[]).map(k=>`<span class="chip x">${esc(k)}</span>`).join("")||'<span style="color:var(--faint);font-size:14px;">Nothing major — nice.</span>';
     $("suggestions").innerHTML=(d.suggestions||[]).map(s=>`<li>${esc(s)}</li>`).join("")||"<li>No suggestions returned.</li>";
     $("result").style.display="block";
-  }catch(e){ msg.className="msg err"; msg.textContent="Network error calling "+(window.AI_BACKEND_URL||"the backend")+": "+(e&&e.message?e.message:"failed")+". If the browser blocks cross-origin requests, the host must allow this origin (CORS)."; }
+  }catch(e){ msg.className="msg err"; msg.textContent=formatFetchError(e, "Request to "+(window.AI_BACKEND_URL||"the backend")); }
   finally{ $("go").disabled=false; }
 });
 
@@ -244,7 +258,7 @@ async function generate(mode, title, kind, btn){
     lastDocKind=kind;
     $("genOut").style.display="block";
     $("genOut").scrollIntoView({behavior:"smooth",block:"nearest"});
-  }catch(e){ gm.className="msg err"; gm.textContent="Network error calling "+(window.AI_BACKEND_URL||"the backend")+": "+(e&&e.message?e.message:"failed")+"."; }
+  }catch(e){ gm.className="msg err"; gm.textContent=formatFetchError(e, "Request to "+(window.AI_BACKEND_URL||"the backend")); }
   finally{ document.querySelectorAll(".genbtn").forEach(b=>b.disabled=false); }
 }
 $("genCover").addEventListener("click",()=>generate("cover","Cover letter","cover"));

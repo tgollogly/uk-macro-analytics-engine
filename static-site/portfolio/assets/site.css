@@ -70,6 +70,7 @@
 }
 html {
   forced-color-adjust: none;
+  overflow-x: clip;
 }
 html,
 body {
@@ -101,7 +102,7 @@ select:focus-visible {
 }
 
 :is(a, button, .btn, .chip, [role="button"]):focus-visible {
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.28);
 }
 
 h1,
@@ -140,7 +141,17 @@ code {
 .wrap {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 clamp(12px, 4vw, 24px);
+  padding: 0 var(--hub-content-pad);
+  min-width: 0;
+}
+
+/* Long-form doc (privacy) — align inset with .wrap */
+.doc {
+  max-width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 0 var(--hub-content-pad) 60px;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 /* ---------- brand mark ---------- */
@@ -164,8 +175,8 @@ code {
 .sitebar .in {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 clamp(12px, 4vw, 24px);
-  min-height: 64px;
+  padding: 0 var(--hub-content-pad);
+  min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -240,7 +251,7 @@ code {
 }
 .head p {
   color: var(--muted);
-  max-width: 65ch;
+  max-width: min(65ch, 100%);
   margin: 14px 0 0;
   font-size: clamp(0.95rem, 0.2vw + 0.92rem, 1.05rem);
 }
@@ -386,21 +397,22 @@ button.chip:hover,
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--line);
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
   display: block;
 }
 .sitefoot .footnote span {
-  max-width: 88ch;
+  max-width: min(88ch, 100%);
   display: block;
 }
 
 /* ---------- case study ---------- */
 .cs {
-  max-width: 900px;
+  max-width: var(--maxw);
   margin: 0 auto;
-  padding: 8px clamp(12px, 4vw, 24px) 54px;
+  padding: 8px var(--hub-content-pad) 54px;
+  box-sizing: border-box;
 }
 .cs-card {
   background: var(--card);

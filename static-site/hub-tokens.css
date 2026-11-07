@@ -61,7 +61,8 @@
   --hub-shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 4px 20px rgba(0, 0, 0, 0.35);
   --hub-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.45);
   --hub-transition: 170ms ease;
-  --hub-transition-slow: 220ms ease;
+  --hub-transition-slow: 200ms ease;
+  --hub-content-pad: clamp(16px, 4vw, 24px);
 
   /* --- Chart.js macro demo (semantic — architecture stage strokes) --- */
   --hub-chart-cpih: #c2410c;

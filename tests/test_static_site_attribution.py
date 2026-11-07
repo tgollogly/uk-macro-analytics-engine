@@ -121,6 +121,8 @@ def test_hub_index_links_to_six_demo_routes() -> None:
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
     assert 'href="./demo.html"' in idx
     assert "Open macro demo" in idx
+    assert 'aria-label="Primary"' in idx
+    assert 'href="./portfolio/privacy.html"' in idx
     assert 'href="./portfolio/beneish.html"' in idx
     assert 'href="./portfolio/heat-dome.html"' in idx
     assert 'href="./portfolio/thermal-compare.html"' in idx

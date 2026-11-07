@@ -18,6 +18,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="page-shell">
+  <header class="app-nav" role="banner">
+    <nav class="nav-inner" aria-label="Primary">
+      <span class="nav-title">Thomas Gollogly</span>
+      <a href="#hub">Six demos</a>
+      <a href="./demo.html">UK macro charts</a>
+      <a href="./portfolio/privacy.html">Privacy</a>
+    </nav>
+  </header>
   <header class="hero" style="background:linear-gradient(180deg, var(--shell-header) 0%, #1e1b4b 100%);border-bottom:2px solid var(--shell-header-stroke);padding-bottom:1.5rem">
     <div class="inner">
       <p class="hero-eyebrow">Portfolio demo hub · static assets</p>
@@ -42,43 +50,43 @@
     <div class="inner">
       <div class="site-notice" id="hub">
         <strong>Portfolio demos (mirrored).</strong>
-        The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). This host serves those files from disk. Data handling differs by demo (see each page and <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <strong>the URL in</strong> <code>./portfolio/config.js</code> (gate Worker) on button clicks only; connectivity from this preview has not been verified.
+        The following static pages are copied from <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (see <code>static-site/portfolio/README-SOURCE.md</code>). Your browser loads them as ordinary static files from this host (HTML/CSS/JS from the deployed bundle — no server-side app here). Data handling differs by demo (see each page and <a href="./portfolio/privacy.html">Privacy &amp; AI notice</a>). The <strong>ATS Resume Matcher</strong> POSTs JSON to <strong>the URL in</strong> <code>./portfolio/config.js</code> (gate Worker) on button clicks only; success from this preview is not guaranteed (e.g. origin policy, usage caps, or browser behaviour may block or end the request — see privacy notice).
       </div>
       <div class="hub-grid">
         <article class="hub-card">
           <h2><span class="hub-tag">1 · Macro</span> UK Macro Analytics Engine</h2>
           <p>ONS CPIH YoY and monthly PSNB totals (DuckDB SQL) — static demo uses committed JSON snapshot + manifest.</p>
-          <a class="btn btn-primary" href="./demo.html" style="margin-top:0.75rem;display:inline-flex">Open macro demo</a>
+          <a class="btn btn-primary" href="./demo.html">Open macro demo</a>
           <p class="hub-src">Repo: <a href="https://github.com/tgollogly/uk-macro-analytics-engine">uk-macro-analytics-engine</a></p>
         </article>
         <article class="hub-card">
           <h2><span class="hub-tag">2 · Finance</span> Beneish M-Score Screener</h2>
           <p>Eight-factor model in-browser; use illustrative/sample figures unless you supply real data you may use.</p>
-          <a class="btn btn-primary" href="./portfolio/beneish.html" style="margin-top:0.75rem;display:inline-flex">Open Beneish</a>
+          <a class="btn btn-primary" href="./portfolio/beneish.html">Open Beneish</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/beneish.html">portfolio/beneish.html</a></p>
         </article>
         <article class="hub-card">
           <h2><span class="hub-tag">3 · Weather</span> Heat Anomaly Detector</h2>
           <p>Open-Meteo, MapLibre, RainViewer — third-party APIs (see privacy notice).</p>
-          <a class="btn btn-primary" href="./portfolio/heat-dome.html" style="margin-top:0.75rem;display:inline-flex">Open heat dashboard</a>
+          <a class="btn btn-primary" href="./portfolio/heat-dome.html">Open heat dashboard</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/heat-dome.html">portfolio/heat-dome.html</a></p>
         </article>
         <article class="hub-card">
           <h2><span class="hub-tag">4 · Weather</span> Thermal Compare</h2>
           <p>Multi-location compare using Open-Meteo (third-party; see notice).</p>
-          <a class="btn btn-primary" href="./portfolio/thermal-compare.html" style="margin-top:0.75rem;display:inline-flex">Open thermal compare</a>
+          <a class="btn btn-primary" href="./portfolio/thermal-compare.html">Open thermal compare</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/thermal-compare.html">portfolio/thermal-compare.html</a></p>
         </article>
         <article class="hub-card">
           <h2><span class="hub-tag">5 · AI</span> ATS Resume Matcher</h2>
           <p>Static UI; POST to <strong>the URL in</strong> <code>./portfolio/config.js</code> on click (gate Worker — response may fail if blocked).</p>
-          <a class="btn btn-primary" href="./portfolio/ats-matcher.html" style="margin-top:0.75rem;display:inline-flex">Open ATS matcher</a>
+          <a class="btn btn-primary" href="./portfolio/ats-matcher.html">Open ATS matcher</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/ats-matcher.html">portfolio/ats-matcher.html</a></p>
         </article>
         <article class="hub-card">
           <h2><span class="hub-tag">6 · Docs</span> BundleBuilder</h2>
           <p>Court bundle layout / print; fictional matter details in-browser only.</p>
-          <a class="btn btn-primary" href="./portfolio/bundlebuilder.html" style="margin-top:0.75rem;display:inline-flex">Open BundleBuilder</a>
+          <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
           <p class="hub-src">Source: <a href="https://github.com/tgollogly/portfolio/blob/main/bundlebuilder.html">portfolio/bundlebuilder.html</a></p>
         </article>
       </div>
