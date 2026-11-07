@@ -70,9 +70,10 @@ def test_hub_cards_do_not_force_row_height_stretch() -> None:
     assert "min-height: 100%" not in hub_pages.split(".hub-card {", 1)[1].split("}", 1)[0]
 
 
-def test_portfolio_pages_include_shared_nav_and_back_link() -> None:
+def test_portfolio_pages_include_shared_nav_and_hub_link() -> None:
+    """Hub return is via primary nav (Six demos) — no duplicate nav-back row on mobile."""
     needle_nav = 'class="app-nav"'
-    needle_back = 'class="nav-back"'
+    needle_hub = "../index.html#hub"
     for name in (
         "beneish.html",
         "heat-dome.html",
@@ -83,7 +84,8 @@ def test_portfolio_pages_include_shared_nav_and_back_link() -> None:
     ):
         html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
         assert needle_nav in html, name
-        assert needle_back in html, name
+        assert needle_hub in html, name
+        assert 'class="nav-back"' not in html, name
 
 
 def test_portfolio_mirror_declares_dark_color_scheme() -> None:
@@ -208,12 +210,56 @@ def test_ats_matcher_parses_non_json_backend_errors() -> None:
     assert ".json()" not in ats
 
 
-def test_nav_back_wraps_on_narrow_viewport() -> None:
-    """Shared shell: nav-back can wrap on narrow viewports (avoid clipped back link)."""
+def test_head_vertical_padding_preserves_wrap_horizontal_inset() -> None:
+    """`.wrap` sets horizontal pad; `.head` must not reset it with `padding: … 0 …` shorthand."""
+    css = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "padding: 0 var(--hub-content-pad)" in css.split(".wrap {", 1)[1].split("}", 1)[0]
+    head_block = css.split(".head {", 1)[1].split("}", 1)[0]
+    assert "padding-block:" in head_block
+    assert " 0 " not in head_block.replace("padding-block:", "")
+    for marker in ("@media (max-width: 900px)", "@media (max-width: 640px)"):
+        chunk = css.split(marker, 1)[1].split("@media", 1)[0]
+        assert ".head" in chunk
+        assert "padding-block:" in chunk
+        assert "padding:" not in chunk.split(".head", 1)[1].split("}", 1)[0]
+
+
+def test_compact_nav_avoids_full_width_third_row() -> None:
+    """Mobile nav stays compact: no nav-back forced to 100% width (third sticky row)."""
     shell = (STATIC / "shell-shared.css").read_text(encoding="utf-8")
-    assert ".app-nav .nav-back" in shell
-    assert "flex: 1 1 100%" in shell
+    assert "nav-back" not in shell
+    assert "flex: 1 1 100%" not in shell
     assert "nav-inner" in shell and "flex-wrap" in shell
+    assert "min-height: 44px" in shell
+
+
+def test_privacy_doc_shares_wrap_column_with_page_head() -> None:
+    priv = (STATIC / "portfolio" / "privacy.html").read_text(encoding="utf-8")
+    assert 'class="wrap head"' in priv
+    assert 'class="wrap doc"' in priv
+    site = (STATIC / "portfolio" / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "min(760px" not in site.split(".doc", 1)[1].split("/* ---------- brand", 1)[0]
+
+
+def test_portfolio_case_studies_use_wrap_cs_column() -> None:
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "ats-matcher.html",
+    ):
+        html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
+        assert 'class="wrap cs"' in html, name
+
+
+def test_ats_abort_errors_include_non_definitive_client_hint() -> None:
+    """Abort-like UI must not imply a single root cause; distinguish from gate 502 JSON."""
+    ats = (STATIC / "portfolio" / "ats-matcher.html").read_text(encoding="utf-8")
+    assert "function abortLikeSuffix" in ats
+    assert "operation was aborted" in ats
+    assert "HTTP 502 JSON" in ats
+    assert "AbortController" not in ats
 
 
 def test_ats_remote_error_adds_verify_hint_for_server_diagnostics() -> None:

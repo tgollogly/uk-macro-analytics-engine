@@ -78,7 +78,6 @@
     <a href="../index.html#hub">Six demos</a>
     <a href="../demo.html">UK macro</a>
     <a href="./privacy.html">Privacy</a>
-    <a class="nav-back" href="../index.html#hub">&larr; All demos</a>
   </nav>
 </header>
 
@@ -175,9 +174,16 @@ function formatAiHttpError(parsed){
   }
   return "Unexpected response from " + host + " (HTTP " + parsed.status + "). Expected JSON; got " + (parsed.contentType || "(no Content-Type)") + ". The backend may be unreachable, blocked, or returning an error page.";
 }
+/** Shared copy when a response or thrown error looks like an aborted/cancelled fetch (cause not diagnosable from the page). */
+function abortLikeSuffix(){
+  return " — the request ended before a full response (navigation/refresh, cancelled fetch, proxy or host timeout, or environment cutoff). Check DevTools Network for the POST status and body. Do not assume client vs server cause from this text alone; HTTP 502 JSON from the gate (e.g. Gemini load) is a separate, server-reported case.";
+}
 /** When JSON parses but the server put diagnostics in `error`, label it so UI is not read as local env diagnosis. */
 function formatRemoteApiError(raw){
   const s = String(raw||"");
+  if (/AbortError|operation was aborted|request aborted|aborted/i.test(s)) {
+    return "Error: " + s + abortLikeSuffix();
+  }
   const hint = (/GEMINI|Cloudflare Pages|Variables and Secrets|API key|secret/i.test(s))
     ? " [Remote API message — verify on the server; not proven from this page alone.]"
     : "";
@@ -189,7 +195,7 @@ function formatFetchError(err, label){
   const msg = (err && err.message) ? String(err.message) : String(err||"failed");
   const base = label + ": " + msg;
   if (/AbortError/i.test(name) || /aborted/i.test(msg)) {
-    return base + " — the browser ended the fetch before a response arrived (e.g. navigation/refresh, request cancelled, or a client-side timeout in your environment). Check DevTools Network for the POST status and whether a response body was returned; do not assume server-side vs client-side cause from this message alone.";
+    return base + abortLikeSuffix();
   }
   if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
     return base + " — browser could not complete the request (offline, blocked, TLS/proxy, or CORS preflight failure). Confirm the POST appears in DevTools with a status code.";
@@ -316,7 +322,7 @@ $("dlBtn").addEventListener("click",()=>{
 </script>
 
 
-<section class="cs"><div class="cs-card">
+<section class="wrap cs"><div class="cs-card">
   <div class="cs-eyebrow">Case study</div>
   <div class="cs-h">How it's built &mdash; and why</div>
   <div class="cs-block"><h3>The problem</h3><p>Most applications are read by software before a person sees them. Applicants get no feedback and no idea which keywords they missed, so they keep sending the same CV into the same filter.</p></div>

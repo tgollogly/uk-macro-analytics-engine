@@ -147,11 +147,12 @@ code {
 
 /* Long-form doc (privacy) — align inset with .wrap */
 .doc {
-  max-width: min(760px, 100%);
-  margin: 0 auto;
-  padding: 0 var(--hub-content-pad) 60px;
+  padding-bottom: 60px;
   box-sizing: border-box;
   min-width: 0;
+}
+.doc > :where(p, ul, ol, .mirror-callout) {
+  max-width: min(72ch, 100%);
 }
 
 /* ---------- brand mark ---------- */
@@ -170,8 +171,9 @@ code {
   text-transform: uppercase;
   color: var(--hub-palette-accent-warm);
 }
+/* Vertical rhythm only — .wrap owns horizontal inset via padding-inline */
 .head {
-  padding: clamp(28px, 5vw, 44px) 0 clamp(20px, 4vw, 28px);
+  padding-block: clamp(28px, 5vw, 44px) clamp(20px, 4vw, 28px);
 }
 .head h1 {
   font-size: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
@@ -337,9 +339,8 @@ button.chip:hover,
 
 /* ---------- case study ---------- */
 .cs {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 8px var(--hub-content-pad) 54px;
+  padding-top: 8px;
+  padding-bottom: 54px;
   box-sizing: border-box;
 }
 .cs-card {
@@ -475,13 +476,13 @@ h3,
 
 @media (max-width: 900px) {
   .head {
-    padding: 34px 0 22px;
+    padding-block: 34px 22px;
   }
 }
 
 @media (max-width: 640px) {
   .head {
-    padding: 26px 0 18px;
+    padding-block: 26px 18px;
   }
   .head h1 {
     font-size: clamp(1.5rem, 6vw + 0.5rem, 2rem);
