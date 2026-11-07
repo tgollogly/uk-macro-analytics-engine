@@ -57,6 +57,41 @@ export function parseMonth(s) {
   return Number.isFinite(t) ? t : NaN;
 }
 
+export function monthInputToMs(v) {
+  if (!v) return null;
+  const [y, m] = v.split("-").map(Number);
+  return Date.UTC(y, m - 1, 1);
+}
+
+export function monthLabelFromRow(row) {
+  return row?.obs_date?.slice(0, 7) ?? null;
+}
+
+/**
+ * Window presets slice the series; custom range uses From/To only when window is "all".
+ */
+export function selectExplorerRows(base, { windowValue, fromMonth, toMonth }) {
+  const fromMs = monthInputToMs(fromMonth);
+  const toMs = monthInputToMs(toMonth);
+  if (windowValue !== "all" && windowValue != null && String(windowValue) !== "") {
+    const n = Number(windowValue);
+    const rows = Number.isFinite(n) && n > 0 ? base.slice(-n) : [...base];
+    return {
+      rows,
+      mode: "window",
+      effectiveFrom: monthLabelFromRow(rows[0]),
+      effectiveTo: monthLabelFromRow(rows[rows.length - 1]),
+    };
+  }
+  const rows = filterByRange(base, fromMs, toMs);
+  return {
+    rows,
+    mode: "range",
+    effectiveFrom: monthLabelFromRow(rows[0]),
+    effectiveTo: monthLabelFromRow(rows[rows.length - 1]),
+  };
+}
+
 export function filterByRange(rows, fromMs, toMs, dateKey = "obs_date") {
   return rows.filter((row) => {
     const t = parseMonth(row[dateKey]);

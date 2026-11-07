@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light"/>
 <title>UK macro trend explorer (pipeline snapshot)</title>
 <meta name="description" content="Compare CPIH YoY and monthly PSNB from committed pipeline JSON — filter by date, chart, table, CSV download. Not live ONS."/>
-<link rel="stylesheet" href="./assets/site.css"/>
+<link rel="stylesheet" href="./assets/site.css?v=20251107c1"/>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
 <style>
@@ -53,7 +53,7 @@
       <option value="all">All data in snapshot</option>
       <option value="120">Last 120 months</option>
       <option value="60">Last 60 months</option>
-      <option value="24">Last 24 months</option>
+      <option value="24" selected>Last 24 months</option>
     </select></label>
     <button type="button" class="btn btn-p" id="apply">Apply</button>
     <button type="button" class="btn btn-g" id="csv">Download visible CSV</button>
@@ -74,15 +74,16 @@
 </div>
 <script type="module">
 import {
-  loadMacroBundle, filterByRange, parseMonth, rowsToCsv, downloadText,
+  loadMacroBundle, rowsToCsv, downloadText,
   fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
-} from "./assets/macro-analytics.js";
+  selectExplorerRows, monthInputToMs,
+} from "./assets/macro-analytics.js?v=20251107c1";
 import {
   chartJsLightOptions,
   assertLightChartTheme,
   chartUpdateMode,
-} from "../chart-light-theme.js";
-import { initPageMotion, pulseChartContainer } from "../hub-motion.js";
+} from "../chart-light-theme.js?v=20251107c1";
+import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107c1";
 
 initPageMotion();
 
@@ -91,18 +92,27 @@ let chart = null;
 let visible = [];
 
 function showErr(msg){ const el=document.getElementById("error"); el.hidden=false; el.textContent=msg; }
-function monthInputToMs(v){ if(!v) return null; const [y,m]=v.split("-").map(Number); return Date.UTC(y,m-1,1); }
+
+function syncMonthInputs(fromMonth, toMonth) {
+  const fromEl = document.getElementById("from");
+  const toEl = document.getElementById("to");
+  if (fromMonth) fromEl.value = fromMonth;
+  if (toMonth) toEl.value = toMonth;
+}
 
 function currentRows(){
   const key = document.getElementById("series").value;
   const base = key === "cpih" ? bundle.cpih : bundle.psnb;
-  let rows = base;
-  const from = monthInputToMs(document.getElementById("from").value);
-  const to = monthInputToMs(document.getElementById("to").value);
   const win = document.getElementById("window").value;
-  if (win !== "all") rows = rows.slice(-Number(win));
-  rows = filterByRange(rows, from, to);
-  return { key, rows };
+  const selected = selectExplorerRows(base, {
+    windowValue: win,
+    fromMonth: document.getElementById("from").value,
+    toMonth: document.getElementById("to").value,
+  });
+  if (selected.mode === "window") {
+    syncMonthInputs(selected.effectiveFrom, selected.effectiveTo);
+  }
+  return { key, rows: selected.rows };
 }
 
 function render(){
@@ -175,6 +185,12 @@ function render(){
 document.getElementById("apply").addEventListener("click", () => { try { render(); } catch(e){ showErr(e.message); } });
 document.getElementById("series").addEventListener("change", render);
 document.getElementById("window").addEventListener("change", render);
+for (const id of ["from", "to"]) {
+  document.getElementById(id).addEventListener("change", () => {
+    document.getElementById("window").value = "all";
+    render();
+  });
+}
 document.getElementById("csv").addEventListener("click", () => {
   const { key } = currentRows();
   const cols = key === "cpih"
@@ -188,8 +204,6 @@ loadMacroBundle().then((b) => {
   const asof = b.manifest.generated_at_utc || "unknown";
   document.getElementById("asof").textContent =
     `As of (UTC): ${asof}. CPIH rows: ${b.manifest.sources?.cpih?.rows ?? b.cpih.length}; PSNB rows: ${b.manifest.sources?.psnb?.rows ?? b.psnb.length}.`;
-  if (b.cpih.length) document.getElementById("from").value = b.cpih[Math.max(0, b.cpih.length - 120)].obs_date.slice(0,7);
-  if (b.cpih.length) document.getElementById("to").value = b.cpih[b.cpih.length - 1].obs_date.slice(0,7);
   render();
 }).catch((e) => showErr(e.message));
 </script>
