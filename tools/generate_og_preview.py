@@ -30,7 +30,13 @@ def main() -> None:
     w, h = 1200, 630
     img = Image.new("RGB", (w, h), BG)
     draw = ImageDraw.Draw(img)
-    draw.rounded_rectangle((48, 48, w - 48, h - 48), radius=28, fill=(255, 255, 255), outline=COBALT, width=3)
+    draw.rounded_rectangle(
+        (48, 48, w - 48, h - 48),
+        radius=28,
+        fill=(255, 255, 255),
+        outline=COBALT,
+        width=3,
+    )
     draw.rectangle((48, 48, 52, h - 48), fill=CORAL)
     draw.rectangle((52, 48, 56, h - 48), fill=TEAL)
     title = _font(54, bold=True)

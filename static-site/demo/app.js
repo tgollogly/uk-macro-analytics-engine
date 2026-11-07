@@ -8,8 +8,8 @@ import {
   assertLightChartTheme,
   chartJsLightOptions,
   chartUpdateMode,
-} from "../chart-light-theme.js?v=20251107c1";
-import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107c1";
+} from "../chart-light-theme.js?v=20251107d2";
+import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107d2";
 
 function cssHubColor(varName, fallback) {
   if (typeof document === "undefined") return fallback;

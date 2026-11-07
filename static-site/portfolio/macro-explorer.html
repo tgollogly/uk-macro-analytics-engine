@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light"/>
 <title>UK macro trend explorer (pipeline snapshot)</title>
 <meta name="description" content="Compare CPIH YoY and monthly PSNB from committed pipeline JSON — filter by date, chart, table, CSV download. Not live ONS."/>
-<link rel="stylesheet" href="./assets/site.css?v=20251107c1"/>
+<link rel="stylesheet" href="./assets/site.css?v=20251107d2"/>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
 <style>
@@ -77,13 +77,13 @@ import {
   loadMacroBundle, rowsToCsv, downloadText,
   fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
   selectExplorerRows, monthInputToMs,
-} from "./assets/macro-analytics.js?v=20251107c1";
+} from "./assets/macro-analytics.js?v=20251107d2";
 import {
   chartJsLightOptions,
   assertLightChartTheme,
   chartUpdateMode,
-} from "../chart-light-theme.js?v=20251107c1";
-import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107c1";
+} from "../chart-light-theme.js?v=20251107d2";
+import { initPageMotion, pulseChartContainer } from "../hub-motion.js?v=20251107d2";
 
 initPageMotion();
 
