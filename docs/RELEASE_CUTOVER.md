@@ -94,6 +94,21 @@ Per-script **route tables** returned empty from API for `portfolio1`, `uk-macro-
 
 Update **commit SHA** and **Worker version ID** in the PR body after each approved landing deploy.
 
+## Editorial hub redesign — live (2026-11-07)
+
+Owner approved publishing the light editorial shell to the **existing** apex (`tgollogly.dev` → `uk-macro-analytics-landing`); no domain rebind, mail, longshots, `portfolio1`, or ATS changes.
+
+| Role | Git `main` | Worker version ID |
+|------|------------|-------------------|
+| **Rollback (pre-redesign prod)** | `9214880` | `8332de21-4c1f-46d5-b5d8-681fc32bbf66` |
+| **Current (post-redesign prod)** | `9b9c0e0` | `f7260861-1dc6-42e2-820a-40756afd8558` |
+
+**PR:** https://github.com/tgollogly/uk-macro-analytics-engine/pull/11
+
+**Rollback steps:** `npx wrangler versions rollback 8332de21-4c1f-46d5-b5d8-681fc32bbf66` on `uk-macro-analytics-landing` (or redeploy from `9214880`). Apex binding unchanged.
+
+**Validation:** `node tools/hub_browser_qa.mjs` — pass on workers.dev; apex may return Cloudflare bot challenge to headless `curl` (verify hub in a normal browser).
+
 ## Automated checks (repo)
 
 - `pytest` (includes static/macro attribution; optional `HUB_BROWSER_QA=1` Playwright gate)
