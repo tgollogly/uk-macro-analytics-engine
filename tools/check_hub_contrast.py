@@ -49,6 +49,10 @@ CHECKS: tuple[tuple[str, str, str], ...] = (
     ("Portfolio body on light page", "#1a2332", "#faf8f4"),
     ("Eyebrow teal on ivory", "#0d6e6e", "#faf8f4"),
     ("Cobalt section title", "#2e4a8c", "#faf8f4"),
+    ("Chart legend on white card", "#1a2332", "#ffffff"),
+    ("Chart tick on white card", "#4a5568", "#ffffff"),
+    ("Form ink on raised field", "#1a2332", "#f7f5f1"),
+    ("CPIH series title on ivory", "#9a3412", "#ffffff"),
 )
 
 

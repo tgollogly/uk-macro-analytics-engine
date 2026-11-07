@@ -3,7 +3,7 @@
  * Usage: node tools/hub_browser_qa.mjs [baseUrl]
  * Writes JSON report + PNG screenshots under ARTIFACT_DIR (default /opt/cursor/artifacts).
  */
-import { chromium, devices } from "playwright";
+import { chromium, devices, webkit } from "playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -15,14 +15,131 @@ const report = {
   viewports: {},
   routes: [],
   errors: [],
+  contrast: [],
   notes: [
-    "Headless Chromium in agent VM — not parent Chrome at 400px.",
-    "375px: hub card count + optional horizontal overflow check + hub screenshot only (not all 10 routes).",
-    "Desktop: full route load; deep macro + bundle PDF only on 1280 viewport.",
-    "a11y: privacy route + mobile pass get minimal spot checks (h1, skip); not WCAG / axe.",
-    "Browser context sets prefers-reduced-motion: reduce; no keyboard tab-order audit.",
+    "Chromium desktop + 375 (iPhone 13 UA); optional WebKit mobile400 if installed.",
+    "Every route: rendered text contrast on key controls (AA 4.5:1 normal, 3:1 large/bold).",
+    "Macro explorer: Chart.js legend/tick colours after render; mobile toolbar screenshot.",
+    "Heat/Thermal: contrast on static chrome only — weather tiles may stay empty without live API.",
+    "Not WCAG / axe certification.",
   ],
 };
+
+const ROUTE_CONTRAST_PROBES = {
+  hub: ["h1", ".takeaway", ".story-q", ".hub-card p"],
+  "macro-charts": [".kpi", ".demo-card h2", "#cpih-h2", "#psnb-h2"],
+  "macro-explorer": ["#series", "#from", "#to", "#window", "#view-summary", "table.data td"],
+  "data-coverage": [".head p", "table.cov td", "table.cov th"],
+  beneish: ["input", "table td", "button"],
+  "heat-dome": ["#q", ".head h1", ".hint"],
+  "thermal-compare": ["#q", ".head h1"],
+  bundlebuilder: ["#dTitle", "textarea#dDesc", ".btn-p"],
+  "ats-retired": [".head h1", ".head p"],
+  privacy: [".doc p", ".doc h1"],
+};
+
+async function auditRouteContrast(page, routeName, vpLabel) {
+  const probes = ROUTE_CONTRAST_PROBES[routeName];
+  if (!probes?.length) return [];
+  const results = await page.evaluate((probeList) => {
+    function parseCssRgb(css) {
+      if (!css || css === "transparent") return null;
+      const m = css.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
+      return null;
+    }
+    function lin(c) {
+      const x = c / 255;
+      return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+    }
+    function relLuminance([r, g, b]) {
+      return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    }
+    function contrastRatio(fgRgb, bgRgb) {
+      const l1 = relLuminance(fgRgb);
+      const l2 = relLuminance(bgRgb);
+      const hi = Math.max(l1, l2);
+      const lo = Math.min(l1, l2);
+      return (hi + 0.05) / (lo + 0.05);
+    }
+    function effectiveBackgroundRgb(node) {
+      let el = node;
+      while (el && el !== document.documentElement) {
+        const cs = getComputedStyle(el);
+        const rgb = parseCssRgb(cs.backgroundColor);
+        if (rgb && cs.backgroundColor !== "rgba(0, 0, 0, 0)") return rgb;
+        el = el.parentElement;
+      }
+      return parseCssRgb(getComputedStyle(document.body).backgroundColor) || [250, 248, 244];
+    }
+    function measure(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return { ok: false, reason: "missing", selector };
+      const cs = getComputedStyle(el);
+      const fg = parseCssRgb(cs.color);
+      const wk = parseCssRgb(cs.webkitTextFillColor);
+      const fill =
+        wk && cs.webkitTextFillColor !== "rgba(0, 0, 0, 0)" && cs.webkitTextFillColor !== "rgb(0, 0, 0)"
+          ? wk
+          : fg;
+      const bg = effectiveBackgroundRgb(el);
+      if (!fill || !bg) {
+        return { ok: false, reason: "unparsed", selector, color: cs.color, webkit: cs.webkitTextFillColor };
+      }
+      const ratio = contrastRatio(fill, bg);
+      const px = parseFloat(cs.fontSize) || 16;
+      const bold = cs.fontWeight === "bold" || Number(cs.fontWeight) >= 600;
+      const large = px >= 18 || (px >= 14 && bold);
+      const min = large ? 3 : 4.5;
+      return {
+        ok: ratio >= min,
+        ratio,
+        min,
+        large,
+        selector,
+        color: cs.color,
+        webkitTextFill: cs.webkitTextFillColor,
+        fontSize: cs.fontSize,
+      };
+    }
+    return probeList.map(measure);
+  }, probes);
+  for (const r of results) {
+    report.contrast.push({ route: routeName, viewport: vpLabel, ...r });
+    if (r.reason === "missing") continue;
+    if (!r.ok) {
+      const msg = r.reason
+        ? `${r.selector}: ${r.reason}`
+        : `${r.selector} ${r.ratio?.toFixed(2)}:1 < ${r.min}:1 (${r.color}${r.webkitTextFill ? ` webkit=${r.webkitTextFill}` : ""})`;
+      pushError(`contrast:${routeName}:${vpLabel}`, msg);
+    }
+  }
+  return results;
+}
+
+async function auditMacroChartTheme(page, canvasId, routeName, vpLabel) {
+  const info = await page.evaluate((id) => {
+    const canvas = document.getElementById(id);
+    const chart = typeof Chart !== "undefined" && canvas ? Chart.getChart(canvas) : null;
+    if (!chart?.options) return { ok: false, reason: "no chart instance" };
+    const leg = chart.options.plugins?.legend?.labels?.color;
+    const xT = chart.options.scales?.x?.ticks?.color;
+    const yT = chart.options.scales?.y?.ticks?.color;
+    const bad = [];
+    if (String(leg).toLowerCase() === "#e2e8f0") bad.push("legend #e2e8f0");
+    if (String(xT).toLowerCase() === "#94a3b8") bad.push("x tick #94a3b8");
+    if (String(yT).toLowerCase() === "#94a3b8") bad.push("y tick #94a3b8");
+    return { ok: bad.length === 0, bad, leg, xT, yT, canvasId: id };
+  }, canvasId);
+  report.contrast.push({ route: routeName, viewport: vpLabel, chartTheme: info });
+  if (!info.ok) {
+    pushError(
+      `chart-theme:${routeName}:${vpLabel}`,
+      info.reason || info.bad?.join(", ") || "chart theme failed",
+    );
+  }
+  return info;
+}
 
 const ROUTES = [
   { name: "hub", path: "/" },
@@ -166,7 +283,9 @@ async function runViewport(vp) {
   const context = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
     reducedMotion: "reduce",
-    userAgent: devices["iPhone 13"]?.userAgent,
+    ...(vp.label === "mobile375" && devices["iPhone 13"]?.userAgent
+      ? { userAgent: devices["iPhone 13"].userAgent }
+      : {}),
   });
   context.setDefaultTimeout(25000);
   const page = await context.newPage();
@@ -179,28 +298,67 @@ async function runViewport(vp) {
   const vpOut = { routes: {}, consoleErrors: [] };
 
   await page.goto(`${report.base}/`, { waitUntil: "networkidle" });
+  await page
+    .waitForFunction(
+      () => {
+        const t = document.getElementById("takeaway-cpih")?.textContent || "";
+        return t.length > 16 && !/Loading/i.test(t);
+      },
+      { timeout: 20000 },
+    )
+    .catch(() => {});
   vpOut.routes.hub = await checkHub(page, vp);
+  await auditRouteContrast(page, "hub", vp.label);
 
   for (const { name, path } of ROUTES.slice(1)) {
     const url = `${report.base}${path}`;
     const resp = await page.goto(url, { waitUntil: "domcontentloaded" });
     const status = resp?.status();
     if (status && status >= 400) pushError(name, `HTTP ${status} for ${path}`);
-    if (name === "macro-explorer" && vp.label === "desktop") {
-      vpOut.routes[name] = await checkMacroExplorer(page);
+
+    if (name === "macro-explorer") {
+      await page.waitForSelector("#view-summary", { timeout: 20000 });
+      await page.waitForFunction(
+        () => {
+          const t = document.getElementById("view-summary")?.textContent || "";
+          return t.length > 40 && !/Loading|Adjust filters/.test(t);
+        },
+        { timeout: 20000 },
+      );
+      await auditMacroChartTheme(page, "chart", name, vp.label);
+      if (vp.label === "desktop") {
+        vpOut.routes[name] = await checkMacroExplorer(page);
+      }
+    } else if (name === "macro-charts") {
+      await page.waitForSelector("#chart-cpih", { timeout: 20000 });
+      await page.waitForFunction(() => typeof Chart !== "undefined" && Chart.getChart("chart-cpih"), {
+        timeout: 20000,
+      });
+      await auditMacroChartTheme(page, "chart-cpih", name, vp.label);
+      await auditMacroChartTheme(page, "chart-psnb", name, vp.label);
     } else if (name === "bundlebuilder" && vp.label === "desktop") {
       vpOut.routes[name] = await checkBundlePdf(page);
     } else if (name === "ats-retired") {
       await checkAtsRetired(page);
     }
+
+    await auditRouteContrast(page, name, vp.label);
+
     if (vp.label === "mobile375" || name === "privacy") {
       await spotA11y(page, name);
     }
     if (vp.label === "mobile375" && (name === "hub" || name === "macro-explorer")) {
+      const shotName =
+        name === "macro-explorer" ? `macro-explorer-controls-${vp.label}` : `${name}-${vp.label}`;
       await page.screenshot({
-        path: join(ARTIFACT_DIR, `${name}-${vp.label}.png`),
+        path: join(ARTIFACT_DIR, `${shotName}.png`),
         fullPage: name === "hub",
       });
+      if (name === "macro-explorer") {
+        await page.locator(".toolbar").screenshot({
+          path: join(ARTIFACT_DIR, `macro-explorer-toolbar-${vp.label}.png`),
+        });
+      }
     }
   }
 
@@ -220,6 +378,30 @@ async function runViewport(vp) {
 
 for (const vp of VIEWPORTS) {
   await runViewport(vp);
+}
+
+// Optional WebKit pass (closer to iPhone Safari than Chromium — requires playwright webkit).
+try {
+  const wb = await webkit.launch({ headless: true });
+  const ctx = await wb.newContext({
+    viewport: { width: 400, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+    reducedMotion: "reduce",
+  });
+  const page = await ctx.newPage();
+  await page.goto(`${report.base}/portfolio/macro-explorer.html`, { waitUntil: "networkidle" });
+  await page.waitForSelector("#view-summary", { timeout: 25000 });
+  await auditRouteContrast(page, "macro-explorer", "webkit400");
+  await auditMacroChartTheme(page, "chart", "macro-explorer", "webkit400");
+  await page.locator(".toolbar").screenshot({
+    path: join(ARTIFACT_DIR, "macro-explorer-toolbar-webkit400.png"),
+  });
+  await wb.close();
+  report.notes.push("webkit400 macro-explorer contrast pass completed");
+} catch (e) {
+  report.notes.push(`webkit400 skipped: ${String(e).slice(0, 120)}`);
 }
 
 report.pass = report.errors.length === 0;
