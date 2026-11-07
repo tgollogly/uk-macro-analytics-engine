@@ -132,9 +132,11 @@ Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` 
 
 ## Safari-visible motion (2026-11-07)
 
-**Rollback (pre motion):** `main` `1b9948e` — Worker `7384a4c4-64b3-4d47-b07a-420320d3213a`.
+**Rollback (pre Safari-visible motion):** `main` `1b9948e` — Worker `7384a4c4-64b3-4d47-b07a-420320d3213a`.
 
-`initPageMotion()` + `body.is-motion-on`, 750ms Chart.js updates, `tools/motion_verify.mjs` (WebKit + Chromium).
+**Current:** `main` `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b` (**PR #15**).
+
+`initPageMotion()` + `body.is-motion-on`, 780ms panel enter, 750ms Chart.js updates, `tools/motion_verify.mjs`.
 
 ## Automated checks (repo)
 
