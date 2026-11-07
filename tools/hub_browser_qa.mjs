@@ -141,6 +141,9 @@ async function auditMacroChartTheme(page, canvasId, routeName, vpLabel) {
   return info;
 }
 
+/** Map pages (MapLibre) and print PDF can poison the next route in one context — audit in fresh pages. */
+const ISOLATED_CONTRAST_ROUTES = new Set(["ats-retired"]);
+
 const ROUTES = [
   { name: "hub", path: "/" },
   { name: "macro-charts", path: "/demo.html" },
@@ -311,9 +314,6 @@ async function runViewport(vp) {
 
   for (const { name, path } of ROUTES.slice(1)) {
     const url = `${report.base}${path}`;
-    if (name === "ats-retired" || name === "privacy") {
-      await page.goto("about:blank");
-    }
     const resp = await page.goto(url, { waitUntil: "domcontentloaded" });
     const status = resp?.status();
     if (status && status >= 400) pushError(name, `HTTP ${status} for ${path}`);
@@ -348,7 +348,9 @@ async function runViewport(vp) {
     }
 
     await page.emulateMedia({ media: "screen", colorScheme: "light" });
-    await auditRouteContrast(page, name, vp.label);
+    if (!ISOLATED_CONTRAST_ROUTES.has(name)) {
+      await auditRouteContrast(page, name, vp.label);
+    }
 
     if (vp.label === "mobile375" || name === "privacy") {
       await spotA11y(page, name);
@@ -385,6 +387,29 @@ async function runViewport(vp) {
 for (const vp of VIEWPORTS) {
   await runViewport(vp);
 }
+
+async function auditIsolatedRouteContrasts() {
+  for (const vp of VIEWPORTS) {
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      viewport: { width: vp.width, height: vp.height },
+      ...(vp.label === "mobile375" && devices["iPhone 13"]?.userAgent
+        ? { userAgent: devices["iPhone 13"].userAgent }
+        : {}),
+    });
+    const page = await context.newPage();
+    for (const routeName of ISOLATED_CONTRAST_ROUTES) {
+      const path = ROUTES.find((r) => r.name === routeName)?.path;
+      if (!path) continue;
+      await page.goto(`${report.base}${path}`, { waitUntil: "domcontentloaded" });
+      await auditRouteContrast(page, routeName, vp.label);
+    }
+    await browser.close();
+  }
+  report.notes.push("ats-retired contrast audited in isolated browser contexts (post map/print tours)");
+}
+
+await auditIsolatedRouteContrasts();
 
 // Optional WebKit pass (closer to iPhone Safari than Chromium — requires playwright webkit).
 try {
