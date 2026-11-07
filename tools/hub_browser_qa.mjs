@@ -26,7 +26,7 @@ const report = {
 };
 
 const ROUTE_CONTRAST_PROBES = {
-  hub: ["h1", ".takeaway", ".story-q", ".hub-card p"],
+  hub: ["h1", ".hero-stat-value", ".hero-stat-label", ".takeaway", ".story-q", ".hub-card p"],
   "macro-charts": [".kpi", ".demo-card h2", "#cpih-h2", "#psnb-h2"],
   "macro-explorer": ["#series", "#from", "#to", "#window", "#view-summary", "table.data td"],
   "data-coverage": [".head p", "table.cov td", "table.cov th"],

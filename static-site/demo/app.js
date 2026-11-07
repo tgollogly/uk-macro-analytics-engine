@@ -11,10 +11,14 @@ import {
 } from "../chart-light-theme.js";
 import { initPageMotion, pulseChartContainer } from "../hub-motion.js";
 
-// ANALYTICS stage stroke (194, 65, 12) — CPIH YoY
-const CPIH_LINE = "#c2410c";
-// EXPORTS stage stroke (22, 101, 52) — PSNB
-const PSNB_LINE = "#166534";
+function cssHubColor(varName, fallback) {
+  if (typeof document === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return v || fallback;
+}
+
+const CPIH_LINE = cssHubColor("--hub-chart-cpih", "#d64f2a");
+const PSNB_LINE = cssHubColor("--hub-chart-psnb", "#0b5e55");
 
 function showErr(msg) {
   const el = document.getElementById("error");

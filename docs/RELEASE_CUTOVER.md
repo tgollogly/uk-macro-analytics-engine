@@ -136,6 +136,12 @@ Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` 
 
 **Current:** `main` `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b` (**PR #15**).
 
+## Striking data-story + editorial colour (2026-11-07)
+
+**Rollback (pre-story-effects):** `main` `c9361b3` / `fdaa4e7` — Worker `54f689cd-e46b-4900-bc07-68c9f851686b`.
+
+Documented in `docs/STORY_EFFECTS_REFERENCE.md`. Physical iPhone Safari not verified; Playwright WebKit blocked in agent VM (missing OS deps).
+
 `initPageMotion()` + `body.is-motion-on`, 780ms panel enter, 750ms Chart.js updates, `tools/motion_verify.mjs`.
 
 ## Automated checks (repo)

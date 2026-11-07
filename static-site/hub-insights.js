@@ -79,32 +79,106 @@ export function sparklinePsnb(psnb, count = 36) {
   }));
 }
 
-export function drawSparkline(canvas, points, stroke, { yLabel = "" } = {}) {
-  if (!canvas || !points.length) return;
-  const ctx = canvas.getContext("2d");
+function sparkGeometry(canvas, points) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth || 320;
   const h = canvas.clientHeight || 80;
   canvas.width = w * dpr;
   canvas.height = h * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, w, h);
   const ys = points.map((p) => p.y);
   const minY = Math.min(...ys);
   const maxY = Math.max(...ys);
   const pad = 4;
   const span = maxY - minY || 1;
+  const coords = points.map((p, i) => ({
+    x: pad + (i / (points.length - 1 || 1)) * (w - pad * 2),
+    y: h - pad - ((p.y - minY) / span) * (h - pad * 2),
+  }));
+  return { ctx, w, h, pad, coords };
+}
+
+function paintSparkline(ctx, coords, stroke, progress, w, h, pad, yLabel, labelColor) {
+  ctx.clearRect(0, 0, w, h);
+  if (!coords.length) return;
+  const last = Math.max(1, Math.ceil(coords.length * progress));
+  const slice = coords.slice(0, last);
+  const lastPt = slice[slice.length - 1];
+  const baseY = h - pad;
+  ctx.strokeStyle = "rgba(26, 35, 50, 0.08)";
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 3; i += 1) {
+    const y = pad + ((h - pad * 2) * i) / 4;
+    ctx.beginPath();
+    ctx.moveTo(pad, y);
+    ctx.lineTo(w - pad, y);
+    ctx.stroke();
+  }
+  if (slice.length > 1) {
+    ctx.beginPath();
+    slice.forEach((c, i) => {
+      if (i === 0) ctx.moveTo(c.x, c.y);
+      else ctx.lineTo(c.x, c.y);
+    });
+    ctx.lineTo(lastPt.x, baseY);
+    ctx.lineTo(slice[0].x, baseY);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, pad, 0, baseY);
+    grad.addColorStop(0, stroke + "44");
+    grad.addColorStop(1, stroke + "08");
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
   ctx.strokeStyle = stroke;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2.25;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
   ctx.beginPath();
-  points.forEach((p, i) => {
-    const x = pad + (i / (points.length - 1 || 1)) * (w - pad * 2);
-    const y = h - pad - ((p.y - minY) / span) * (h - pad * 2);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  slice.forEach((c, i) => {
+    if (i === 0) ctx.moveTo(c.x, c.y);
+    else ctx.lineTo(c.x, c.y);
   });
   ctx.stroke();
-  ctx.fillStyle = "#64748b";
-  ctx.font = "11px system-ui,sans-serif";
-  if (yLabel) ctx.fillText(yLabel, pad, 12);
+  if (progress >= 1 && lastPt) {
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(lastPt.x, lastPt.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = stroke;
+    ctx.beginPath();
+    ctx.arc(lastPt.x, lastPt.y, 3.25, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = labelColor || "#4a5568";
+  ctx.font = "600 11px IBM Plex Mono, ui-monospace, monospace";
+  if (yLabel) ctx.fillText(yLabel, pad, 13);
+}
+
+export function drawSparkline(canvas, points, stroke, { yLabel = "", animate = false, durationMs = 900 } = {}) {
+  if (!canvas || !points.length) return;
+  const reduced =
+    typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const { ctx, w, h, pad, coords } = sparkGeometry(canvas, points);
+  const doc = canvas.ownerDocument;
+  const labelColor =
+    doc?.defaultView
+      ?.getComputedStyle(doc.documentElement)
+      .getPropertyValue("--hub-text-secondary")
+      .trim() || "#4a5568";
+  if (!animate || reduced) {
+    paintSparkline(ctx, coords, stroke, 1, w, h, pad, yLabel, labelColor);
+    canvas.dataset.draw = "complete";
+    return;
+  }
+  canvas.dataset.draw = "pending";
+  const t0 = performance.now();
+  const tick = (now) => {
+    const p = Math.min(1, (now - t0) / durationMs);
+    paintSparkline(ctx, coords, stroke, p, w, h, pad, yLabel, labelColor);
+    if (p < 1) requestAnimationFrame(tick);
+    else canvas.dataset.draw = "complete";
+  };
+  requestAnimationFrame(tick);
 }

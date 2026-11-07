@@ -23,6 +23,10 @@ def test_index_loads_hub_insights_module() -> None:
     assert "hub-insights.js" in idx
     assert "insight-feature" in idx
     assert "takeaway-cpih" in idx
+    assert "initStoryScrollEmphasis" in idx
+    assert "animate: true" in idx
+    assert "hero-data-stage" in idx
+    assert "hero-val-cpih" in idx
     assert "not a live ONS pull" in idx.lower() or "committed snapshot" in idx.lower()
 
 

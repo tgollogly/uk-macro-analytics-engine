@@ -5,8 +5,14 @@ const MACRO_MANIFEST = new URL("../../demo/manifest.json", import.meta.url);
 const CPIH_URL = new URL("../../demo/cpih_yoy.json", import.meta.url);
 const PSNB_URL = new URL("../../demo/psnb_monthly.json", import.meta.url);
 
-export const CPIH_LINE = "#c2410c";
-export const PSNB_LINE = "#166534";
+function cssHubColor(varName, fallback) {
+  if (typeof document === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return v || fallback;
+}
+
+export const CPIH_LINE = cssHubColor("--hub-chart-cpih", "#d64f2a");
+export const PSNB_LINE = cssHubColor("--hub-chart-psnb", "#0b5e55");
 
 /** Max rows shown in macro-explorer table; chart + CSV use the full filtered range. */
 export const TABLE_PREVIEW_LIMIT = 24;
