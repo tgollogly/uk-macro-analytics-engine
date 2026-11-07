@@ -401,7 +401,19 @@ async function auditIsolatedRouteContrasts() {
     for (const routeName of ISOLATED_CONTRAST_ROUTES) {
       const path = ROUTES.find((r) => r.name === routeName)?.path;
       if (!path) continue;
-      await page.goto(`${report.base}${path}`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${report.base}${path}`, { waitUntil: "networkidle" });
+      await page
+        .waitForFunction(
+          () => {
+            const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
+            const body = getComputedStyle(document.body).color;
+            return ink.length > 3 && body !== "rgb(0, 0, 0)";
+          },
+          { timeout: 15000 },
+        )
+        .catch(async () => {
+          await page.reload({ waitUntil: "networkidle" });
+        });
       await auditRouteContrast(page, routeName, vp.label);
     }
     await browser.close();
