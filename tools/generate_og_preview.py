@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""Generate static-site/og-preview.png (1200x630) for social / LinkedIn previews."""
+"""Generate Open Graph sharing images (1200x630) for tgollogly.dev root."""
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "static-site" / "og-preview.png"
+DEFAULT_OUT = ROOT / "static-site" / "og-hub-public-data-20251108a.png"
+LEGACY_OUT = ROOT / "static-site" / "og-preview.png"
 
-BG = (244, 246, 249)
+IVORY = (247, 245, 241)
+SURFACE = (255, 255, 255)
 COBALT = (46, 74, 140)
-CORAL = (154, 52, 18)
+CORAL = (214, 79, 42)
 TEAL = (13, 110, 110)
+AMBER = (193, 127, 58)
 INK = (26, 35, 50)
 MUTED = (74, 85, 104)
 
@@ -26,36 +30,74 @@ def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.I
         return ImageFont.load_default()
 
 
-def main() -> None:
-    w, h = 1200, 630
-    img = Image.new("RGB", (w, h), BG)
+def draw_card(img: Image.Image, *, headline: str, subline: str, detail: str, badge: str) -> None:
+    w, h = img.size
     draw = ImageDraw.Draw(img)
-    draw.rounded_rectangle(
-        (48, 48, w - 48, h - 48),
-        radius=28,
-        fill=(255, 255, 255),
-        outline=COBALT,
-        width=3,
+    draw.rectangle((0, 0, w, h), fill=IVORY)
+    draw.rounded_rectangle((40, 36, w - 40, h - 36), radius=26, fill=SURFACE, outline=COBALT, width=3)
+    draw.rectangle((40, 36, 46, h - 36), fill=CORAL)
+    draw.rectangle((46, 36, 52, h - 36), fill=TEAL)
+    draw.rectangle((52, 36, 58, h - 36), fill=AMBER)
+
+    mark = _font(26, bold=True)
+    draw.rounded_rectangle((78, 72, 146, 140), radius=16, fill=TEAL)
+    draw.text((96, 94), "TG", fill=(255, 255, 255), font=mark)
+
+    name = _font(44, bold=True)
+    role = _font(30, bold=True)
+    body = _font(24)
+    small = _font(21)
+
+    draw.text((168, 78), "Thomas Gollogly", fill=INK, font=name)
+    draw.text((78, 162), headline, fill=COBALT, font=role)
+    draw.text((78, 212), subline, fill=INK, font=body)
+
+    y = 268
+    for line in detail.split("\n"):
+        draw.text((78, y), line, fill=MUTED, font=small)
+        y += 34
+
+    draw.rounded_rectangle((78, 480, 560, 548), radius=16, fill=TEAL)
+    draw.text((102, 502), badge, fill=(255, 255, 255), font=small)
+
+    draw.text((78, 562), "tgollogly.dev", fill=MUTED, font=small)
+
+
+def build_hub_image() -> Image.Image:
+    img = Image.new("RGB", (1200, 630), IVORY)
+    draw_card(
+        img,
+        headline="UK public data · macro analytics",
+        subline="DuckDB pipeline, ONS snapshots, traceable JSON",
+        detail="Junior reporting & data technician portfolio\n"
+        "CPIH · PSNB · open datasets — honest snapshot demos",
+        badge="Public data · not live ONS in the browser",
     )
-    draw.rectangle((48, 48, 52, h - 48), fill=CORAL)
-    draw.rectangle((52, 48, 56, h - 48), fill=TEAL)
-    title = _font(54, bold=True)
-    sub = _font(28)
-    small = _font(22)
-    draw.text((88, 120), "UK macro & analytics", fill=COBALT, font=title)
-    draw.text((88, 195), "Evidence-led reporting demos", fill=INK, font=sub)
-    draw.text(
-        (88, 260),
-        "ONS CPIH · PSNB pipeline · traceable JSON exports",
-        fill=MUTED,
-        font=small,
+    return img
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        default=DEFAULT_OUT,
+        help=f"Output PNG path (default: {DEFAULT_OUT.name})",
     )
-    draw.text((88, 310), "Junior data technician portfolio — tgollogly.dev", fill=MUTED, font=small)
-    draw.rounded_rectangle((88, 400, 420, 470), radius=14, fill=TEAL)
-    draw.text((110, 418), "Snapshot charts, not live ONS at edge", fill=(255, 255, 255), font=small)
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    img.save(OUT, format="PNG", optimize=True)
-    print(f"Wrote {OUT} ({OUT.stat().st_size} bytes)")
+    parser.add_argument(
+        "--legacy-alias",
+        action="store_true",
+        help=f"Also write {LEGACY_OUT.name} for backwards compatibility",
+    )
+    args = parser.parse_args()
+    img = build_hub_image()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    img.save(args.output, format="PNG", optimize=True)
+    print(f"Wrote {args.output} ({args.output.stat().st_size} bytes)")
+    if args.legacy_alias:
+        img.save(LEGACY_OUT, format="PNG", optimize=True)
+        print(f"Wrote {LEGACY_OUT} ({LEGACY_OUT.stat().st_size} bytes)")
 
 
 if __name__ == "__main__":
