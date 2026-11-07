@@ -130,6 +130,12 @@ Dribbble reference capture: `/opt/cursor/artifacts/orca-dribbble-reference.png` 
 
 **PR:** #13
 
+## Safari-visible motion (2026-11-07)
+
+**Rollback (pre motion):** `main` `1b9948e` — Worker `7384a4c4-64b3-4d47-b07a-420320d3213a`.
+
+`initPageMotion()` + `body.is-motion-on`, 750ms Chart.js updates, `tools/motion_verify.mjs` (WebKit + Chromium).
+
 ## Automated checks (repo)
 
 - `pytest` (includes static/macro attribution; optional `HUB_BROWSER_QA=1` Playwright gate)

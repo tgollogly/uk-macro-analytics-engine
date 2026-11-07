@@ -19,7 +19,7 @@ export function chartUpdateMode() {
 }
 
 export function chartMotionMs() {
-  return prefersReducedMotion() ? 0 : 480;
+  return prefersReducedMotion() ? 0 : 750;
 }
 
 /** @param {import('chart.js').ChartConfiguration['options']} [extra] */

@@ -32,7 +32,7 @@
   </header>
 
   <header class="hero">
-    <div class="inner">
+    <div class="inner motion-in">
       <p class="hero-eyebrow">Junior reporting &amp; data technician portfolio</p>
       <h1>From ONS tables to explainable charts</h1>
       <p class="lead">
@@ -53,7 +53,7 @@
 
   <main class="hub-main" id="main">
     <div class="inner">
-      <section class="story-intro" id="story" aria-labelledby="story-h">
+      <section class="story-intro motion-in" id="story" aria-labelledby="story-h" data-stagger="1">
         <h2 id="story-h">Question → source → chart → takeaway</h2>
         <p>
           Each insight is computed from <code>static-site/demo/*.json</code> and <code>manifest.json</code>.
@@ -62,7 +62,7 @@
       </section>
 
       <div class="insight-feature-grid" id="insights" aria-live="polite">
-        <article class="insight-feature dash-panel" id="insight-cpih" data-insight="cpih">
+        <article class="insight-feature dash-panel motion-in" id="insight-cpih" data-insight="cpih" data-stagger="1">
           <p class="story-q">Inflation snapshot</p>
           <h3>CPIH year-on-year</h3>
           <div class="spark-wrap">
@@ -72,7 +72,7 @@
           <p class="provenance" id="prov-cpih"></p>
           <p class="limit">Limitation: YoY is null where a 12-month lag is unavailable; ONS may revise history.</p>
         </article>
-        <article class="insight-feature dash-panel" id="insight-psnb" data-insight="psnb">
+        <article class="insight-feature dash-panel motion-in" id="insight-psnb" data-insight="psnb" data-stagger="2">
           <p class="story-q">Fiscal snapshot</p>
           <h3>PSNB monthly (ex banks)</h3>
           <div class="spark-wrap">
@@ -84,24 +84,24 @@
         </article>
       </div>
 
-      <div class="site-notice" id="hub">
+      <div class="site-notice motion-in" id="hub" data-stagger="2">
         <strong>Seven demos</strong> — macro engine chart, trend explorer, coverage QA, mirrored portfolio tools (Beneish, weather, BundleBuilder).
         Portfolio HTML is attributed to <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) where noted; macro analytics pages are authored in this repo.
       </div>
 
       <h2 class="hub-section-title">Macro &amp; analytics</h2>
       <div class="hub-grid-demos">
-        <article class="hub-card hub-card-feature">
+        <article class="hub-card hub-card-feature motion-in" data-stagger="1">
           <h2><span class="hub-tag">Charts</span> UK macro — dual series (separate axes)</h2>
           <p>Chart.js dashboard: CPIH YoY % and PSNB £m from the same snapshot bundle; downloads and manifest provenance on-page.</p>
           <a class="btn btn-primary" href="./demo.html">Open macro charts</a>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Explorer</span> Macro trend explorer</h2>
           <p>Filter, chart one series at a time, table cap with honest CSV export sizing.</p>
           <a class="btn btn-primary" href="./portfolio/macro-explorer.html">Open explorer</a>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Quality</span> Pipeline coverage</h2>
           <p>Null YoY months, PSNB row counts, manifest limitations — computed in-browser.</p>
           <a class="btn btn-primary" href="./portfolio/data-coverage.html">Open coverage</a>
@@ -110,22 +110,22 @@
 
       <h2 class="hub-section-title">Portfolio tools</h2>
       <div class="hub-grid-demos">
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Finance</span> Beneish M-Score</h2>
           <p>In-browser model; illustrative inputs unless you supply your own figures.</p>
           <a class="btn btn-primary" href="./portfolio/beneish.html">Open Beneish</a>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Weather</span> Heat anomaly</h2>
           <p>Live public weather APIs — see privacy notice.</p>
           <a class="btn btn-primary" href="./portfolio/heat-dome.html">Open heat demo</a>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Weather</span> Thermal compare</h2>
           <p>Multi-location Open-Meteo compare.</p>
           <a class="btn btn-primary" href="./portfolio/thermal-compare.html">Open thermal</a>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-tag">Print</span> BundleBuilder</h2>
           <p>Fictional court-bundle layout; print/PDF stays in your browser.</p>
           <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
@@ -134,14 +134,14 @@
 
       <h2 class="hub-section-title hub-grid-secondary">Engineering notes</h2>
       <div class="hub-grid">
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-pill">Pipeline</span> Python + DuckDB + CI</h2>
           <ul class="list-clean">
             <li><code>pytest -q</code> · <code>ruff check</code></li>
             <li>Parquet cache, exports, Streamlit optional</li>
           </ul>
         </article>
-        <article class="hub-card">
+        <article class="hub-card motion-in">
           <h2><span class="hub-pill">Legal</span> Privacy &amp; licences</h2>
           <p class="hub-prose" style="font-size:0.88rem;color:var(--shell-muted)">
             <a href="./portfolio/privacy.html">Privacy &amp; data notice</a> · portfolio MIT where mirrored · Crown OGL for ONS-derived stats.
@@ -162,7 +162,7 @@
   </footer>
 
   <script type="module">
-    import { initViewTransitionMeta, markInsightsReady } from "./hub-motion.js";
+    import { initPageMotion, markInsightsReady } from "./hub-motion.js";
     import {
       computeMacroStory,
       sparklineYoY,
@@ -170,7 +170,7 @@
       drawSparkline,
     } from "./hub-insights.js";
 
-    initViewTransitionMeta();
+    initPageMotion();
 
     const fmtPct = (x) =>
       x == null ? "—" : `${Number(x).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
