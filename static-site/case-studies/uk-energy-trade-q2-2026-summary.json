@@ -1,45 +1,155 @@
 {
-  "period": "2026-Q2",
-  "measure": "Current prices (CPA), seasonally adjusted, \u00a3 million in table \u2192 \u00a3 billion here",
-  "source_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current",
+  "focus_quarter": "2026-Q2",
+  "cp_measure": "Classification of Products by Activity (CPA 08); current prices (CP), seasonally adjusted; \u00a3m \u2192 \u00a3bn",
+  "source_cpa_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current",
+  "source_trade_tables_page": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current",
   "bulletin_url": "https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026",
-  "xlsx_file": "tradepublicationtables2026aug.xlsx",
-  "fuels_exports_world": {
+  "cpa08_file": "cpapublicationq22026august.xlsx",
+  "trade_tables_file": "tradepublicationtables2026aug.xlsx",
+  "cpa_crude_exports": {
+    "cpa_label": "06.1 Crude petroleum",
     "direction": "Exports",
-    "commodity": "SITC 3 Fuels",
-    "area": "Total World",
-    "series_id": "BOPN",
-    "q1_2026_gbp_m": 7.819,
-    "q2_2026_gbp_m": 14.276,
-    "qoq_change_gbp_m": 6.5,
-    "qoq_change_pct": 82.6
+    "series_id": "P2TV",
+    "prior_q_gbp_b": 2.421,
+    "current_q_gbp_b": 7.271,
+    "yoy_change_gbp_b": 4.85,
+    "yoy_change_pct": 200.3
   },
-  "fuels_imports_world": {
+  "cpa_crude_gas_imports": {
+    "cpa_label": "06 Crude petroleum & natural gas",
     "direction": "Imports",
-    "commodity": "SITC 3 Fuels",
-    "area": "Total World",
-    "series_id": "BQAT",
-    "q1_2026_gbp_m": 16.717,
-    "q2_2026_gbp_m": 22.572,
-    "qoq_change_gbp_m": 5.9,
-    "qoq_change_pct": 35.0
+    "series_id": "P27Y",
+    "prior_q_gbp_b": 8.551,
+    "current_q_gbp_b": 11.68,
+    "yoy_change_gbp_b": 3.129,
+    "yoy_change_pct": 36.6
   },
-  "fuels_balance_world": {
-    "direction": "Balance",
-    "commodity": "SITC 3 Fuels",
-    "area": "Total World",
-    "series_id": "ELBG",
-    "q1_2026_gbp_m": -8.898,
-    "q2_2026_gbp_m": -8.296,
-    "qoq_change_gbp_m": 0.6,
-    "qoq_change_pct": -6.8
+  "cpa_refined_imports": {
+    "cpa_label": "19.2 Refined petroleum products",
+    "direction": "Imports",
+    "series_id": "P29H",
+    "prior_q_gbp_b": 5.327,
+    "current_q_gbp_b": 9.239,
+    "yoy_change_gbp_b": 3.912,
+    "yoy_change_pct": 73.4
+  },
+  "cpa_total_goods_exports": {
+    "cpa_label": "Total exports",
+    "direction": "Exports",
+    "series_id": "P2TE",
+    "prior_q_gbp_b": 94.721,
+    "current_q_gbp_b": 107.153,
+    "yoy_change_gbp_b": 12.432,
+    "yoy_change_pct": 13.1
+  },
+  "cpa_total_goods_imports": {
+    "cpa_label": "Total imports",
+    "direction": "Imports",
+    "series_id": "P27I",
+    "prior_q_gbp_b": 155.278,
+    "current_q_gbp_b": 171.197,
+    "yoy_change_gbp_b": 15.919,
+    "yoy_change_pct": 10.3
+  },
+  "cpa_energy_trade_balance": {
+    "definition": "CPA 06 + 19.2 exports minus imports (repo, not ONS headline)",
+    "prior_q_gbp_b": -7.957,
+    "current_q_gbp_b": -7.666,
+    "yoy_change_gbp_b": 0.291
+  },
+  "original_pdf_claim_check": [
+    {
+      "claim": "Crude exports +109% YoY to \u00a35.4bn (PDF)",
+      "comparable_series": "06.1 Crude petroleum",
+      "recomputed_yoy_pct": 200.3,
+      "recomputed_current_q_gbp_b": 7.271,
+      "validation": "not_validated_as_stated",
+      "comment": "CPA 06.1 Q2 YoY differs on both % and level vs PDF wording."
+    },
+    {
+      "claim": "Crude+gas imports +35.8% YoY to \u00a311.7bn (PDF)",
+      "comparable_series": "06 Crude petroleum & natural gas",
+      "recomputed_yoy_pct": 36.6,
+      "recomputed_current_q_gbp_b": 11.68,
+      "validation": "close",
+      "comment": "Level ~\u00a311.68bn; YoY % ~36.6 vs PDF 35.8."
+    },
+    {
+      "claim": "Refined imports +64.8% YoY to \u00a38.9bn (PDF)",
+      "comparable_series": "19.2 Refined petroleum products",
+      "recomputed_yoy_pct": 73.4,
+      "recomputed_current_q_gbp_b": 9.239,
+      "validation": "partial",
+      "comment": "Level ~\u00a39.24bn; YoY % higher than PDF 64.8%."
+    },
+    {
+      "claim": "Energy deficit \u00a310.7bn, \u00a32.8bn worse YoY (PDF)",
+      "comparable_series": "CPA 06 + 19.2 exports minus imports (repo definition)",
+      "recomputed_current_q_gbp_b": -7.666,
+      "recomputed_prior_q_gbp_b": -7.957,
+      "recomputed_yoy_change_gbp_b": 0.291,
+      "validation": "not_validated_as_stated",
+      "comment": "ONS bulletin may use a wider energy basket; not assumed correct."
+    },
+    {
+      "claim": "Energy +\u00a36.6bn of +\u00a315bn goods import growth, 44% (PDF)",
+      "comparable_series": "CPA 06 import delta / total goods import delta",
+      "recomputed_energy_import_delta_gbp_b": 3.129,
+      "recomputed_total_goods_import_delta_gbp_b": 15.919,
+      "recomputed_share_pct": 19.7,
+      "validation": "not_validated_as_stated",
+      "comment": "Share ~20% on CPA 06 only; PDF energy scope unknown."
+    },
+    {
+      "claim": "Goods exports \u00a3101.7bn, imports \u00a3171bn (PDF)",
+      "comparable_series": "CPA Total exports/imports Q2 2026",
+      "recomputed_exports_gbp_b": 107.153,
+      "recomputed_imports_gbp_b": 171.197,
+      "validation": "close",
+      "comment": "Imports match; exports differ (~\u00a3107.2bn CPA total exports Q2)."
+    }
+  ],
+  "sitc3_fuels_substitute_qoq_only": {
+    "label": "SITC 3 Fuels substitute (Table 2A) \u2014 QoQ Q1\u2192Q2 2026 only",
+    "classification_note": "SITC \u2260 CPA (08); CP prices only; not a PDF crude recreation.",
+    "exports": {
+      "direction": "Exports",
+      "commodity": "SITC 3 Fuels",
+      "area": "Total World",
+      "series_id": "BOPN",
+      "q1_2026_gbp_m": 7.819,
+      "q2_2026_gbp_m": 14.276,
+      "qoq_change_gbp_m": 6.5,
+      "qoq_change_pct": 82.6
+    },
+    "imports": {
+      "direction": "Imports",
+      "commodity": "SITC 3 Fuels",
+      "area": "Total World",
+      "series_id": "BQAT",
+      "q1_2026_gbp_m": 16.717,
+      "q2_2026_gbp_m": 22.572,
+      "qoq_change_gbp_m": 5.9,
+      "qoq_change_pct": 35.0
+    },
+    "balance": {
+      "direction": "Balance",
+      "commodity": "SITC 3 Fuels",
+      "area": "Total World",
+      "series_id": "ELBG",
+      "q1_2026_gbp_m": -8.898,
+      "q2_2026_gbp_m": -8.296,
+      "qoq_change_gbp_m": 0.6,
+      "qoq_change_pct": -6.8
+    }
   },
   "notes": [
-    "Rebuilt Nov 2026 from ONS publication tables worksheet '2 - Quarterly CP' (table 2A).",
-    "SITC 3 Fuels aggregates mineral fuels; not an official 'energy balance' total.",
-    "QoQ compares Q2 2026 vs Q1 2026 levels \u2014 not the same as bulletin prose on country/commodity deltas.",
-    "Do not mix current price (value) with chained volume (CVM) without labelling."
+    "Primary validation uses CPA (08) quarterly CP sheets 2 & 4.",
+    "PDF YoY claims require the same CPA row and Q2 2025 vs Q2 2026.",
+    "SITC 3 Fuels (publication Table 2A) is an explicit substitute for QoQ context only.",
+    "Do not treat SITC % change as proof the PDF crude YoY claim is wrong."
   ],
-  "generated_at_utc": "2026-11-07T17:50:22Z",
-  "sha256_source_xlsx": "d40efd7b66051b03e3d9afcb609a163994e971904359c0f80ed5f865a508b6f6"
+  "generated_at_utc": "2026-11-07T17:56:43Z",
+  "sha256_source_cpa08_xlsx": "682e034620ccf7d53b24d126ea6d2978339b025f23b9951a71276b9e35b22202",
+  "sha256_source_trade_tables_xlsx": "d40efd7b66051b03e3d9afcb609a163994e971904359c0f80ed5f865a508b6f6"
 }

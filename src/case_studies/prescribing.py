@@ -61,6 +61,61 @@ class PrescribingSummary:
         return asdict(self)
 
 
+def ni_prescribing_sanity_checks(csv_path: Path | str) -> dict[str, Any]:
+    """Independent row/cost checks used by tests (not committed JSON mirrors)."""
+
+    path = Path(csv_path)
+    con = duckdb.connect()
+    names = list(NI_PRESCRIBING_COLUMNS)
+    con.execute(
+        f"""
+        CREATE OR REPLACE TABLE gp AS
+        SELECT * FROM read_csv(?, header=true, names={names}, encoding='latin-1')
+        """,
+        [str(path)],
+    )
+    checks = con.execute(
+        """
+        SELECT
+          count(*)::BIGINT,
+          count(DISTINCT practice)::BIGINT,
+          min(year), max(year), min(month), max(month),
+          coalesce(sum(total_items), 0)::BIGINT,
+          coalesce(sum(total_quantity), 0)::DOUBLE,
+          coalesce(sum(actual_cost_gbp), 0)::DOUBLE,
+          coalesce(sum(gross_cost_gbp), 0)::DOUBLE,
+          sum(CASE WHEN actual_cost_gbp > gross_cost_gbp + 0.01 THEN 1 ELSE 0 END)::BIGINT
+        FROM gp
+        """
+    ).fetchone()
+    con.close()
+    return {
+        "detail_rows": int(checks[0]),
+        "distinct_practices": int(checks[1]),
+        "year_min": int(checks[2]) if checks[2] is not None else None,
+        "year_max": int(checks[3]) if checks[3] is not None else None,
+        "month_min": int(checks[4]) if checks[4] is not None else None,
+        "month_max": int(checks[5]) if checks[5] is not None else None,
+        "total_items": int(checks[6]),
+        "total_quantity": float(checks[7]),
+        "sum_actual_cost_gbp": float(checks[8]),
+        "sum_gross_cost_gbp": float(checks[9]),
+        "rows_actual_gt_gross": int(checks[10]),
+        "column_definitions": {
+            "total_items": "Prescription items (lines), not patients",
+            "total_quantity": "Dispensed quantity in presentation units",
+            "actual_cost_gbp": "Actual Cost — reimbursement to contractors",
+            "gross_cost_gbp": "Gross Cost — list ingredient cost",
+            "bnf_chapter": "BNF chapter code for therapy-area grouping",
+        },
+        "drug_match_rules": {
+            "tirzepatide": "presentation OR vmp_nm OR amp_nm ILIKE '%tirzepatide%'",
+            "atorvastatin": "presentation OR vmp_nm OR amp_nm ILIKE '%atorvastatin%'",
+            "cns_proxy": "sum(actual_cost_gbp) WHERE bnf_chapter = 4",
+        },
+    }
+
+
 def aggregate_ni_gp_prescribing(csv_path: Path | str) -> PrescribingSummary:
     path = Path(csv_path)
     con = duckdb.connect()

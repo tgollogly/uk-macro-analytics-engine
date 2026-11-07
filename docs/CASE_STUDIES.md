@@ -186,31 +186,33 @@ pytest tests/test_case_studies_rebuild.py -q
 
 ---
 
-## 5. UK trade in goods — SITC 3 Fuels (**rebuilt Nov 2026 — AI-assisted**)
+## 5. UK trade — energy-related CPA (08) lines (**rebuilt Nov 2026 — AI-assisted**)
 
-**Label:** Recreation from ONS **publication tables** (current prices, quarterly CPA sheet). Aggregates **SITC 3 Fuels (Total World)** exports/imports/balance — not the full “energy balance” or crude/refined split from bulletin prose.
+**Label:** Primary source is [CPA (08) publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current) (`cpapublicationq22026august.xlsx`), worksheets **2. Exports quarter** and **4. Imports quarter**, **current prices (CP)**, seasonally adjusted. **CPA (08) is not SITC.** PDF YoY claims are mapped in [`EVIDENCE_HANDOFF.md`](./EVIDENCE_HANDOFF.md); unmatched lines stay **not validated**, not debunked via a different series.
 
 ### Source
 
 | Field | Value |
 |--------|--------|
-| Dataset (current) | [UK trade publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current) |
-| Bulletin context | [UK trade: June 2026](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026) (Q2 2026 goods) |
-| Worksheet | `2 - Quarterly CP` (table 2A), £m → £bn in summary |
+| CPA (08) dataset | [Publication tables — CPA 08](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/publicationtablesuktradecpa08/current) |
+| Bulletin context | [UK trade: June 2026](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/bulletins/uktrade/june2026) |
 | Code | [`src/case_studies/energy_trade.py`](../src/case_studies/energy_trade.py) |
 | Summary JSON | [`static-site/case-studies/uk-energy-trade-q2-2026-summary.json`](../static-site/case-studies/uk-energy-trade-q2-2026-summary.json) |
+| SITC substitute (QoQ only) | [Trade publication tables](https://www.ons.gov.uk/economy/nationalaccounts/balanceofpayments/datasets/uktradegoodsandservicespublicationtables/current) sheet `2 - Quarterly CP` |
 
-### Recomputed Q1→Q2 2026 (SITC 3 Fuels, Total World, £bn)
+### Recomputed Q2 2026 vs Q2 2025 YoY (CPA, £bn levels)
 
-| Series | Q1 2026 | Q2 2026 | QoQ % (summary) |
-|--------|---------|---------|-----------------|
-| Exports | 7.819 | 14.276 | +82.6% |
-| Imports | 16.717 | 22.572 | +35.0% |
-| Balance | −8.898 | −8.296 | deficit narrows £0.6bn |
+| CPA line | Q2 2025 | Q2 2026 | YoY % |
+|----------|---------|---------|-------|
+| 06.1 Crude petroleum exports | 2.421 | 7.271 | +200.3 |
+| 06 Crude petroleum & natural gas imports | 8.551 | 11.680 | +36.6 |
+| 19.2 Refined petroleum products imports | 5.327 | 9.239 | +73.4 |
+| Total goods exports | 94.721 | 107.153 | +13.1 |
+| Total goods imports | 155.278 | 171.197 | +10.3 |
 
-Screenshot narrative citing **+109% exports** and **£5.4bn** change used a different slice or rounding — see [`EVIDENCE_HANDOFF.md`](./EVIDENCE_HANDOFF.md) for accept/reject vs PDF claims. **Do not** force JSON to match old PDF.
+PDF headline **crude exports +109% to £5.4bn** does **not** match CPA **06.1** on this vintage — see claim matrix in JSON `original_pdf_claim_check`.
 
-**Reproduce:** same `tools/export_case_studies.py` flow as §4.
+**Reproduce:** `PYTHONPATH=. python tools/export_case_studies.py` then `pytest tests/test_case_studies_rebuild.py -q`.
 
 ---
 

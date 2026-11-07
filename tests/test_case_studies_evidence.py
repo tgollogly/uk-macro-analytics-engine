@@ -90,5 +90,5 @@ def test_case_studies_page_links_rebuilt_summaries() -> None:
 def test_case_studies_doc_lists_rebuild_totals() -> None:
     md = (ROOT / "docs" / "CASE_STUDIES.md").read_text(encoding="utf-8")
     assert "447,682" in md
-    assert "82.6%" in md
+    assert "CPA (08)" in md or "CPA 08" in md
     assert "src/case_studies/prescribing.py" in md

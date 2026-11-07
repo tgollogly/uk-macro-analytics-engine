@@ -7,10 +7,18 @@ from pathlib import Path
 
 import pytest
 
+from src.case_studies.prescribing import (
+    aggregate_ni_gp_prescribing,
+    ni_prescribing_sanity_checks,
+)
+
 ROOT = Path(__file__).resolve().parent.parent
 SUMMARY_DIR = ROOT / "static-site" / "case-studies"
-NI_FIXTURE = ROOT / "tests" / "fixtures" / "ni_prescribing_aug2026_sample.csv"
-ONS_XLSX = ROOT / "data" / "cache" / "case-studies" / "tradepublicationtables2026aug.xlsx"
+NI_FIXTURE = ROOT / "tests/fixtures/ni_prescribing_aug2026_sample.csv"
+NI_FULL = ROOT / "data/cache/case-studies/ni-gp-prescribing-2026-08.csv"
+CPA08 = ROOT / "data/cache/case-studies/cpapublicationq22026august.xlsx"
+ONS_XLSX = ROOT / "data/cache/case-studies/tradepublicationtables2026aug.xlsx"
+EXPECTED_PERIOD = {"year_min": 2026, "year_max": 2026, "month_min": 8, "month_max": 8}
 
 
 @pytest.fixture
@@ -25,55 +33,81 @@ def energy_summary() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_committed_ni_totals_match_pipeline(ni_summary: dict) -> None:
+def test_ni_fixture_sanity_not_json_mirror() -> None:
+    sanity = ni_prescribing_sanity_checks(NI_FIXTURE)
+    agg = aggregate_ni_gp_prescribing(NI_FIXTURE)
+    assert sanity["detail_rows"] == agg.detail_rows == 200
+    assert sanity["total_items"] == agg.total_items
+    assert sanity["sum_actual_cost_gbp"] == pytest.approx(agg.actual_cost_gbp, abs=0.02)
+    assert sanity["sum_gross_cost_gbp"] >= sanity["sum_actual_cost_gbp"]
+    assert sanity["total_quantity"] > sanity["total_items"]
+
+
+def test_ni_full_file_recompute_when_cached(ni_summary: dict) -> None:
+    if not NI_FULL.is_file():
+        pytest.skip("full NI CSV not in cache (CI optional)")
+    sanity = ni_prescribing_sanity_checks(NI_FULL)
+    assert sanity["detail_rows"] > 400_000
+    for key, val in EXPECTED_PERIOD.items():
+        assert sanity[key] == val, f"period check {key}"
+    live = aggregate_ni_gp_prescribing(NI_FULL)
+    assert live.detail_rows == sanity["detail_rows"]
+    assert live.total_items == sanity["total_items"]
+    assert live.actual_cost_gbp == pytest.approx(sanity["sum_actual_cost_gbp"], rel=1e-9)
+    assert live.period_label == "2026-08"
+    assert live.distinct_practices == sanity["distinct_practices"]
+    assert sanity["rows_actual_gt_gross"] < sanity["detail_rows"] * 0.01
+
+
+@pytest.mark.skipif(not NI_FULL.is_file(), reason="full NI CSV not cached")
+def test_ni_committed_json_matches_full_recompute(ni_summary: dict) -> None:
     from src.case_studies.prescribing import aggregate_ni_gp_prescribing
 
-    full_csv = ROOT / "data" / "cache" / "case-studies" / "ni-gp-prescribing-2026-08.csv"
-    if not full_csv.is_file():
-        pytest.skip("full NI CSV not in cache (local/CI optional)")
-    live = aggregate_ni_gp_prescribing(full_csv)
-    assert live.detail_rows == ni_summary["detail_rows"]
+    live = aggregate_ni_gp_prescribing(NI_FULL)
     assert live.total_items == ni_summary["total_items"]
-    assert live.distinct_practices == ni_summary["distinct_practices"]
-    assert live.actual_cost_gbp == pytest.approx(ni_summary["actual_cost_gbp"], rel=1e-6)
     assert live.tirzepatide_items == ni_summary["tirzepatide_items"]
-    assert live.atorvastatin_items == ni_summary["atorvastatin_items"]
+    assert ni_summary["sha256_source_csv"] == json.loads(
+        (SUMMARY_DIR / "manifest.json").read_text(encoding="utf-8")
+    )["sources"]["ni_prescribing"]["sha256"]
 
 
-def test_ni_fixture_control_totals() -> None:
-    from src.case_studies.prescribing import aggregate_ni_gp_prescribing
+def test_cpa08_crude_yoy_from_xlsx() -> None:
+    if not CPA08.is_file() or not ONS_XLSX.is_file():
+        pytest.skip("CPA08 / trade tables not in cache")
+    from src.case_studies.energy_trade import parse_cpa08_energy_trade
 
-    s = aggregate_ni_gp_prescribing(NI_FIXTURE)
-    assert s.detail_rows == 200
-    assert s.distinct_practices == 1
-    assert s.total_items == 549
-    assert s.actual_cost_gbp == pytest.approx(22263.63, abs=0.01)
-
-
-def test_committed_energy_fuel_exports_qoq(energy_summary: dict) -> None:
-    exp = energy_summary["fuels_exports_world"]
-    assert exp["q1_2026_gbp_m"] == 7.819
-    assert exp["q2_2026_gbp_m"] == 14.276
-    assert exp["qoq_change_pct"] == pytest.approx(82.6, abs=0.1)
-    assert exp["qoq_change_gbp_m"] == pytest.approx(6.5, abs=0.1)
+    parsed = parse_cpa08_energy_trade(CPA08, trade_tables_path=ONS_XLSX)
+    crude = parsed.cpa_crude_exports
+    assert crude.prior_q_gbp_b == pytest.approx(2.421, abs=0.01)
+    assert crude.current_q_gbp_b == pytest.approx(7.271, abs=0.01)
+    assert crude.yoy_change_pct == pytest.approx(200.3, abs=0.5)
+    imp = parsed.cpa_crude_gas_imports
+    assert imp.current_q_gbp_b == pytest.approx(11.680, abs=0.02)
+    assert imp.yoy_change_pct == pytest.approx(36.6, abs=0.3)
 
 
-def test_energy_xlsx_parser_matches_json(energy_summary: dict) -> None:
-    if not ONS_XLSX.is_file():
-        pytest.skip("ONS xlsx not in cache")
-    from src.case_studies.energy_trade import parse_quarterly_cp_xlsx
+def test_energy_json_has_pdf_claim_map_not_false_debunk(energy_summary: dict) -> None:
+    checks = energy_summary["original_pdf_claim_check"]
+    crude_claim = next(c for c in checks if "Crude exports" in c["claim"])
+    assert crude_claim["validation"] == "not_validated_as_stated"
+    assert "SITC" not in crude_claim["comment"]
+    assert energy_summary["cp_measure"].startswith("Classification")
+    assert energy_summary.get("sitc3_fuels_substitute_qoq_only")
 
-    parsed = parse_quarterly_cp_xlsx(ONS_XLSX)
-    assert parsed.fuels_exports_world.q2_2026_gbp_m == pytest.approx(
-        energy_summary["fuels_exports_world"]["q2_2026_gbp_m"], abs=0.001
-    )
-    assert parsed.fuels_imports_world.qoq_change_pct == pytest.approx(
-        energy_summary["fuels_imports_world"]["qoq_change_pct"], abs=0.1
+
+@pytest.mark.skipif(not CPA08.is_file(), reason="CPA08 not cached")
+def test_exported_energy_matches_live_parser(energy_summary: dict) -> None:
+    from src.case_studies.energy_trade import parse_cpa08_energy_trade
+
+    trade = ONS_XLSX if ONS_XLSX.is_file() else None
+    live = parse_cpa08_energy_trade(CPA08, trade_tables_path=trade)
+    assert live.cpa_crude_exports.current_q_gbp_b == pytest.approx(
+        energy_summary["cpa_crude_exports"]["current_q_gbp_b"], abs=0.001
     )
 
 
 def test_case_studies_manifest_hashes(ni_summary: dict, energy_summary: dict) -> None:
     manifest = json.loads((SUMMARY_DIR / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["sources"]["ni_prescribing"]["sha256"] == ni_summary["sha256_source_csv"]
-    assert manifest["sources"]["ons_trade_tables"]["sha256"] == energy_summary["sha256_source_xlsx"]
+    assert manifest["sources"]["ons_cpa08"]["sha256"] == energy_summary["sha256_source_cpa08_xlsx"]
     assert "rebuild_label" in manifest

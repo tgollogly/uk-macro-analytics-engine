@@ -16,12 +16,14 @@ OUT = ROOT / "static-site" / "case-studies"
 CACHE = ROOT / "data" / "cache" / "case-studies"
 
 from src.case_studies.energy_trade import (  # noqa: E402, I001
-    DEFAULT_XLSX_URL,
-    parse_quarterly_cp_xlsx,
+    DEFAULT_CPA08_XLSX_URL,
+    DEFAULT_TRADE_XLSX_URL,
+    parse_cpa08_energy_trade,
 )
 from src.case_studies.prescribing import (  # noqa: E402
     OPEN_DATA_NI_DOWNLOAD_URL as NI_URL,
     aggregate_ni_gp_prescribing,
+    ni_prescribing_sanity_checks,
 )
 
 
@@ -46,11 +48,14 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     ni_csv = CACHE / "ni-gp-prescribing-2026-08.csv"
     ons_xlsx = CACHE / "tradepublicationtables2026aug.xlsx"
+    cpa_xlsx = CACHE / "cpapublicationq22026august.xlsx"
     download(NI_URL, ni_csv)
-    download(DEFAULT_XLSX_URL, ons_xlsx)
+    download(DEFAULT_TRADE_XLSX_URL, ons_xlsx)
+    download(DEFAULT_CPA08_XLSX_URL, cpa_xlsx)
 
     pres = aggregate_ni_gp_prescribing(ni_csv)
-    energy = parse_quarterly_cp_xlsx(ons_xlsx)
+    sanity = ni_prescribing_sanity_checks(ni_csv)
+    energy = parse_cpa08_energy_trade(cpa_xlsx, trade_tables_path=ons_xlsx)
     now = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
     manifest = {
@@ -65,13 +70,20 @@ def main() -> int:
                 "sha256": sha256_file(ni_csv),
                 "local_cache": str(ni_csv.relative_to(ROOT)),
             },
-            "ons_trade_tables": {
+            "ons_trade_tables_sitc_substitute": {
                 "title": "UK trade publication tables (Aug 2026 vintage)",
-                "dataset_page": energy.source_page,
-                "download_url": DEFAULT_XLSX_URL,
+                "dataset_page": energy.source_trade_tables_page,
+                "download_url": DEFAULT_TRADE_XLSX_URL,
                 "bulletin_url": energy.bulletin_url,
                 "sha256": sha256_file(ons_xlsx),
                 "local_cache": str(ons_xlsx.relative_to(ROOT)),
+            },
+            "ons_cpa08": {
+                "title": "Trade in goods: CPA (08) exports and imports",
+                "dataset_page": energy.source_cpa_page,
+                "download_url": DEFAULT_CPA08_XLSX_URL,
+                "sha256": sha256_file(cpa_xlsx),
+                "local_cache": str(cpa_xlsx.relative_to(ROOT)),
             },
         },
     }
@@ -79,6 +91,7 @@ def main() -> int:
         **pres.to_dict(),
         "generated_at_utc": now,
         "sha256_source_csv": manifest["sources"]["ni_prescribing"]["sha256"],
+        "sanity_checks": sanity,
         "linkedin_screenshot_comparison": {
             "status": "independent_recompute",
             "note": (
@@ -87,8 +100,14 @@ def main() -> int:
             ),
         },
     }
-    ons_sha = manifest["sources"]["ons_trade_tables"]["sha256"]
-    energy_out = {**energy.to_dict(), "generated_at_utc": now, "sha256_source_xlsx": ons_sha}
+    energy_out = {
+        **energy.to_dict(),
+        "generated_at_utc": now,
+        "sha256_source_cpa08_xlsx": manifest["sources"]["ons_cpa08"]["sha256"],
+        "sha256_source_trade_tables_xlsx": manifest["sources"][
+            "ons_trade_tables_sitc_substitute"
+        ]["sha256"],
+    }
 
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     ni_path = OUT / "ni-prescribing-2026-08-summary.json"
