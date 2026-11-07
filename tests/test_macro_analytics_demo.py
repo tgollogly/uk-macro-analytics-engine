@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -23,6 +24,55 @@ def test_cpih_null_yoy_at_series_start() -> None:
     assert cpih[0]["yoy_pct"] is None
     non_null = sum(1 for r in cpih if r.get("yoy_pct") is not None)
     assert non_null > 100
+
+
+def test_macro_explorer_documents_table_preview_cap() -> None:
+    html = (STATIC / "portfolio" / "macro-explorer.html").read_text(encoding="utf-8")
+    js = (STATIC / "portfolio" / "assets" / "macro-analytics.js").read_text(encoding="utf-8")
+    assert 'id="view-summary"' in html
+    assert "sliceTablePreview" in html
+    assert "TABLE_PREVIEW_LIMIT" in js
+    assert "export const TABLE_PREVIEW_LIMIT = 24" in js
+    assert "capped at" in html
+
+
+def test_slice_table_preview_six_and_capped_ranges() -> None:
+    """Regression: 6-row range shows all 6; 120-row range caps table at 24."""
+    code = """
+import {
+  sliceTablePreview,
+  TABLE_PREVIEW_LIMIT,
+} from './static-site/portfolio/assets/macro-analytics.js';
+const row = (i) => ({ obs_date: `2024-${String((i % 12) + 1).padStart(2, '0')}-01` });
+const six = sliceTablePreview(Array.from({ length: 6 }, (_, i) => row(i)));
+if (six.capped || six.displayCount !== 6 || six.total !== 6) {
+  throw new Error('expected 6 uncapped, got ' + JSON.stringify(six));
+}
+const many = sliceTablePreview(Array.from({ length: 120 }, (_, i) => row(i)));
+if (!many.capped || many.displayCount !== TABLE_PREVIEW_LIMIT || many.total !== 120) {
+  throw new Error('expected 120 capped at 24, got ' + JSON.stringify(many));
+}
+"""
+    out = subprocess.run(
+        ["node", "--input-type=module", "-e", code],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert out.returncode == 0, out.stderr or out.stdout
+
+
+def test_static_site_ships_favicon_at_root() -> None:
+    ico = STATIC / "favicon.ico"
+    svg = STATIC / "favicon.svg"
+    assert ico.is_file() and ico.stat().st_size > 32
+    assert svg.is_file()
+    assert ico.read_bytes()[:4] == b"\x00\x00\x01\x00"
+    for rel in ("index.html", "demo.html"):
+        html = (STATIC / rel).read_text(encoding="utf-8")
+        assert 'href="/favicon.ico"' in html
+        assert 'type="image/svg+xml"' in html
 
 
 def test_macro_analytics_module_paths_in_html() -> None:

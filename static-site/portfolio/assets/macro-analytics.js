@@ -8,6 +8,25 @@ const PSNB_URL = new URL("../../demo/psnb_monthly.json", import.meta.url);
 export const CPIH_LINE = "#c2410c";
 export const PSNB_LINE = "#166534";
 
+/** Max rows shown in macro-explorer table; chart + CSV use the full filtered range. */
+export const TABLE_PREVIEW_LIMIT = 24;
+
+export function sliceTablePreview(rows, limit = TABLE_PREVIEW_LIMIT) {
+  const total = rows.length;
+  if (total === 0) {
+    return { total: 0, display: [], capped: false, displayCount: 0 };
+  }
+  if (total <= limit) {
+    return { total, display: [...rows].reverse(), capped: false, displayCount: total };
+  }
+  return {
+    total,
+    display: rows.slice(-limit).reverse(),
+    capped: true,
+    displayCount: limit,
+  };
+}
+
 export async function loadMacroBundle() {
   const [manifest, cpih, psnb] = await Promise.all([
     fetch(MACRO_MANIFEST).then((r) => {

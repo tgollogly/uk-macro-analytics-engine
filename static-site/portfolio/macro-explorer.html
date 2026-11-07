@@ -63,21 +63,19 @@
     <div class="chartbox"><canvas id="chart" role="img" aria-label="Selected macro series chart"></canvas></div>
     <p class="hint" id="method"></p>
   </div>
-  <div class="tablewrap" style="margin-top:18px">
-    <table class="data" id="tbl">
+  <h2 id="table-heading" style="font-size:1rem;margin:18px 0 6px;font-weight:600;color:var(--strong);">Month detail</h2>
+  <p class="meta" id="view-summary" aria-labelledby="table-heading" aria-live="polite">Adjust filters to load the table.</p>
+  <div class="tablewrap" style="margin-top:8px">
+    <table class="data" id="tbl" aria-describedby="view-summary">
       <thead><tr><th scope="col">Month</th><th scope="col" id="val-h">Value</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
 </div>
-<div class="sitefoot"><div class="in">
-  <span>Snapshot only — confirm figures on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. Not advice.</span>
-  <a href="../index.html#hub">← Demo hub</a>
-</div></div>
 <script type="module">
 import {
   loadMacroBundle, filterByRange, parseMonth, rowsToCsv, downloadText,
-  fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE,
+  fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
 } from "./assets/macro-analytics.js";
 
 let bundle = null;
@@ -126,11 +124,27 @@ function render(){
       },
     },
   });
+  const preview = sliceTablePreview(rows);
   const tb = document.querySelector("#tbl tbody");
-  tb.innerHTML = rows.slice(-24).reverse().map((r) => {
+  tb.innerHTML = preview.display.map((r) => {
     const v = key === "cpih" ? fmtPct(r.yoy_pct) : fmtGbpM(r.total_net_borrowing_gbp_m);
     return `<tr><td>${r.obs_date.slice(0,7)}</td><td>${v}</td></tr>`;
   }).join("") || "<tr><td colspan='2'>No rows in range</td></tr>";
+  const summary = document.getElementById("view-summary");
+  if (!rows.length) {
+    summary.textContent = "No rows match the current filters.";
+    return;
+  }
+  const fromM = rows[0].obs_date.slice(0, 7);
+  const toM = rows[rows.length - 1].obs_date.slice(0, 7);
+  const plural = rows.length === 1 ? "" : "s";
+  if (!preview.capped) {
+    summary.textContent =
+      `Showing all ${preview.total} month${plural} (${fromM}–${toM}). Chart, CSV, and table use the same ${preview.total} row${plural} (newest first in the table).`;
+  } else {
+    summary.textContent =
+      `Chart and CSV use all ${preview.total} months (${fromM}–${toM}). Table lists the latest ${preview.displayCount} of ${preview.total} (newest first; capped at ${TABLE_PREVIEW_LIMIT} for readability).`;
+  }
 }
 
 document.getElementById("apply").addEventListener("click", () => { try { render(); } catch(e){ showErr(e.message); } });
@@ -154,8 +168,14 @@ loadMacroBundle().then((b) => {
   render();
 }).catch((e) => showErr(e.message));
 </script>
-<div class="sitefoot"><div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Do not enter confidential information.</span>
-</div></div>
+<div class="sitefoot">
+  <div class="in">
+    <span>Snapshot only — confirm figures on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. Not advice.</span>
+    <a href="../index.html#hub">← Demo hub</a>
+  </div>
+  <div class="in footnote">
+    <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Do not enter confidential information.</span>
+  </div>
+</div>
 </body>
 </html>
