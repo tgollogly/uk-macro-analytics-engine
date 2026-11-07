@@ -34,5 +34,11 @@ def test_hub_motion_exports_view_transition_helper() -> None:
 
 def test_hub_tokens_define_editorial_accents() -> None:
     tokens = (ROOT / "static-site" / "hub-tokens.css").read_text(encoding="utf-8")
-    for name in ("--hub-accent-teal", "--hub-accent-cobalt", "--hub-accent-coral", "--hub-accent-amber"):
+    accent_names = (
+        "--hub-accent-teal",
+        "--hub-accent-cobalt",
+        "--hub-accent-coral",
+        "--hub-accent-amber",
+    )
+    for name in accent_names:
         assert name in tokens
