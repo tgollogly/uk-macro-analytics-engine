@@ -1,35 +1,38 @@
+@import url("../../hub-tokens.css");
 
 /* =====================================================================
    site.css — the ONE source of truth for colour, type and page shell.
    Every page links this before its own <style>. No page redeclares
    :root. If a colour or a font is not in here, it does not exist.
+   Shared hex aliases: static-site/hub-tokens.css (README generator palette).
    ===================================================================== */
 
 :root{
   /* --- surfaces --- */
   --bg:#ffffff;
-  --bg-alt:#f4f6f9;
+  --bg-alt:#f8fafc; /* slate-50 — same family as generator TEXT_MUTED */
+
   --card:#ffffff;
 
   /* --- text --- */
-  --strong:#0b0f14;   /* headings, near black */
-  --ink:#1a2028;      /* body */
-  --muted:#3f4954;    /* secondary */
-  --faint:#5c6672;    /* tertiary — still passes AA on white */
+  --strong:#0f172a;   /* slate-900 — aligns with hub dark shell */
+  --ink:var(--hub-palette-text-body);
+  --muted:#475569;    /* slate-600 — between generator muted & body */
+  --faint:#64748b;    /* generator TEXT_MUTED — tertiary on white */
 
   /* --- lines --- */
-  --line:#e4e8ec;
-  --line-2:#d6dbe1;
+  --line:#e2e8f0;
+  --line-2:#cbd5e1;
 
-  /* --- brand --- */
-  --accent:#2f39c9;
-  --accent-2:#4750e6;
-  --accent-soft:#eef0fe;
+  /* --- brand (README / architecture indigo + amber) --- */
+  --accent:var(--hub-palette-outline);
+  --accent-2:var(--hub-palette-header-stroke);
+  --accent-soft:#eef2ff; /* indigo-50 */
 
   /* --- status (ONE of each, sitewide) --- */
-  --ok:#0c7a5e;      --ok-soft:#e6f5f0;
-  --warn:#9a6700;    --warn-soft:#fdf6e3;
-  --err:#b3261e;     --err-soft:#fdf3f2;
+  --ok:var(--hub-semantic-ok);           --ok-soft:var(--hub-semantic-ok-soft);
+  --warn:var(--hub-semantic-warn);       --warn-soft:var(--hub-semantic-warn-soft);
+  --err:var(--hub-semantic-err);        --err-soft:var(--hub-semantic-err-soft);
 
   /* --- heat scale (heat-dome only, but declared here so it is
          auditable and cannot drift) --- */
@@ -44,10 +47,10 @@
   --shadow-sm:0 1px 2px rgba(15,20,23,.05),0 4px 12px rgba(15,20,23,.06);
   --shadow-md:0 12px 32px rgba(15,20,23,.10),0 2px 8px rgba(15,20,23,.05);
 
-  /* --- type --- */
-  --sans:"Inter",system-ui,-apple-system,sans-serif;
-  --serif:"Fraunces",Georgia,serif;
-  --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,monospace;
+  /* --- type (hub tokens + portfolio faces) --- */
+  --sans:var(--hub-font-sans);
+  --serif:var(--hub-font-serif);
+  --mono:var(--hub-font-mono);
 
   /* --- terminal mock (home page hero) — deliberately dark, not
          part of the light palette, but declared here so every colour
@@ -72,6 +75,9 @@
 html{forced-color-adjust:none;}
 html,body{margin:0;padding:0;background:var(--bg-alt);color:var(--ink);color-scheme:light;}
 body{font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+/* Shared keyboard focus — warm accent reads on light + dark sections */
+:focus-visible{outline:2px solid var(--hub-focus-ring);outline-offset:var(--hub-focus-offset);}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--hub-focus-ring);outline-offset:2px;}
 h1,h2,h3{font-family:var(--serif);color:var(--strong);margin:0;line-height:1.1;letter-spacing:-.015em;font-weight:600;}
 a{color:inherit;text-decoration:none;}
 code,kbd,pre,samp{font-family:var(--mono);}

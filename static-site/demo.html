@@ -8,25 +8,30 @@
   <!--
     README generator palette (tools/regen_readme_images.py): BG #fefce8, HEADER #312e81,
     HEADER_STROKE #4338ca, ACCENT_BADGE #fbbf24, TEXT_MUTED #64748b, OUTLINE #4f46e5.
-    Chart line colours in demo/app.js match architecture stage strokes (ANALYTICS / EXPORTS).
+    Shared tokens: ./hub-tokens.css. Chart line colours in demo/app.js match architecture
+    stage strokes (ANALYTICS / EXPORTS).
   -->
+  <link rel="stylesheet" href="./hub-tokens.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
   <script src="./demo/app.js" type="module" defer></script>
   <style>
     :root {
-      --palette-header: #312e81;
-      --palette-header-stroke: #4338ca;
-      --palette-accent-warm: #fbbf24;
-      --palette-text-muted: #64748b;
-      --palette-outline: #4f46e5;
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --link: #c7d2fe;
-      --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --palette-header: var(--hub-palette-header);
+      --palette-header-stroke: var(--hub-palette-header-stroke);
+      --palette-accent-warm: var(--hub-palette-accent-warm);
+      --palette-text-muted: var(--hub-palette-text-muted);
+      --palette-outline: var(--hub-palette-outline);
+      --bg: var(--hub-bg-page);
+      --card: var(--hub-bg-elevated);
+      --border: var(--hub-border);
+      --text: var(--hub-text);
+      --muted: var(--hub-text-secondary);
+      --link: var(--hub-link);
+      --font: var(--hub-font-sans);
     }
     *, *::before, *::after { box-sizing: border-box; }
     body {
@@ -38,7 +43,7 @@
       min-height: 100vh;
     }
     a:focus-visible, button:focus-visible, input:focus-visible {
-      outline: 2px solid var(--palette-accent-warm);
+      outline: 2px solid var(--hub-focus-ring);
       outline-offset: 2px;
     }
     .skip {
@@ -89,7 +94,7 @@
       padding: 1.5rem clamp(0.75rem, 3vw, 1.25rem) 3rem;
       min-width: 0;
     }
-    h1 { font-size: clamp(1.35rem, 3.5vw, 1.85rem); margin: 0 0 0.25rem; }
+    h1 { font-family: var(--hub-font-serif); font-size: clamp(1.35rem, 3.5vw, 1.85rem); font-weight: 600; margin: 0 0 0.25rem; }
     .meta {
       font-size: 0.88rem;
       color: var(--muted);
@@ -113,6 +118,7 @@
       margin: 0 0 0.35rem;
       color: #e2e8f0;
     }
+    /* Chart card titles: tints aligned to ANALYTICS (#c2410c) / EXPORTS (#166534) series (demo/app.js) */
     #cpih-h2 { color: #fed7aa; }
     #psnb-h2 { color: #bbf7d0; }
     .controls {
@@ -162,7 +168,7 @@
       color: var(--muted);
       margin-top: 1rem;
       padding: 0.75rem;
-      background: #0c1222;
+      background: var(--hub-code-bg);
       border-radius: 10px;
       border: 1px solid var(--border);
       max-width: 100%;
@@ -174,9 +180,9 @@
     .limit .prov-src { list-style: none; margin-left: 0; padding-left: 0; }
     .limit .prov-src a { color: var(--link); word-break: break-all; }
     .err {
-      background: #450a0a;
-      border: 1px solid #991b1b;
-      color: #fecaca;
+      background: var(--hub-dark-err-bg);
+      border: 1px solid var(--hub-dark-err-border);
+      color: var(--hub-dark-err-text);
       padding: 1rem;
       border-radius: 10px;
       max-width: 100%;
@@ -202,8 +208,9 @@
       margin-right: auto;
     }
     code {
+      font-family: var(--hub-font-mono);
       font-size: 0.82em;
-      background: #0c1222;
+      background: var(--hub-code-bg);
       padding: 0.12em 0.35em;
       border-radius: 4px;
       border: 1px solid var(--border);

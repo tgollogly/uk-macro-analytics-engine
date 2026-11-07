@@ -96,6 +96,7 @@ def test_docs_describe_ats_worker_deploy_and_secrets() -> None:
 def test_hub_index_links_to_six_demo_routes() -> None:
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
     assert 'href="./demo.html"' in idx
+    assert "Open macro demo" in idx
     assert 'href="./portfolio/beneish.html"' in idx
     assert 'href="./portfolio/heat-dome.html"' in idx
     assert 'href="./portfolio/thermal-compare.html"' in idx
