@@ -36,17 +36,24 @@ export function initPageMotion() {
 
 export function pulseChartContainer(selector) {
   if (prefersReducedMotion()) return;
-  const el = document.querySelector(selector);
-  const box = el?.closest?.(".chartbox, .chart-wrap") ?? el;
-  if (!box) return;
-  box.classList.remove("motion-chart-pulse");
-  void box.offsetWidth;
-  box.classList.add("motion-chart-pulse");
-  box.addEventListener(
-    "animationend",
-    () => box.classList.remove("motion-chart-pulse"),
-    { once: true },
-  );
+  const boxes = [
+    ...new Set(
+      [...document.querySelectorAll(selector)].map(
+        (el) => el.closest?.(".chartbox, .chart-wrap") ?? el,
+      ),
+    ),
+  ];
+  for (const box of boxes) {
+    if (!box) continue;
+    box.classList.remove("motion-chart-pulse");
+    void box.offsetWidth;
+    box.classList.add("motion-chart-pulse");
+    box.addEventListener(
+      "animationend",
+      () => box.classList.remove("motion-chart-pulse"),
+      { once: true },
+    );
+  }
 }
 
 export function markInsightsReady(root = document) {
@@ -58,6 +65,39 @@ export function markInsightsReady(root = document) {
 }
 
 /** Scroll-linked emphasis on insight cards (no parallax / scroll-jacking). */
+/** Section reveal when panels enter viewport (no parallax). */
+export function initSectionReveal(selector = ".reveal-section", root = document) {
+  const nodes = root.querySelectorAll?.(selector);
+  if (!nodes?.length) return;
+  if (prefersReducedMotion()) {
+    nodes.forEach((n) => n.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          io.unobserve(e.target);
+        }
+      }
+    },
+    { rootMargin: "-8% 0px -6% 0px", threshold: 0.12 },
+  );
+  nodes.forEach((n) => io.observe(n));
+}
+
+export function setAsyncLoadState(root, state, message = "") {
+  const el = typeof root === "string" ? document.querySelector(root) : root;
+  if (!el) return;
+  el.setAttribute("data-load-state", state);
+  const status = el.querySelector?.("[data-async-status]");
+  if (status) {
+    status.textContent = message;
+    status.dataset.tone = state === "error" ? "error" : "neutral";
+  }
+}
+
 export function initStoryScrollEmphasis(root = document) {
   if (prefersReducedMotion()) return;
   const cards = root.querySelectorAll?.(".insight-feature[data-insight]");

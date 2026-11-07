@@ -17,9 +17,11 @@ SCRIPT = ROOT / "tools" / "case_studies_layout_qa.mjs"
 def test_case_studies_html_has_responsive_overflow_guards() -> None:
     html = (ROOT / "static-site" / "case-studies.html").read_text(encoding="utf-8")
     assert "case-studies-page" in html
-    assert "overflow-x: clip" in html
+    polish = (ROOT / "static-site" / "hub-visual-polish.css").read_text(encoding="utf-8")
+    assert "overflow-x: clip" in polish
     assert "cs-chart-caption" in html
-    assert "case-studies/app.js?v=20251107d3" in html
+    assert "case-studies/app.js?v=20251107d4" in html
+    assert "hub-visual-polish.css?v=20251107d4" in html
 
 
 @pytest.mark.skipif(

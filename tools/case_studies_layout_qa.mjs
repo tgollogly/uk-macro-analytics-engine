@@ -11,8 +11,10 @@ const ART = process.env.CASE_STUDIES_QA_ARTIFACT_DIR || "/opt/cursor/artifacts";
 
 async function checkViewport(page, name) {
   await page.goto(`${base}/case-studies.html`, { waitUntil: "networkidle", timeout: 30_000 });
-  await page.waitForSelector("#ni-findings:not(:has-text('Loading'))", { timeout: 10_000 }).catch(() => {});
-  await page.waitForTimeout(600);
+  await page.waitForFunction(
+    () => document.body?.dataset?.pageReady === "true",
+    { timeout: 20_000 },
+  );
   const metrics = await page.evaluate(() => {
     const doc = document.documentElement;
     const body = document.body;
@@ -32,7 +34,7 @@ async function checkViewport(page, name) {
     };
   });
   mkdirSync(ART, { recursive: true });
-  await page.screenshot({ path: `${ART}/case-studies-qa-${name}.png`, fullPage: true });
+  await page.screenshot({ path: `${ART}/case-studies-qa-${name}.png`, fullPage: false });
   return { name, metrics };
 }
 

@@ -1,0 +1,195 @@
+/* Readable analytics polish — light ivory shell, generous type, bounded charts. */
+
+.page-shell {
+  overflow-x: clip;
+}
+
+.hub-main .inner,
+.hero .inner {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.hub-story-card,
+.ms-finding {
+  background: var(--hub-bg-elevated, #fff);
+  border: 1px solid var(--hub-border-subtle, #ebe6de);
+  border-left: 4px solid var(--hub-accent-coral, #d64f2a);
+  border-radius: var(--hub-radius-md, 14px);
+  padding: 1.15rem 1.25rem;
+  margin: 0 0 1rem;
+  box-shadow: var(--hub-shadow-sm);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.ms-finding:nth-child(even) {
+  border-left-color: var(--hub-accent-teal, #0d6e6e);
+}
+
+.hub-story-card h3,
+.ms-finding h3 {
+  font-family: var(--hub-font-serif, Georgia, serif);
+  font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+  line-height: 1.35;
+  margin: 0.35rem 0 0.5rem;
+  color: var(--hub-text, #1a2332);
+}
+
+.ms-panel,
+.cs-study {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+.ms-panel h2,
+.cs-study h2 {
+  font-size: clamp(1.25rem, 4.2vw, 1.65rem);
+  line-height: 1.3;
+}
+
+.ms-panel p,
+.cs-study p,
+.cs-block p {
+  font-size: clamp(1rem, 3.5vw, 1.08rem);
+  line-height: 1.65;
+  color: var(--hub-text, #1a2332);
+}
+
+.ms-q {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--hub-accent-cobalt, #2e4a8c);
+}
+
+.ms-limit,
+.cs-chart-caption {
+  font-size: 0.95rem;
+  color: var(--hub-text-secondary, #4a5568);
+}
+
+.ms-meta {
+  font-size: 0.88rem;
+  color: var(--hub-text-tertiary, #5c6573);
+}
+
+.chartbox,
+.ms-chart,
+.cs-chart {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: min(58vw, 340px);
+  min-height: 280px;
+  margin: 1rem 0 0.5rem;
+  overflow: hidden;
+  border-radius: var(--hub-radius-md, 14px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 246, 249, 0.85));
+  border: 1px solid var(--hub-border-subtle, #ebe6de);
+}
+
+.chartbox canvas,
+.ms-chart canvas,
+.cs-chart canvas {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+}
+
+.ms-heatmap {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-size: clamp(0.72rem, 2.8vw, 0.88rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-heatmap th,
+.ms-heatmap td {
+  border: none;
+  padding: 0.4rem 0.35rem;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.ms-heatmap th {
+  background: var(--hub-bg-raised, #f7f5f1);
+  color: var(--hub-text, #1a2332);
+  font-weight: 600;
+}
+
+.ms-heatmap td[data-empty="true"] {
+  color: var(--hub-text-tertiary);
+  background: transparent;
+}
+
+.ms-legend {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--hub-text-secondary);
+  margin: 0.75rem 0 0;
+}
+
+[data-async-root][data-load-state="loading"] .chartbox,
+[data-async-root][data-load-state="loading"] .ms-chart,
+[data-async-root][data-load-state="loading"] .cs-chart {
+  opacity: 0.72;
+}
+
+[data-async-root][data-load-state="ready"] .chartbox,
+[data-async-root][data-load-state="ready"] .ms-chart,
+[data-async-root][data-load-state="ready"] .cs-chart {
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.async-status {
+  font-size: 0.92rem;
+  color: var(--hub-text-secondary);
+  margin: 0.25rem 0 0.75rem;
+  min-height: 1.4em;
+}
+
+.async-status[data-tone="error"] {
+  color: var(--hub-semantic-err, #b3261e);
+  background: var(--hub-semantic-err-soft);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--hub-radius-sm);
+}
+
+body.page-data-ready .hero-note,
+body.page-data-ready #story-asof {
+  color: var(--hub-accent-teal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.is-motion-on .reveal-section {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-section {
+    opacity: 1;
+    transform: translate3d(0, 20px, 0);
+  }
+  body.is-motion-on.page-data-ready .reveal-section.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-section {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

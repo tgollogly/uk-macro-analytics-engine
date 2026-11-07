@@ -1,7 +1,9 @@
 /**
  * Case study charts — loads committed summary JSON only (no live APIs).
  */
+import { bootDataPage } from "../hub-page-enhance.js?v=20251107d4";
 import { chartJsLightOptions } from "../chart-light-theme.js";
+import { chartMotionMs } from "../chart-light-theme.js";
 
 const fmtM = (n) =>
   new Intl.NumberFormat("en-GB", {
@@ -44,6 +46,7 @@ function niChart(canvas, data) {
       ],
     },
     options: chartBoxOptions({
+      animation: { duration: chartMotionMs() },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -82,6 +85,7 @@ function tradeChart(canvas, data) {
       ],
     },
     options: chartBoxOptions({
+      animation: { duration: chartMotionMs() },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -101,7 +105,7 @@ function tradeChart(canvas, data) {
   });
 }
 
-export async function initCaseStudyCharts() {
+async function renderCaseStudies() {
   const [ni, trade] = await Promise.all([
     loadJson("./case-studies/ni-prescribing-2026-08-summary.json"),
     loadJson("./case-studies/uk-energy-trade-q2-2026-summary.json"),
@@ -129,10 +133,9 @@ export async function initCaseStudyCharts() {
   if (trFig) {
     trFig.textContent = `Crude exports ${fmtBn(trade.cpa_crude_exports.prior_q_gbp_b)} → ${fmtBn(trade.cpa_crude_exports.current_q_gbp_b)} (CPA 06.1, current prices).`;
   }
+  document.querySelectorAll(".chartbox").forEach((el) => {
+    el.dataset.chartReady = "true";
+  });
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => initCaseStudyCharts().catch(console.error));
-} else {
-  initCaseStudyCharts().catch(console.error);
-}
+bootDataPage({ load: renderCaseStudies });
