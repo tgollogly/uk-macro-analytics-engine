@@ -40,11 +40,16 @@ def test_select_explorer_rows_window_syncs_effective_months() -> None:
     """Window preset slices first; From/To must match visible chart range."""
     code = """
 import { selectExplorerRows } from './static-site/portfolio/assets/macro-analytics.js';
-const base = Array.from({ length: 120 }, (_, i) => ({
-  obs_date: `20${String(16 + Math.floor(i / 12)).slice(-2)}-${String((i % 12) + 1).padStart(2, '0')}-01`,
-  total_net_borrowing_gbp_m: i,
-}));
-const win = selectExplorerRows(base, { windowValue: '24', fromMonth: '2016-10', toMonth: '2026-09' });
+const base = Array.from({ length: 120 }, (_, i) => {
+  const y = 16 + Math.floor(i / 12);
+  const m = String((i % 12) + 1).padStart(2, "0");
+  return { obs_date: `20${String(y).slice(-2)}-${m}-01`, total_net_borrowing_gbp_m: i };
+});
+const win = selectExplorerRows(base, {
+  windowValue: "24",
+  fromMonth: "2016-10",
+  toMonth: "2026-09",
+});
 if (win.rows.length !== 24) throw new Error('expected 24 rows');
 if (win.effectiveFrom !== win.rows[0].obs_date.slice(0, 7)) throw new Error('from');
 if (win.effectiveTo !== win.rows[win.rows.length - 1].obs_date.slice(0, 7)) throw new Error('to');
