@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="dark"/>
+<title>Pipeline data coverage &amp; quality (snapshot)</title>
+<meta name="description" content="Row counts, null YoY months, PSNB aggregation flags, and manifest limitations from committed pipeline JSON."/>
+<link rel="stylesheet" href="./assets/site.css"/>
+<style>
+  .grid{display:grid;gap:16px;} @media(min-width:800px){.grid.two{grid-template-columns:1fr 1fr;}}
+  .stat{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--strong);}
+  .card h3{margin:0 0 8px;font-size:15px;}
+  ul.limits{margin:8px 0 0;padding-left:20px;color:var(--muted);}
+  table.cov{width:100%;border-collapse:collapse;font-size:13px;font-family:var(--mono);}
+  table.cov th,table.cov td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;}
+  table.cov th:first-child,table.cov td:first-child{text-align:left;}
+  table.cov th{color:var(--muted);}
+  .bar{height:8px;background:var(--bg-alt);border-radius:4px;overflow:hidden;margin-top:6px;}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+</style>
+</head>
+<body>
+<header class="app-nav" role="banner">
+  <nav class="nav-inner" aria-label="Primary">
+    <a class="nav-title" href="../index.html"><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+    <a href="../index.html#hub">Demos</a>
+    <a href="../demo.html">UK macro</a>
+    <a href="./privacy.html">Privacy</a>
+  </nav>
+</header>
+<div class="wrap head">
+  <span class="eyebrow">Demo 06 · Data quality</span>
+  <h1>Pipeline coverage explorer</h1>
+  <p>Quality signals computed in-browser from <code>manifest.json</code>, <code>cpih_yoy.json</code>, and <code>psnb_monthly.json</code>. Methodology matches the Python export path (row counts, null YoY at series start, PSNB <code>row_count</code> aggregation).</p>
+  <p class="meta" id="asof" style="font-size:13px;color:var(--faint);"></p>
+</div>
+<div class="wrap grid two" id="main" aria-live="polite"></div>
+<section class="wrap cs"><div class="cs-card">
+  <div class="cs-eyebrow">Traceability</div>
+  <h2 class="cs-h">How these metrics are derived</h2>
+  <div class="cs-block"><h3>Source</h3><p>ONS CSVs via configured generator URLs in the repo; analytics in DuckDB; exports committed to <code>static-site/demo/</code> (see <code>manifest.json</code>).</p></div>
+  <div class="cs-block"><h3>Not claimed</h3><p>Not live replication of ONS releases, not automated data-quality SLAs, and not employment-outcome analytics — descriptive coverage only.</p></div>
+</div></section>
+<div class="sitefoot"><div class="in"><span>© pipeline snapshot. OGL applies to underlying statistics.</span><a href="./macro-explorer.html">Trend explorer</a></div></div>
+<script type="module">
+import { loadMacroBundle, countNullYoy, psnbMultiRowMonths, findMonthGaps } from "./assets/macro-analytics.js";
+
+function pct(n, d){ return d ? (100 * n / d).toFixed(1) + "%" : "—"; }
+
+loadMacroBundle().then(({ manifest, cpih, psnb }) => {
+  const asof = manifest.generated_at_utc || "—";
+  document.getElementById("asof").textContent = `Snapshot as of (UTC): ${asof}`;
+  const nullYoy = countNullYoy(cpih);
+  const multi = psnbMultiRowMonths(psnb);
+  const gaps = findMonthGaps(cpih);
+  const lastCpih = cpih.length ? cpih[cpih.length - 1].obs_date.slice(0, 7) : "—";
+  const lastPsnb = psnb.length ? psnb[psnb.length - 1].obs_date.slice(0, 7) : "—";
+  const html = `
+  <article class="card">
+    <h3>CPIH YoY (L522)</h3>
+    <p class="stat">${cpih.length}</p>
+    <p class="hint">rows in snapshot · last month <strong>${lastCpih}</strong></p>
+    <p class="hint">Null <code>yoy_pct</code>: <strong>${nullYoy}</strong> (${pct(nullYoy, cpih.length)} of rows)</p>
+    <div class="bar" title="Non-null YoY share"><i style="width:${cpih.length ? ((cpih.length - nullYoy) / cpih.length) * 100 : 0}%"></i></div>
+    <p class="hint">Large calendar gaps flagged: <strong>${gaps.gaps.length}</strong></p>
+  </article>
+  <article class="card">
+    <h3>PSNB monthly (DZLS)</h3>
+    <p class="stat">${psnb.length}</p>
+    <p class="hint">rows in snapshot · last month <strong>${lastPsnb}</strong></p>
+    <p class="hint">Months with <code>row_count &gt; 1</code>: <strong>${multi.length}</strong></p>
+    <p class="hint">Manifest rows: cpih ${manifest.sources?.cpih?.rows ?? "—"}, psnb ${manifest.sources?.psnb?.rows ?? "—"}</p>
+  </article>
+  <article class="card" style="grid-column:1/-1">
+    <h3>Manifest limitations (verbatim)</h3>
+    <ul class="limits">${(manifest.limitations || []).map((x) => `<li>${x}</li>`).join("")}</ul>
+  </article>
+  <article class="card" style="grid-column:1/-1">
+    <h3>PSNB multi-row months (sample)</h3>
+    <div style="overflow-x:auto"><table class="cov"><thead><tr><th>Month</th><th>£m total</th><th>row_count</th></tr></thead><tbody>
+    ${multi.slice(0, 12).map((r) => `<tr><td>${r.obs_date.slice(0,7)}</td><td>${r.total_net_borrowing_gbp_m}</td><td>${r.row_count}</td></tr>`).join("") || "<tr><td colspan='3'>None in snapshot</td></tr>"}
+    </tbody></table></div>
+  </article>`;
+  document.getElementById("main").innerHTML = html;
+}).catch((e) => {
+  document.getElementById("main").innerHTML = `<p class="errbox">${e.message}</p>`;
+});
+</script>
+<div class="sitefoot"><div class="in footnote">
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Do not enter confidential information.</span>
+</div></div>
+</body>
+</html>

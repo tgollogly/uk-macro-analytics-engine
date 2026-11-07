@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="dark">
 <title>Privacy &amp; AI notice (static mirror) | Thomas Gollogly</title>
-<meta name="description" content="How mirrored portfolio demos handle data on this static host: ATS to tgollogly.dev/api and Gemini, weather APIs, chat disabled."/>
+<meta name="description" content="Privacy notice for the static demo hub: weather APIs, macro JSON snapshots, no active ATS submission on this preview."/>
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
 <meta name="googlebot" content="noindex,nofollow"/>
 <link rel="canonical" href="https://tgollogly.dev/privacy.html"/>
@@ -27,21 +27,24 @@
 <link rel="stylesheet" href="./assets/site.css"/>
 
 <style>
-  .doc{max-width:760px;margin:0 auto;padding:0 24px 60px;}
   .doc h2{font-size:20px;margin:30px 0 10px;}
   .doc p{color:var(--muted);margin:0 0 12px;}
   .doc ul{color:var(--muted);margin:0 0 12px;padding-left:20px;}
   .doc li{margin:5px 0;}
   .doc .updated{font-size:12.5px;color:var(--faint);}
   .mirror-callout{font-size:13px;line-height:1.55;color:var(--muted);background:var(--bg-alt);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 20px;}
-  @media(max-width:640px){ .doc{padding:0 16px 44px;} .doc h2{font-size:18px;} }
+  @media(max-width:640px){ .doc h2{font-size:18px;} }
 </style>
 </head>
 <body>
-<div class="sitebar"><div class="in">
-  <a class="brand" href="../index.html"><svg class="tg-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
-  <a class="back" href="../index.html#hub">&larr; Back to demo hub</a>
-</div></div>
+<header class="app-nav" role="banner">
+  <nav class="nav-inner" aria-label="Primary">
+    <a class="nav-title" href="../index.html"><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+    <a href="../index.html#hub">Demos</a>
+    <a href="../demo.html">UK macro</a>
+    <a href="./privacy.html">Privacy</a>
+  </nav>
+</header>
 
 <div class="wrap head">
   <span class="eyebrow">Site information</span>
@@ -49,12 +52,12 @@
   <p>Portfolio front-end files are mirrored here for a static demo hub. This page describes behaviour on <strong>this</strong> host; the canonical personal site may differ.</p>
 </div>
 
-<div class="doc">
+<div class="wrap doc">
 
   <p class="mirror-callout"><strong>Static mirror.</strong> You may be viewing these HTML/CSS/JS files from the <a href="https://github.com/tgollogly/uk-macro-analytics-engine"><code>uk-macro-analytics-engine</code></a> repo (e.g. Workers Static Assets). It is not the same deployment as <code>tgollogly.dev</code>. Loading pages still involves network requests your browser makes to CDNs, APIs, and third-party hosts listed below.</p>
 
   <h2>Cookies and identifiers</h2>
-  <p>This mirrored <strong>static bundle</strong> does not ship first-party analytics or advertising scripts. We do <strong>not</strong> assert that no cookies or storage ever occur: third-party requests (fonts, map tiles, chart libraries, weather APIs, or an AI backend if you use ATS) may set or use identifiers under <strong>those parties&rsquo; policies</strong>. This page has not been independently audited.</p>
+  <p>This mirrored <strong>static bundle</strong> does not ship first-party analytics or advertising scripts. We do <strong>not</strong> assert that no cookies or storage ever occur: third-party requests (fonts, map tiles, chart libraries, weather APIs) may set or use identifiers under <strong>those parties&rsquo; policies</strong>. This page has not been independently audited.</p>
 
   <h2>Optional chat (disabled on this mirror)</h2>
   <p>The portfolio&rsquo;s optional chat widget is <strong>not</strong> loaded on this hub (<code>chat-disabled.js</code>). Chat-related claims in upstream portfolio copy do not apply here.</p>
@@ -63,8 +66,9 @@
   <ul>
     <li><strong>Beneish M-Score Screener</strong> &mdash; runs in your browser; figures you enter are not sent to our backend in the shipped script paths.</li>
     <li><strong>BundleBuilder</strong> &mdash; case details stay in the page until you close the tab.</li>
-    <li><strong>Heat Anomaly Detector</strong> and <strong>Thermal Compare</strong> &mdash; request weather and map data from third parties (e.g. Open-Meteo, radar and map tile providers). Those services receive normal HTTP requests (including IP as usual for web requests).</li>
-    <li><strong>ATS Resume Matcher</strong> &mdash; when you click <em>Analyse match</em>, <em>Generate cover letter</em>, or <em>Improved CV</em>, the page POSTs JSON (<code>mode</code>, <code>cv</code>, <code>jd</code>) to <strong><code>https://tgollogly.dev/api</code></strong> (configured in <code>config.js</code>). That endpoint is intended to call <strong>Google Gemini</strong> with a server-held key. <strong>Connectivity and responses from this mirror have not been verified</strong> in every environment; do not paste sensitive text.</li>
+    <li><strong>Heat Anomaly Detector</strong> and <strong>Thermal Compare</strong> &mdash; request weather and map data from third parties (e.g. Open-Meteo, OpenStreetMap raster tiles per the <a href="https://operations.osmfoundation.org/policies/tiles/">OSM tile policy</a>, RainViewer radar). Those services receive normal HTTP requests (including IP as usual for web requests).</li>
+    <li><strong>Macro trend explorer</strong> and <strong>Pipeline coverage explorer</strong> &mdash; load committed <code>static-site/demo/*.json</code> and <code>manifest.json</code> in your browser only (no live ONS pull on this host).</li>
+    <li><strong>ATS Resume Matcher</strong> &mdash; <strong>retired on this hub</strong>. The page at <code>ats-matcher.html</code> is informational only; it does <strong>not</strong> POST CV or job text. Optional gate/backend Workers in the repo (<code>docs/ATS_API_WORKER.md</code>) are for developer review only and are <strong>not</strong> linked from the public demo hub.</li>
   </ul>
 
   <h2>UK Macro interactive charts (<code>../demo.html</code>)</h2>
@@ -75,13 +79,11 @@
   <ul>
     <li>Google Fonts &mdash; typefaces</li>
     <li>jsDelivr / other CDNs &mdash; JavaScript libraries</li>
-    <li>Open-Meteo, RainViewer, CARTO, AWS (or similar) &mdash; weather and maps in the heat / compare demos</li>
-    <li><code>tgollogly.dev</code> &mdash; ATS backend only when you trigger it</li>
-    <li>Google Gemini &mdash; only via that ATS backend when it succeeds</li>
+    <li>Open-Meteo, OpenStreetMap (tiles), RainViewer, AWS elevation &mdash; weather and maps in the heat demo</li>
   </ul>
 
-  <h2>AI and retention</h2>
-  <p>We do <strong>not</strong> warrant that backend providers retain or delete data in any particular way. Google&rsquo;s processing of content sent to Gemini is governed by <strong>Google&rsquo;s terms</strong>. Do not send confidential or third-party personal data you are not allowed to share.</p>
+  <h2>Historical AI stack (not active on this hub)</h2>
+  <p>Earlier mirror builds could POST to a Cloudflare gate Worker for Gemini-backed ATS. That flow is <strong>disabled</strong> on the current preview hub. See <code>docs/ATS_API_WORKER.md</code> for architecture retained in the repo only.</p>
 
   <h2>Not professional advice</h2>
   <p>Everything here is for portfolio demonstration. It is not financial, legal, medical, careers, or safety advice.</p>
@@ -106,10 +108,9 @@
   </span>
 </div>
 <div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Optional chat is disabled. Do not enter confidential information.</span>
 </div></div>
 
-<script src="./config.js"></script>
 <script src="./assets/chat-disabled.js" defer></script>
 </body>
 </html>

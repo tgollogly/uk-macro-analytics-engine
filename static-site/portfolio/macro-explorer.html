@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="dark"/>
+<title>UK macro trend explorer (pipeline snapshot)</title>
+<meta name="description" content="Compare CPIH YoY and monthly PSNB from committed pipeline JSON — filter by date, chart, table, CSV download. Not live ONS."/>
+<link rel="stylesheet" href="./assets/site.css"/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+<style>
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:18px 0;}
+  .toolbar label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);}
+  .toolbar input,.toolbar select{min-height:44px;padding:8px 10px;border-radius:var(--hub-radius-sm);border:1px solid var(--line);background:var(--raised);color:var(--ink);}
+  .chartbox{position:relative;height:min(52vh,420px);min-height:260px;margin:16px 0;}
+  .meta{font-size:13px;color:var(--faint);line-height:1.55;margin:0 0 12px;max-width:72ch;}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--hub-radius-md);}
+  table.data{width:100%;border-collapse:collapse;font-size:13px;font-family:var(--mono);}
+  table.data th,table.data td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);}
+  table.data th:first-child,table.data td:first-child{text-align:left;}
+  table.data th{background:var(--bg-alt);color:var(--muted);font-weight:600;}
+  .errbox{color:var(--err);background:var(--err-soft);border:1px solid var(--line);padding:12px;border-radius:var(--hub-radius-sm);}
+  @media (prefers-reduced-motion: reduce){ .chartbox canvas{transition:none!important;} }
+</style>
+</head>
+<body>
+<header class="app-nav" role="banner">
+  <nav class="nav-inner" aria-label="Primary">
+    <a class="nav-title" href="../index.html"><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+    <a href="../index.html#hub">Demos</a>
+    <a href="../demo.html">UK macro</a>
+    <a href="./privacy.html">Privacy</a>
+  </nav>
+</header>
+<div class="wrap head">
+  <span class="eyebrow">Demo 05 · Visual analytics</span>
+  <h1>Macro trend explorer</h1>
+  <p>Interactive comparison of <strong>CPIH year-on-year %</strong> and <strong>monthly PSNB (ex banks)</strong> from committed pipeline exports (<code>static-site/demo/*.json</code>). This is a <strong>dated snapshot</strong> — not a live ONS feed in the browser.</p>
+  <p class="meta" id="asof" aria-live="polite">Loading manifest…</p>
+</div>
+<div class="wrap">
+  <div class="toolbar" role="region" aria-label="Chart controls">
+    <label>Series
+      <select id="series" aria-label="Series to display">
+        <option value="cpih">CPIH YoY (%)</option>
+        <option value="psnb">PSNB monthly (£m)</option>
+      </select>
+    </label>
+    <label>From <input type="month" id="from" aria-label="Range start month"/></label>
+    <label>To <input type="month" id="to" aria-label="Range end month"/></label>
+    <label>Window <select id="window" aria-label="Quick window">
+      <option value="all">All data in snapshot</option>
+      <option value="120">Last 120 months</option>
+      <option value="60">Last 60 months</option>
+      <option value="24">Last 24 months</option>
+    </select></label>
+    <button type="button" class="btn btn-p" id="apply">Apply</button>
+    <button type="button" class="btn btn-g" id="csv">Download visible CSV</button>
+  </div>
+  <div id="error" class="errbox" hidden role="alert"></div>
+  <div class="card">
+    <div class="chartbox"><canvas id="chart" role="img" aria-label="Selected macro series chart"></canvas></div>
+    <p class="hint" id="method"></p>
+  </div>
+  <h2 id="table-heading" style="font-size:1rem;margin:18px 0 6px;font-weight:600;color:var(--strong);">Month detail</h2>
+  <p class="meta" id="view-summary" aria-labelledby="table-heading" aria-live="polite">Adjust filters to load the table.</p>
+  <div class="tablewrap" style="margin-top:8px">
+    <table class="data" id="tbl" aria-describedby="view-summary">
+      <thead><tr><th scope="col">Month</th><th scope="col" id="val-h">Value</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+<script type="module">
+import {
+  loadMacroBundle, filterByRange, parseMonth, rowsToCsv, downloadText,
+  fmtPct, fmtGbpM, CPIH_LINE, PSNB_LINE, TABLE_PREVIEW_LIMIT, sliceTablePreview,
+} from "./assets/macro-analytics.js";
+
+let bundle = null;
+let chart = null;
+let visible = [];
+
+function showErr(msg){ const el=document.getElementById("error"); el.hidden=false; el.textContent=msg; }
+function monthInputToMs(v){ if(!v) return null; const [y,m]=v.split("-").map(Number); return Date.UTC(y,m-1,1); }
+
+function currentRows(){
+  const key = document.getElementById("series").value;
+  const base = key === "cpih" ? bundle.cpih : bundle.psnb;
+  let rows = base;
+  const from = monthInputToMs(document.getElementById("from").value);
+  const to = monthInputToMs(document.getElementById("to").value);
+  const win = document.getElementById("window").value;
+  if (win !== "all") rows = rows.slice(-Number(win));
+  rows = filterByRange(rows, from, to);
+  return { key, rows };
+}
+
+function render(){
+  const { key, rows } = currentRows();
+  visible = rows;
+  const labels = rows.map((r) => r.obs_date.slice(0, 7));
+  const values = rows.map((r) => key === "cpih" ? r.yoy_pct : r.total_net_borrowing_gbp_m);
+  const color = key === "cpih" ? CPIH_LINE : PSNB_LINE;
+  const label = key === "cpih" ? "CPIH YoY %" : "PSNB £m";
+  document.getElementById("val-h").textContent = label;
+  document.getElementById("method").textContent =
+    key === "cpih"
+      ? "CPIH YoY from pipeline DuckDB export (L522); nulls where 12m lag missing — see Data coverage demo."
+      : "PSNB monthly total_net_borrowing_gbp_m (DZLS); row_count>1 means multiple CSV lines summed that month.";
+  const ctx = document.getElementById("chart");
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: "line",
+    data: { labels, datasets: [{ label, data: values, borderColor: color, backgroundColor: color + "33", fill: true, tension: 0.12, spanGaps: false, pointRadius: 0, borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: { legend: { labels: { color: "#e2e8f0" } } },
+      scales: {
+        x: { ticks: { color: "#94a3b8", maxTicksLimit: 10 }, grid: { color: "#334155" } },
+        y: { ticks: { color: "#94a3b8" }, grid: { color: "#334155" } },
+      },
+    },
+  });
+  const preview = sliceTablePreview(rows);
+  const tb = document.querySelector("#tbl tbody");
+  tb.innerHTML = preview.display.map((r) => {
+    const v = key === "cpih" ? fmtPct(r.yoy_pct) : fmtGbpM(r.total_net_borrowing_gbp_m);
+    return `<tr><td>${r.obs_date.slice(0,7)}</td><td>${v}</td></tr>`;
+  }).join("") || "<tr><td colspan='2'>No rows in range</td></tr>";
+  const summary = document.getElementById("view-summary");
+  if (!rows.length) {
+    summary.textContent = "No rows match the current filters.";
+    return;
+  }
+  const fromM = rows[0].obs_date.slice(0, 7);
+  const toM = rows[rows.length - 1].obs_date.slice(0, 7);
+  const plural = rows.length === 1 ? "" : "s";
+  if (!preview.capped) {
+    summary.textContent =
+      `Showing all ${preview.total} month${plural} (${fromM}–${toM}). Chart, CSV, and table use the same ${preview.total} row${plural} (newest first in the table).`;
+  } else {
+    summary.textContent =
+      `Chart and CSV use all ${preview.total} months (${fromM}–${toM}). Table lists the latest ${preview.displayCount} of ${preview.total} (newest first; capped at ${TABLE_PREVIEW_LIMIT} for readability).`;
+  }
+}
+
+document.getElementById("apply").addEventListener("click", () => { try { render(); } catch(e){ showErr(e.message); } });
+document.getElementById("series").addEventListener("change", render);
+document.getElementById("window").addEventListener("change", render);
+document.getElementById("csv").addEventListener("click", () => {
+  const { key } = currentRows();
+  const cols = key === "cpih"
+    ? ["obs_date","index_level","cpih_3m_avg","yoy_pct"]
+    : ["obs_date","total_net_borrowing_gbp_m","row_count"];
+  downloadText(`macro-${key}-visible.csv`, rowsToCsv(visible, cols));
+});
+
+loadMacroBundle().then((b) => {
+  bundle = b;
+  const asof = b.manifest.generated_at_utc || "unknown";
+  document.getElementById("asof").textContent =
+    `As of (UTC): ${asof}. CPIH rows: ${b.manifest.sources?.cpih?.rows ?? b.cpih.length}; PSNB rows: ${b.manifest.sources?.psnb?.rows ?? b.psnb.length}.`;
+  if (b.cpih.length) document.getElementById("from").value = b.cpih[Math.max(0, b.cpih.length - 120)].obs_date.slice(0,7);
+  if (b.cpih.length) document.getElementById("to").value = b.cpih[b.cpih.length - 1].obs_date.slice(0,7);
+  render();
+}).catch((e) => showErr(e.message));
+</script>
+<div class="sitefoot">
+  <div class="in">
+    <span>Snapshot only — confirm figures on <a href="https://www.ons.gov.uk/">ons.gov.uk</a>. Not advice.</span>
+    <a href="../index.html#hub">← Demo hub</a>
+  </div>
+  <div class="in footnote">
+    <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs; macro analytics use committed pipeline JSON only. ATS is retired on this hub. Do not enter confidential information.</span>
+  </div>
+</div>
+</body>
+</html>

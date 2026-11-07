@@ -1,0 +1,22 @@
+# Private backend — service binding only; disable *.workers.dev so it is not publicly reachable.
+#   cd workers/ats-api && npx wrangler deploy -c wrangler.backend.toml
+name = "uk-macro-ats-backend"
+main = "src/backend.ts"
+compatibility_date = "2025-11-06"
+account_id = "af97c3366c0a7455ffbcbcffecfebc6d"
+workers_dev = false
+
+[observability]
+enabled = true
+
+  [observability.logs]
+  invocation_logs = true
+  head_sampling_rate = 1
+
+# Secrets (set in dashboard; never commit values):
+#   GEMINI_API_KEY              — Google Gemini API key (used only here)
+#   ATS_INTERNAL_HMAC_SECRET   — shared with gate Worker (same secret both sides)
+
+# Optional vars:
+#   GEMINI_MODEL        — default gemini-3.8-flash
+#   ATS_MAX_BODY_CHARS  — default 120000

@@ -1,192 +1,527 @@
+@import url("../../hub-tokens.css");
+@import url("../../shell-shared.css");
 
 /* =====================================================================
-   site.css — the ONE source of truth for colour, type and page shell.
-   Every page links this before its own <style>. No page redeclares
-   :root. If a colour or a font is not in here, it does not exist.
+   site.css — colour, type, shell for portfolio mirror demos (dark product UI).
+   Shared tokens: static-site/hub-tokens.css (README / architecture palette).
+   Page-level <style> blocks should not redeclare :root — use these variables.
    ===================================================================== */
 
-:root{
-  /* --- surfaces --- */
-  --bg:#ffffff;
-  --bg-alt:#f4f6f9;
-  --card:#ffffff;
+:root {
+  /* --- mapped semantic aliases (pages use these names) --- */
+  --bg: var(--hub-bg-page);
+  --bg-alt: var(--hub-bg-deep);
+  --card: var(--hub-bg-elevated);
+  --raised: var(--hub-bg-raised);
 
-  /* --- text --- */
-  --strong:#0b0f14;   /* headings, near black */
-  --ink:#1a2028;      /* body */
-  --muted:#3f4954;    /* secondary */
-  --faint:#5c6672;    /* tertiary — still passes AA on white */
+  --strong: var(--hub-text);
+  --ink: #e2e8f0;
+  --muted: var(--hub-text-secondary);
+  --faint: var(--hub-text-tertiary);
 
-  /* --- lines --- */
-  --line:#e4e8ec;
-  --line-2:#d6dbe1;
+  --line: var(--hub-border);
+  --line-2: #475569;
 
-  /* --- brand --- */
-  --accent:#2f39c9;
-  --accent-2:#4750e6;
-  --accent-soft:#eef0fe;
+  --accent: var(--hub-palette-outline);
+  --accent-2: var(--hub-palette-header-stroke);
+  --accent-soft: rgba(79, 70, 229, 0.2);
 
-  /* --- status (ONE of each, sitewide) --- */
-  --ok:#0c7a5e;      --ok-soft:#e6f5f0;
-  --warn:#9a6700;    --warn-soft:#fdf6e3;
-  --err:#b3261e;     --err-soft:#fdf3f2;
+  --ok: var(--hub-semantic-ok);
+  --ok-soft: var(--hub-semantic-ok-soft);
+  --warn: var(--hub-semantic-warn);
+  --warn-soft: var(--hub-semantic-warn-soft);
+  --err: var(--hub-semantic-err);
+  --err-soft: var(--hub-semantic-err-soft);
 
-  /* --- heat scale (heat-dome only, but declared here so it is
-         auditable and cannot drift) --- */
-  --c-comfort:#0c7a5e;
-  --c-caution:#9a6700;
-  --c-xcaution:#d1622e;
-  --c-danger:#b3261e;
-  --c-extreme:#7b1fa2;
-  --c-cool:#2f6fb0;   /* below-average / cooler-than-normal readings */
+  /* heat scale — meaning preserved, aliased to tokens */
+  --c-comfort: var(--hub-heat-comfort);
+  --c-caution: var(--hub-heat-caution);
+  --c-xcaution: var(--hub-heat-xcaution);
+  --c-danger: var(--hub-heat-danger);
+  --c-extreme: var(--hub-heat-extreme);
+  --c-cool: var(--hub-heat-cool);
 
-  /* --- elevation --- */
-  --shadow-sm:0 1px 2px rgba(15,20,23,.05),0 4px 12px rgba(15,20,23,.06);
-  --shadow-md:0 12px 32px rgba(15,20,23,.10),0 2px 8px rgba(15,20,23,.05);
+  --shadow-sm: var(--hub-shadow-sm);
+  --shadow-md: var(--hub-shadow-md);
 
-  /* --- type --- */
-  --sans:"Inter",system-ui,-apple-system,sans-serif;
-  --serif:"Fraunces",Georgia,serif;
-  --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,monospace;
+  --sans: var(--hub-font-sans);
+  --serif: var(--hub-font-serif);
+  --mono: var(--hub-font-mono);
 
-  /* --- terminal mock (home page hero) — deliberately dark, not
-         part of the light palette, but declared here so every colour
-         on the site lives in one file --- */
-  --term-bg:#0d1117;
-  --term-bar:#161b22;
-  --term-line:#1e2633;
-  --term-fg:#d7dde6;      /* terminal body text — light, for the dark panel */
-  --term-cmd:#e6e9ee;     /* typed commands — brightest */
-  --term-out:#9aa4b2;     /* command output — dimmer, still readable on dark */
-  --term-title:#7d8797;   /* title-bar label */
-  --term-red:#ff5f56;
-  --term-amber:#ffbd2e;
-  --term-green:#27c93f;
+  /* terminal mock (case studies) — dark-on-dark inset */
+  --term-bg: #0d1117;
+  --term-bar: #161b22;
+  --term-line: #1e2633;
+  --term-fg: #d7dde6;
+  --term-cmd: #e6e9ee;
+  --term-out: #9aa4b2;
+  --term-title: #7d8797;
+  --term-red: #ff5f56;
+  --term-amber: #ffbd2e;
+  --term-green: #27c93f;
 
-  /* --- layout --- */
-  --maxw:1080px;
+  --maxw: 1080px;
 }
 
 /* ---------- base ---------- */
-*{box-sizing:border-box;}
-html{forced-color-adjust:none;}
-html,body{margin:0;padding:0;background:var(--bg-alt);color:var(--ink);color-scheme:light;}
-body{font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-h1,h2,h3{font-family:var(--serif);color:var(--strong);margin:0;line-height:1.1;letter-spacing:-.015em;font-weight:600;}
-a{color:inherit;text-decoration:none;}
-code,kbd,pre,samp{font-family:var(--mono);}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  forced-color-adjust: none;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  background-image: radial-gradient(ellipse 90% 55% at 50% -8%, rgba(49, 46, 129, 0.35) 0%, var(--bg) 52%);
+  color: var(--ink);
+  color-scheme: dark;
+}
+body {
+  font-family: var(--sans);
+  font-size: clamp(15px, 0.32vw + 14px, 17px);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
 
+:focus-visible {
+  outline: 2px solid var(--hub-focus-ring);
+  outline-offset: var(--hub-focus-offset);
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline-offset: 2px;
+}
 
-/* ---------- brand mark (inline SVG on every page) ---------- */
-.tg-mark rect{fill:var(--accent);}
-.tg-mark text{fill:#fff;}
+:is(a, button, .btn, .chip, [role="button"]):focus-visible {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.28);
+}
 
-/* ---------- site bar (every page except the home page) ---------- */
-.sitebar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
-.sitebar .in{max-width:var(--maxw);margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.sitebar .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:19px;color:var(--strong);}
-.sitebar .back{font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap;}
-.sitebar .back:hover{color:var(--strong);}
-@media(max-width:400px){
-  .sitebar .brand span{display:none;}
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  color: var(--strong);
+  margin: 0;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+a {
+  color: var(--hub-link);
+  text-decoration: none;
+  transition: color var(--hub-transition);
+}
+a:hover {
+  color: var(--hub-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--mono);
+}
+code {
+  background: var(--hub-code-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.15em 0.45em;
+  font-size: 0.88em;
+}
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--hub-content-pad);
+  min-width: 0;
+}
+
+/* Long-form doc (privacy) — align inset with .wrap */
+.doc {
+  padding-bottom: 60px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.doc > :where(p, ul, ol, .mirror-callout) {
+  max-width: min(72ch, 100%);
+}
+
+/* ---------- brand mark ---------- */
+.tg-mark rect {
+  fill: var(--accent);
+}
+.tg-mark text {
+  fill: #fff;
 }
 
 /* ---------- page head ---------- */
-.eyebrow{font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
-.head{padding:44px 0 26px;}
-.head h1{font-size:clamp(30px,5vw,46px);margin-top:10px;}
-.head p{color:var(--muted);max-width:62ch;margin:14px 0 0;}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;}
-.chip{font-size:12px;font-weight:600;font-family:var(--sans);color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 10px;line-height:1.5;}
-button.chip,.chip[role="button"]{cursor:pointer;}
-button.chip:hover{border-color:var(--accent);color:var(--accent);}
-
-/* ---------- primitives ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow-sm);}
-.sec-t{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
-.btn{font:600 14px/1 var(--sans);padding:12px 18px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:transform .15s,background .2s;}
-.btn:hover{transform:translateY(-1px);}
-.btn-p{background:var(--accent);color:#fff;}
-.btn-p:hover{background:var(--accent-2);}
-.btn-g{background:var(--card);border-color:var(--line-2);color:var(--strong);}
-.btn-g:hover{border-color:var(--accent);color:var(--accent);}
-.hint{font-size:12.5px;color:var(--faint);}
-
-/* ---------- site foot (every page, identical) ---------- */
-.sitefoot{border-top:1px solid var(--line);background:var(--card);padding:24px;margin-top:44px;}
-.sitefoot .in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;font-size:13px;color:var(--faint);}
-.sitefoot a{color:var(--accent);}
-.sitefoot a:hover{text-decoration:underline;}
-.footlinks{display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
-.footlinks .ico{display:inline-flex;align-items:center;gap:6px;}
-.footlinks .ico svg{width:15px;height:15px;flex:none;}
-.sitefoot .footnote{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;line-height:1.55;color:var(--faint);display:block;}
-.sitefoot .footnote span{max-width:88ch;display:block;}
-
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
-
-/* ---------- case-study block (used on the four narrative demo pages) ---------- */
-.cs{max-width:900px;margin:0 auto;padding:8px 24px 54px;}
-.cs-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 28px;box-shadow:var(--shadow-sm);}
-.cs-eyebrow{font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
-.cs-h{font-family:var(--serif);font-weight:600;font-size:26px;color:var(--strong);margin:6px 0 22px;letter-spacing:-.015em;line-height:1.1;}
-.cs-block{margin:0 0 20px;}
-.cs-block:last-child{margin-bottom:0;}
-.cs-block h3{font-size:14px;color:var(--accent);margin:0 0 6px;font-weight:700;letter-spacing:.02em;font-family:var(--sans);}
-.cs-block p{font-size:15.5px;line-height:1.62;color:var(--muted);margin:0;}
-.cs-block code{background:var(--bg-alt);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:var(--strong);}
-
-/* ---------- print: the shell and the chat widget never print ---------- */
-@media print{
-  .sitebar,.sitefoot,#chatBtn,#chatPanel{display:none!important;}
-  html,body{background:#fff!important;}
+.eyebrow {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hub-palette-accent-warm);
+}
+/* Vertical rhythm only — .wrap owns horizontal inset via padding-inline */
+.head {
+  padding-block: clamp(28px, 5vw, 44px) clamp(20px, 4vw, 28px);
+}
+.head h1 {
+  font-size: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
+  margin-top: 10px;
+}
+.head p {
+  color: var(--muted);
+  max-width: min(65ch, 100%);
+  margin: 14px 0 0;
+  font-size: clamp(0.95rem, 0.2vw + 0.92rem, 1.05rem);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.chip {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--hub-radius-sm);
+  padding: 6px 12px;
+  line-height: 1.45;
+  transition:
+    border-color var(--hub-transition),
+    background var(--hub-transition),
+    color var(--hub-transition);
+}
+button.chip,
+.chip[role="button"] {
+  cursor: pointer;
+}
+button.chip:hover,
+.chip[role="button"]:hover {
+  border-color: var(--accent);
+  color: var(--hub-link-hover);
+  background: var(--raised);
 }
 
-/* =====================================================================
-   RESPONSIVE LAYER
-   One set of breakpoints for the whole site:
-     900px  tablet / small laptop
-     640px  phone
-     400px  small phone
-   Pages may add their own rules, but they use these widths.
-   ===================================================================== */
+/* ---------- primitives ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--hub-radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+.sec-t {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hub-link);
+  margin-bottom: 12px;
+}
+.btn {
+  font: 600 14px/1 var(--sans);
+  padding: 12px 20px;
+  border-radius: var(--hub-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    transform var(--hub-transition),
+    background var(--hub-transition),
+    border-color var(--hub-transition),
+    color var(--hub-transition),
+    box-shadow var(--hub-transition);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+}
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-p {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(67, 56, 202, 0.35);
+}
+.btn-p:hover {
+  filter: brightness(1.06);
+}
+.btn-g {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--strong);
+}
+.btn-g:hover {
+  border-color: var(--accent);
+  color: var(--hub-link-hover);
+  background: var(--raised);
+}
+.hint {
+  font-size: 12.5px;
+  color: var(--faint);
+}
 
-/* --- things that must never push the page wider than the screen --- */
-img, svg, video, canvas, iframe { max-width: 100%; height: auto; }
-table { max-width: 100%; }
-pre { overflow-x: auto; }
-/* long unbroken strings (URLs, emails, part codes) wrap instead of overflowing */
-p, li, td, th, h1, h2, h3, .lede, .desc { overflow-wrap: break-word; }
+/* ---------- site foot ---------- */
+.sitefoot {
+  border-top: 1px solid var(--line);
+  background: var(--bg-alt);
+  padding: 24px;
+  margin-top: clamp(36px, 6vw, 52px);
+}
+.sitefoot .in {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--faint);
+}
+.sitefoot a {
+  color: var(--hub-link);
+}
+.sitefoot a:hover {
+  color: var(--hub-link-hover);
+}
+.footlinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.footlinks .ico {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+}
+.footlinks .ico svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.sitefoot .footnote {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+  display: block;
+}
+.sitefoot .footnote span {
+  max-width: min(88ch, 100%);
+  display: block;
+}
 
-/* any table that can't shrink gets a scrollable parent instead of
-   stretching the page — pages wrap wide tables in .scroll-x */
-.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* ---------- case study ---------- */
+.cs {
+  padding-top: 8px;
+  padding-bottom: 54px;
+  box-sizing: border-box;
+}
+.cs-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--hub-radius-md);
+  padding: clamp(20px, 3vw, 30px);
+  box-shadow: var(--shadow-sm);
+}
+.cs-eyebrow {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hub-link);
+}
+.cs-h {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 1vw + 1.1rem, 1.65rem);
+  color: var(--strong);
+  margin: 6px 0 22px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.cs-block {
+  margin: 0 0 20px;
+}
+.cs-block:last-child {
+  margin-bottom: 0;
+}
+.cs-block h3 {
+  font-size: 14px;
+  color: var(--hub-link);
+  margin: 0 0 6px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-family: var(--sans);
+}
+.cs-block p {
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--muted);
+  margin: 0;
+}
+.cs-block code {
+  background: var(--hub-code-bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+/* ---------- inputs (shared) ---------- */
+input,
+textarea,
+select {
+  accent-color: var(--accent);
+}
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--hub-radius-sm);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--hub-focus-ring);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- print ---------- */
+@media print {
+  .app-nav,
+  .sitefoot,
+  #chatBtn,
+  #chatPanel {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}
+
+/* ---------- responsive ---------- */
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+table {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+p,
+li,
+td,
+th,
+h1,
+h2,
+h3,
+.lede,
+.desc {
+  overflow-wrap: break-word;
+}
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 @media (max-width: 900px) {
-  .head { padding: 34px 0 22px; }
+  .head {
+    padding-block: 34px 22px;
+  }
 }
 
 @media (max-width: 640px) {
-  .wrap, .sitebar .in, .sitefoot { padding-left: 16px; padding-right: 16px; }
-  .head { padding: 26px 0 18px; }
-  .head h1 { font-size: clamp(26px, 8vw, 34px); }
-  .head p { font-size: 15px; }
-  .card, .cs-card { padding: 18px 16px; border-radius: 14px; }
-  .sitefoot .in { flex-direction: column; gap: 6px; }
-
-  /* iOS zooms the page in when a focused field is under 16px.
-     Keep every control at 16px on phones. */
-  input, select, textarea { font-size: 16px !important; }
-
-  /* the chat launcher takes less room on a small screen */
-  #chatBtn { bottom: 14px; right: 14px; padding: 12px 16px; font-size: 14px; }
-  #chatPanel { bottom: 74px; right: 14px; left: 14px; width: auto;
-               height: min(70vh, calc(100vh - 110px)); }
+  .head {
+    padding-block: 26px 18px;
+  }
+  .head h1 {
+    font-size: clamp(1.5rem, 6vw + 0.5rem, 2rem);
+  }
+  .head p {
+    font-size: 15px;
+  }
+  .card,
+  .cs-card {
+    padding: 18px 16px;
+    border-radius: var(--hub-radius-md);
+  }
+  .sitefoot .in {
+    flex-direction: column;
+    gap: 6px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  #chatBtn {
+    bottom: 14px;
+    right: 14px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  #chatPanel {
+    bottom: 74px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+    height: min(70vh, calc(100vh - 110px));
+  }
 }
 
 @media (max-width: 400px) {
-  .wrap, .sitebar .in, .sitefoot { padding-left: 12px; padding-right: 12px; }
-  .head h1 { font-size: 25px; }
-  .chip { font-size: 11px; padding: 3px 8px; }
+  .chip {
+    font-size: 11px;
+    padding: 5px 9px;
+  }
 }

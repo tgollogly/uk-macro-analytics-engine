@@ -1,0 +1,83 @@
+@import url("./hub-tokens.css");
+
+/* Shared sticky nav + horizontal inset — hub, macro demo, portfolio (8 pages). */
+
+.tg-mark {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.tg-mark rect {
+  fill: var(--hub-palette-outline);
+}
+.tg-mark text {
+  fill: #fff;
+}
+
+.app-nav {
+  background: linear-gradient(180deg, var(--hub-palette-header) 0%, #1e1b4b 100%);
+  border-bottom: 2px solid var(--hub-palette-header-stroke);
+  padding: 0.35rem var(--hub-content-pad, clamp(16px, 4vw, 24px));
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  box-sizing: border-box;
+  width: 100%;
+}
+.app-nav .nav-inner {
+  max-width: min(72rem, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.85rem;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.app-nav .nav-title {
+  color: var(--hub-text);
+  font-family: var(--hub-font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: auto;
+  min-width: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.app-nav .nav-title:hover {
+  color: var(--hub-link-hover);
+}
+.app-nav a {
+  color: var(--hub-link);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: color var(--hub-transition, 170ms ease);
+  padding: 0.35rem 0;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+.app-nav a:hover {
+  color: var(--hub-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.app-nav a:focus-visible {
+  outline: 2px solid var(--hub-focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 480px) {
+  .app-nav .nav-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .app-nav a:not(.nav-title) {
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 0.2rem 0;
+  }
+}

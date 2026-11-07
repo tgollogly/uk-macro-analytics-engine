@@ -1,304 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"/>
-<meta name="color-scheme" content="light">
-<title>AI ATS Resume Matcher — live demo</title>
-<meta name="description" content="Paste a CV and a job description, get a match score and the missing keywords, then generate a tailored cover letter and improved CV. Full-stack, with a secure serverless backend."/>
-<link rel="canonical" href="https://tgollogly.dev/ats-matcher.html"/>
-<meta property="og:type" content="website"/>
-<meta property="og:url" content="https://tgollogly.dev/ats-matcher.html"/>
-<meta property="og:title" content="AI ATS Resume Matcher — live demo"/>
-<meta property="og:description" content="Score a CV against a job description, see the missing keywords, then generate a tailored cover letter and CV."/>
-<meta property="og:image" content="https://tgollogly.dev/assets/og/ats-matcher.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="AI ATS Resume Matcher — live demo"/>
-<meta name="twitter:description" content="Score a CV against a job description, see the missing keywords, then generate a tailored cover letter and CV."/>
-<meta name="twitter:image" content="https://tgollogly.dev/assets/og/ats-matcher.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>ATS Resume Matcher — retired on this hub</title>
+<meta name="description" content="The ATS AI demo is not offered on this static preview hub. Use macro analytics demos or see repo docs for the optional worker stack."/>
 <link rel="stylesheet" href="./assets/site.css"/>
-<style>
-  body{margin:0;background:var(--bg-alt);color:var(--ink);font-family:var(--sans);line-height:1.55;}
-  a{color:var(--accent);text-decoration:none;}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 7px;}
-  textarea{width:100%;min-height:230px;font-family:inherit;font-size:14px;line-height:1.5;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);resize:vertical;}
-  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
-  .go{margin-top:18px;font-family:inherit;font-weight:600;font-size:16px;background:var(--accent);color:var(--card);border:none;border-radius:12px;padding:15px 26px;cursor:pointer;transition:background .2s;}
-  .go:hover{background:var(--accent-2);}
-  .go:disabled{opacity:.6;cursor:default;}
-  .result{margin-top:26px;display:none;}
-  .scorecard{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(15,20,23,.06);padding:26px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;}
-  .gauge{--v:0;width:120px;height:120px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--gcol) calc(var(--v)*1%),var(--bg-alt) 0);}
-  .gauge .inner{width:92px;height:92px;border-radius:50%;background:var(--card);display:grid;place-items:center;flex-direction:column;}
-  .gauge .num{font-family:var(--serif);font-weight:600;font-size:32px;color:var(--strong);line-height:1;}
-  .gauge .lab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
-  .verdict h2{font-family:var(--serif);font-size:22px;margin:0 0 4px;color:var(--strong);}
-  .verdict p{margin:0;color:var(--muted);font-size:15px;}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;}
-  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;}
-  .box h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;margin:0 0 12px;}
-  .box.match h3{color:var(--ok);} .box.miss h3{color:var(--err);}
-  .chip.m{color:var(--ok);background:var(--ok-soft);} .chip.x{color:var(--err);background:var(--err-soft);}
-  .sugg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:18px;}
-  .sugg h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;}
-  .sugg ul{margin:0;padding-left:20px;} .sugg li{margin:7px 0;color:var(--muted);font-size:15px;}
-  .msg{margin-top:20px;font-size:14px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;}
-  .msg.err{color:var(--err);border-color:var(--err-soft);background:var(--err-soft);}
-  .loader{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:8px;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .about{margin-top:34px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;}
-  .about h3{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 8px;}
-  .about p{margin:0 0 8px;color:var(--muted);font-size:14.5px;}
-  @media(max-width:900px){.grid,.cols{grid-template-columns:1fr;}}
-
-  @media(max-width:640px){
-    .scorecard{padding:18px;gap:16px;justify-content:center;text-align:center;}
-    .gauge{width:100px;height:100px;}
-    .gauge .inner{width:76px;height:76px;}
-    .gauge .num{font-size:27px;}
-    .verdict{flex:1 1 100%;}
-    .box,.sugg{padding:16px;}
-    textarea{min-height:170px;}
-    .go{width:100%;}
-  }
-</style>
 </head>
 <body>
-<div class="sitebar"><div class="in">
-  <a class="brand" href="../index.html"><svg class="tg-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
-  <a class="back" href="../index.html#hub">&larr; All demos</a>
-</div></div>
-
+<header class="app-nav" role="banner">
+  <nav class="nav-inner" aria-label="Primary">
+    <a class="nav-title" href="../index.html"><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7"/><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg><span>Thomas Gollogly</span></a>
+    <a href="../index.html#hub">Demos</a>
+    <a href="../demo.html">UK macro</a>
+    <a href="./privacy.html">Privacy</a>
+  </nav>
+</header>
 <div class="wrap head">
-  <span class="eyebrow">Demo 01 &middot; AI &amp; full-stack</span>
-  <h1>AI ATS Resume Matcher</h1>
-  <p>Nearly 60% of job seekers say their biggest worry is never knowing if a human saw their CV — because software screens most applications first. Paste your CV and a job description: the AI scores the match, shows the missing keywords, and — with one click — generates a tailored cover letter and an improved CV you can download.</p>
-
-  <div class="grid">
-    <div class="field"><label>Your CV</label><textarea id="cv"></textarea></div>
-    <div class="field"><label>Job description</label><textarea id="jd" placeholder="Paste the full job advert here..."></textarea></div>
-  </div>
-  <button class="go" id="go">Analyse match</button>
-
-  <div class="msg" id="msg" style="display:none;"></div>
-
-  <div class="result" id="result">
-    <div class="scorecard">
-      <div class="gauge" id="gauge"><div class="inner"><div class="num" id="scoreNum">0</div><div class="lab">match</div></div></div>
-      <div class="verdict"><h2 id="verdictH">—</h2><p id="verdictP"></p></div>
-    </div>
-    <div class="cols">
-      <div class="box match"><h3>✓ Keywords you already have</h3><div class="chips" id="matched"></div></div>
-      <div class="box miss"><h3>✕ Missing — add these if true</h3><div class="chips" id="missing"></div></div>
-    </div>
-    <div class="sugg"><h3>Suggestions to improve your match</h3><ul id="suggestions"></ul></div>
-
-    <div class="gen">
-      <h3>Generate application documents</h3>
-      <p class="genhint">Tailored to this job, drawn only from your CV. AI writes the draft — you review and edit before sending.</p>
-      <div class="genbtns">
-        <button id="genCover" class="genbtn">✍️ Generate cover letter</button>
-        <button id="genCv" class="genbtn">📄 Generate improved CV</button>
-      </div>
-      <div id="genMsg" class="msg" style="display:none;"></div>
-      <div id="genOut" class="genout" style="display:none;">
-        <div class="genout-head"><span id="genTitle"></span>
-          <span class="genout-actions">
-            <button id="copyBtn" class="minibtn">Copy</button>
-            <button id="dlBtn" class="minibtn">Download Word</button>
-          </span>
-        </div>
-        <div id="genText" class="gentext"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="about">
-    <h3>How it works</h3>
-    <p>The front end runs on this static site; the CV and job description are sent to a small serverless function (a Cloudflare Worker) that holds the AI key securely and calls Google's Gemini model. Keeping the key server-side is the correct, safe pattern — it's never exposed in the browser.</p>
-    <p>Stack: vanilla JavaScript front end · Cloudflare Worker backend · Google Gemini API · deployed free.</p>
-    <p style="margin-top:10px;color:var(--faint);font-size:13px;"><b>Privacy &amp; AI notice:</b> When you click analyse or generate, this page POSTs your CV and job text JSON to <code>https://tgollogly.dev/api</code> (see <code>config.js</code>), intended for a Worker that calls Google&rsquo;s Gemini API. Responses are not verified from every host; third-party retention follows Google&rsquo;s terms. Do not paste confidential information. For demonstration only — not career, legal or professional advice.</p>
-  </div>
+  <span class="eyebrow">Retired on this preview</span>
+  <h1>ATS Resume Matcher</h1>
+  <p>This static preview hub no longer hosts an active CV/job-description submission flow. There is <strong>no</strong> POST to a gate Worker from this page, and <strong>no</strong> <code>config.js</code> backend URL is loaded.</p>
 </div>
-
-<style>
-  .gen{margin-top:26px;border-top:1px solid var(--line);padding-top:22px;}
-  .gen h3{font-size:15px;color:var(--strong);margin:0 0 4px;}
-  .genhint{color:var(--faint);font-size:13.5px;margin:0 0 14px;}
-  .genbtns{display:flex;flex-wrap:wrap;gap:12px;}
-  .genbtn{font-family:inherit;font-weight:600;font-size:15px;background:var(--card);color:var(--accent);border:1.5px solid var(--accent);border-radius:11px;padding:12px 18px;cursor:pointer;transition:.15s;}
-  .genbtn:hover{background:var(--accent);color:var(--card);}
-  .genbtn:disabled{opacity:.55;cursor:default;}
-  .genout{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);}
-  .genout-head{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--bg-alt);padding:10px 14px;border-bottom:1px solid var(--line);}
-  .genout-head span:first-child{font-weight:700;font-size:13px;color:var(--strong);}
-  .genout-actions{display:flex;gap:8px;}
-  .minibtn{font-family:inherit;font-size:12.5px;font-weight:600;background:var(--accent);color:var(--card);border:none;border-radius:8px;padding:7px 12px;cursor:pointer;}
-  .minibtn:hover{background:var(--accent-2);}
-  .gentext{padding:18px;white-space:pre-wrap;font-size:14.5px;line-height:1.6;color:var(--ink);max-height:520px;overflow:auto;}
-</style>
-<script>
-// Sample CV text so the tool is usable immediately (generic demo data)
-document.getElementById("cv").value = `Alex Developer — Software Developer
-Self-taught developer who builds and ships real, working web applications end to end.
-Skills: JavaScript, TypeScript, HTML, CSS, React, SQL/SQLite, WebAssembly, Cloudflare Workers, REST/JSON APIs, unit testing, CSV import/export, Python, Git, CI/CD.
-Projects: AI resume matcher (full-stack with serverless backend); data admin console with validation rules; SQLite in the browser; TypeScript validation library with unit tests; live weather dashboard; forensic accounting screener; multi-location weather compare; document bundle generator.
-Education: Relevant qualifications and training.`;
-
-const $=id=>document.getElementById(id);
-function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-function bandColour(s){ return s>=75?"var(--ok)":s>=50?"var(--warn)":"var(--err)"; }
-function verdict(s){
-  if(s>=75) return ["Strong match","Your CV lines up well with this job. Tighten the few missing keywords and apply."];
-  if(s>=50) return ["Partial match","Worth applying, but add the missing keywords (where true) to get past the ATS filter."];
-  return ["Weak match","This CV would likely be filtered out. Add the missing keywords if you have them, or target a closer role."];
-}
-
-$("go").addEventListener("click", async ()=>{
-  const cv=$("cv").value.trim(), jd=$("jd").value.trim();
-  const msg=$("msg");
-  if(!jd){ msg.style.display="block"; msg.className="msg err"; msg.textContent="Paste a job description first."; return; }
-  if(!window.AI_BACKEND_URL){
-    msg.style.display="block"; msg.className="msg";
-    msg.innerHTML="This tool isn't switched on yet — the AI backend URL hasn't been set. See <b>AI-SETUP.md</b> to deploy the free Worker, then paste its URL into <b>config.js</b>.";
-    return;
-  }
-  msg.style.display="block"; msg.className="msg"; msg.innerHTML='<span class="loader"></span>Analysing your CV against the job description…';
-  $("result").style.display="none"; $("go").disabled=true;
-  try{
-    const r=await fetch(window.AI_BACKEND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:"ats",cv,jd})});
-    const d=await r.json();
-    if(d.error){ msg.className="msg err"; msg.textContent="Error: "+d.error+(d.raw?(" — "+d.raw.slice(0,200)):""); return; }
-    const score=Math.max(0,Math.min(100,parseInt(d.score)||0));
-    lastMatchScore=score;
-    msg.style.display="none";
-    const col=bandColour(score);
-    const g=$("gauge"); g.style.setProperty("--v",score); g.style.setProperty("--gcol",col);
-    $("scoreNum").textContent=score; $("scoreNum").style.color=col;
-    const [h,p]=verdict(score); $("verdictH").textContent=h; $("verdictP").textContent=p;
-    $("matched").innerHTML=(d.matched||[]).map(k=>`<span class="chip m">${esc(k)}</span>`).join("")||'<span style="color:var(--faint);font-size:14px;">—</span>';
-    $("missing").innerHTML=(d.missing||[]).map(k=>`<span class="chip x">${esc(k)}</span>`).join("")||'<span style="color:var(--faint);font-size:14px;">Nothing major — nice.</span>';
-    $("suggestions").innerHTML=(d.suggestions||[]).map(s=>`<li>${esc(s)}</li>`).join("")||"<li>No suggestions returned.</li>";
-    $("result").style.display="block";
-  }catch(e){ msg.className="msg err"; msg.textContent="Couldn't reach the AI backend. Check the Worker is deployed and the URL in config.js is correct."; }
-  finally{ $("go").disabled=false; }
-});
-
-
-// ---------- Generate cover letter / improved CV ----------
-let lastDocKind = "";
-let lastMatchScore = null;
-async function generate(mode, title, kind, btn){
-  const cv=$("cv").value.trim(), jd=$("jd").value.trim();
-  const gm=$("genMsg");
-  if(!jd){ gm.style.display="block"; gm.className="msg err"; gm.textContent="Paste a job description first."; return; }
-  if(!window.AI_BACKEND_URL){ gm.style.display="block"; gm.className="msg"; gm.textContent="AI backend isn't connected yet."; return; }
-  if(lastMatchScore!==null && lastMatchScore<50){
-    const ok=confirm("This looks like a weak match ("+lastMatchScore+"%).\n\nApplying to a poorly-matched role rarely succeeds, and the generated documents can't invent experience you don't have. Consider whether this job really fits.\n\nGenerate anyway?");
-    if(!ok){ return; }
-  }
-  gm.style.display="block"; gm.className="msg"; gm.innerHTML='<span class="loader"></span>Writing your '+title.toLowerCase()+'… this can take a few seconds.';
-  $("genOut").style.display="none";
-  document.querySelectorAll(".genbtn").forEach(b=>b.disabled=true);
-  try{
-    const r=await fetch(window.AI_BACKEND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,cv,jd})});
-    const d=await r.json();
-    if(d.error && !d.text){ gm.className="msg err"; gm.textContent="Error: "+d.error; return; }
-    gm.style.display="none";
-    $("genTitle").textContent=title;
-    $("genText").textContent=(d.text||"").trim();
-    lastDocKind=kind;
-    $("genOut").style.display="block";
-    $("genOut").scrollIntoView({behavior:"smooth",block:"nearest"});
-  }catch(e){ gm.className="msg err"; gm.textContent="Couldn't reach the AI backend just now — please try again in a moment."; }
-  finally{ document.querySelectorAll(".genbtn").forEach(b=>b.disabled=false); }
-}
-$("genCover").addEventListener("click",()=>generate("cover","Cover letter","cover"));
-$("genCv").addEventListener("click",()=>generate("cvimprove","Improved CV","cv"));
-
-$("copyBtn").addEventListener("click",()=>{
-  const b=$("copyBtn"); const t=b.textContent;
-  navigator.clipboard.writeText($("genText").textContent).then(()=>{
-    b.textContent="Copied ✓"; setTimeout(()=>b.textContent=t,1500);
-  }).catch(()=>{
-    b.textContent="Couldn't copy — select the text instead"; setTimeout(()=>b.textContent=t,2000);
-  });
-});
-
-// Build a clean Word (.doc) file from the generated text
-function textToDocHtml(text, isCV){
-  const lines=text.split(/\r?\n/); let html=""; let inList=false;
-  const closeList=()=>{ if(inList){ html+="</ul>"; inList=false; } };
-  for(let raw of lines){
-    const line=raw.trim();
-    if(line===""){ closeList(); continue; }
-    if(isCV && /^[A-Z][A-Z \/&]{2,}$/.test(line)){ closeList(); html+="<h2>"+esc(line)+"</h2>"; continue; }
-    if(/^[-•]\s+/.test(line)){ if(!inList){ html+="<ul>"; inList=true; } html+="<li>"+esc(line.replace(/^[-•]\s+/,""))+"</li>"; continue; }
-    closeList(); html+="<p>"+esc(line)+"</p>";
-  }
-  closeList(); return html;
-}
-function downloadDoc(filename, title, text, isCV){
-  const body=textToDocHtml(text,isCV);
-  const doc="<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>"+
-    "<head><meta charset='utf-8'><title>"+title+"</title><style>"+
-    /* NOTE: this CSS is embedded in a downloaded Word document, so it must use
-       literal hex — CSS custom properties do not resolve outside this page.
-       Values below are the site tokens, hardcoded on purpose. */
-    "@page{size:A4;margin:2cm;} body{font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.45;color:#0b0f14;} "+
-    "h1{font-size:20pt;margin:0 0 2pt;} h2{font-size:12.5pt;color:#2f39c9;border-bottom:1px solid #d6dbe1;padding-bottom:2pt;margin:14pt 0 6pt;text-transform:uppercase;letter-spacing:.5pt;} "+
-    "p{margin:0 0 8pt;} ul{margin:2pt 0 8pt;padding-left:18pt;} li{margin:2pt 0;} .pagebreak{page-break-before:always;}"+
-    "</style></head><body>"+body+"<\/body><\/html>";
-  const blob=new Blob(['\ufeff',doc],{type:"application/msword"});
-  const url=URL.createObjectURL(blob); const a=document.createElement("a");
-  a.href=url; a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-}
-$("dlBtn").addEventListener("click",()=>{
-  const isCV=lastDocKind==="cv";
-  const fname=isCV?"Tailored_CV.doc":"Cover_Letter.doc";
-  const title=isCV?"Tailored CV":"Cover Letter";
-  downloadDoc(fname,title,$("genText").textContent,isCV);
-});
-
-</script>
-
-
-<section class="cs"><div class="cs-card">
-  <div class="cs-eyebrow">Case study</div>
-  <div class="cs-h">How it's built &mdash; and why</div>
-  <div class="cs-block"><h3>The problem</h3><p>Most applications are read by software before a person sees them. Applicants get no feedback and no idea which keywords they missed, so they keep sending the same CV into the same filter.</p></div>
-  <div class="cs-block"><h3>Stack &amp; why I chose it</h3><p>Vanilla JavaScript on the front end, with a Cloudflare Worker as the back end calling Google&rsquo;s Gemini model. The Worker exists for one reason: the API key. A browser-side key is visible to anyone who opens dev tools, so the key lives server-side as a Cloudflare secret and the browser only ever talks to my own <code>/api</code> endpoint.</p></div>
-  <div class="cs-block"><h3>Key decisions</h3><p>The model is asked to return strict JSON for the score, matched and missing keywords, so the response can be parsed and mapped onto the UI rather than dumped as text. The cover-letter and CV-rewrite prompts carry explicit instructions never to invent employers, dates or qualifications &mdash; an AI that flatters you into a lie is worse than no tool at all. Word export is generated client-side as an HTML blob with a Word MIME type, which avoids a document-generation dependency entirely.</p></div>
-  <div class="cs-block"><h3>Trade-offs &amp; what's next</h3><p>It depends on one model and one vendor, and the score is indicative rather than a real ATS simulation &mdash; every ATS scores differently. Next: caching repeated CV/JD pairs to cut token cost, and a diff view showing exactly what the rewrite changed.</p></div>
-</div></section>
-
-<div class="sitefoot"><div class="in">
-  <span>&copy; <span class="footyr"></span> Thomas Gollogly &middot; Northern Ireland</span>
-  <span class="footlinks">
-    <a class="ico" href="../index.html" aria-label="Home"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.69 3.5 9.5V21a1 1 0 0 0 1 1H9v-7h6v7h4.5a1 1 0 0 0 1-1V9.5L12 2.69z"/></svg><span>Home</span></a>
-    <a class="ico" href="../index.html" aria-label="CV"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM7 13h10v1.5H7V13zm0 4h10v1.5H7V17zm0-8h5v1.5H7V9z"/></svg><span>CV</span></a>
-    <a class="ico" href="mailto:thomas@tgollogly.dev" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13zm2.2.5 7.15 5.72a1 1 0 0 0 1.3 0L19.8 6H4.2zM4 8.1V18h16V8.1l-6.86 5.5a3 3 0 0 1-3.78 0L4 8.1z"/></svg><span>Email</span></a>
-    <a class="ico" href="https://github.com/tgollogly/portfolio" target="_blank" rel="noopener me" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.28 5.69.42.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg><span>GitHub</span></a>
-    <a class="ico" href="https://www.linkedin.com/in/thomasgollogly" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg><span>LinkedIn</span></a>
-  </span>
+<div class="wrap doc">
+  <p class="mirror-callout">The upstream portfolio file may still describe an AI matcher on other hosts. On <strong>uk-macro-analytics-landing</strong> we removed the public ATS demo in favour of <strong>visual macro analytics</strong> built from committed pipeline JSON.</p>
+  <h2 style="font-size:18px;margin:24px 0 10px;">Try instead</h2>
+  <ul>
+    <li><a href="./macro-explorer.html">Macro trend explorer</a> — CPIH vs PSNB charts, filters, CSV download</li>
+    <li><a href="./data-coverage.html">Pipeline coverage explorer</a> — nulls, row counts, manifest limits</li>
+    <li><a href="../demo.html">UK macro charts</a> — original Chart.js snapshot dashboard</li>
+  </ul>
+  <h2 style="font-size:18px;margin:24px 0 10px;">Developers</h2>
+  <p>Optional gate/backend Workers remain in the repo for review (<code>docs/ATS_API_WORKER.md</code>). They are <strong>not</strong> linked from this hub and are <strong>not</strong> required for the seven public demos.</p>
 </div>
-<div class="in footnote">
-  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. Data handling depends on the demo (see <a href="./privacy.html">Privacy &amp; AI notice</a>): Beneish and BundleBuilder keep input in your browser; weather demos call third-party APIs (Open-Meteo, map tiles); the ATS matcher sends JSON to <code>https://tgollogly.dev/api</code> for Gemini when you click analyse or generate (backend availability not verified from every host). Optional chat is disabled here. Do not enter confidential information.</span>
+<div class="sitefoot"><div class="in footnote">
+  <span>Portfolio demos on this mirror are for demonstration only &mdash; not professional, legal, financial or medical advice. ATS is retired on this hub. See <a href="./macro-explorer.html">macro analytics demos</a> or <a href="../index.html#hub">demo hub</a>.</span>
 </div></div>
-
-<script>document.querySelectorAll(".footyr").forEach(e=>e.textContent=new Date().getFullYear());</script>
-
-
-
-<script src="./config.js"></script>
-<script src="./assets/chat-disabled.js" defer></script>
 </body>
 </html>
