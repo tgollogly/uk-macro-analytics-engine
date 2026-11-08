@@ -1,0 +1,53 @@
+# Dependabot: opens update PRs only — no auto-merge (review in GitHub UI).
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "10:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    groups:
+      python-patch-minor:
+        patterns:
+          - "*"
+        update-types:
+          - patch
+          - minor
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: npm
+    directory: "/workers/ats-api"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "10:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 3
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - patch
+          - minor
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "10:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - "*"
