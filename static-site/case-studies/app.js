@@ -1,9 +1,8 @@
 /**
- * Case study charts — loads committed summary JSON only (no live APIs).
+ * Case study charts — committed summary JSON only (no live APIs).
+ * KPI copy lives in DOM captions below the chart (not painted on the canvas).
  */
-import { bootDataPage } from "../hub-page-enhance.js?v=20251107d4";
-import { chartJsLightOptions } from "../chart-light-theme.js";
-import { chartMotionMs } from "../chart-light-theme.js";
+import { chartJsLightOptions } from "../chart-light-theme.js?v=20251107d2";
 
 const fmtM = (n) =>
   new Intl.NumberFormat("en-GB", {
@@ -18,7 +17,7 @@ const chartBoxOptions = (extra = {}) =>
   chartJsLightOptions({
     maintainAspectRatio: false,
     responsive: true,
-    layout: { padding: { top: 4, right: 4, left: 4, bottom: 4 } },
+    layout: { padding: { top: 6, right: 8, left: 4, bottom: 2 } },
     ...extra,
   });
 
@@ -41,12 +40,11 @@ function niChart(canvas, data) {
           data: [actual, gross],
           backgroundColor: ["#1d5c8c", "#e8a830"],
           borderRadius: 8,
-          maxBarThickness: 64,
+          maxBarThickness: 56,
         },
       ],
     },
     options: chartBoxOptions({
-      animation: { duration: chartMotionMs() },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -56,7 +54,9 @@ function niChart(canvas, data) {
         },
       },
       scales: {
-        x: { ticks: { maxRotation: 0, autoSkip: true } },
+        x: {
+          ticks: { maxRotation: 0, autoSkip: true, font: { size: 11 } },
+        },
         y: {
           ticks: {
             maxTicksLimit: 5,
@@ -80,12 +80,11 @@ function tradeChart(canvas, data) {
           data: [crude.prior_q_gbp_b, crude.current_q_gbp_b],
           backgroundColor: ["#7c3aed", "#14b8a6"],
           borderRadius: 8,
-          maxBarThickness: 72,
+          maxBarThickness: 64,
         },
       ],
     },
     options: chartBoxOptions({
-      animation: { duration: chartMotionMs() },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -95,7 +94,7 @@ function tradeChart(canvas, data) {
         },
       },
       scales: {
-        x: { ticks: { maxRotation: 0 } },
+        x: { ticks: { maxRotation: 0, font: { size: 11 } } },
         y: {
           title: { display: true, text: "£ billion" },
           ticks: { maxTicksLimit: 5 },
@@ -105,7 +104,7 @@ function tradeChart(canvas, data) {
   });
 }
 
-async function renderCaseStudies() {
+export async function initCaseStudyCharts() {
   const [ni, trade] = await Promise.all([
     loadJson("./case-studies/ni-prescribing-2026-08-summary.json"),
     loadJson("./case-studies/uk-energy-trade-q2-2026-summary.json"),
@@ -122,7 +121,7 @@ async function renderCaseStudies() {
   }
   const trCap = document.getElementById("trade-chart-caption");
   if (trCap) {
-    trCap.textContent = `YoY change (CPA 06.1): +${trade.cpa_crude_exports.yoy_change_pct}%.`;
+    trCap.textContent = `YoY change (same CPA row): +${trade.cpa_crude_exports.yoy_change_pct}%.`;
   }
 
   const niFig = document.getElementById("ni-findings");
@@ -133,9 +132,10 @@ async function renderCaseStudies() {
   if (trFig) {
     trFig.textContent = `Crude exports ${fmtBn(trade.cpa_crude_exports.prior_q_gbp_b)} → ${fmtBn(trade.cpa_crude_exports.current_q_gbp_b)} (CPA 06.1, current prices).`;
   }
-  document.querySelectorAll(".chartbox").forEach((el) => {
-    el.dataset.chartReady = "true";
-  });
 }
 
-bootDataPage({ load: renderCaseStudies });
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => initCaseStudyCharts().catch(console.error));
+} else {
+  initCaseStudyCharts().catch(console.error);
+}

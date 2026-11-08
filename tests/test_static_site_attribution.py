@@ -160,7 +160,8 @@ def test_docs_describe_ats_worker_deploy_and_secrets() -> None:
 def test_hub_index_links_to_seven_demo_routes() -> None:
     idx = (STATIC / "index.html").read_text(encoding="utf-8")
     assert 'href="./demo.html"' in idx
-    assert "seven demos" in idx.lower()
+    assert 'href="#hub">Demos</a>' in idx
+    assert idx.lower().count('href="./portfolio/') >= 4
     assert 'href="#hub">Demos</a>' in idx
     assert 'href="./portfolio/macro-explorer.html"' in idx
     assert 'href="./portfolio/data-coverage.html"' in idx
@@ -168,7 +169,7 @@ def test_hub_index_links_to_seven_demo_routes() -> None:
     assert 'href="./portfolio/heat-dome.html"' in idx
     assert 'href="./portfolio/thermal-compare.html"' in idx
     assert 'href="./portfolio/bundlebuilder.html"' in idx
-    assert "ATS matcher is retired" in idx or "retired" in idx.lower()
+    assert "not</strong> claiming paid analyst" in idx.lower() or "retired" in idx.lower()
 
 
 def test_mirror_privacy_describes_hub_without_active_ats() -> None:
@@ -241,12 +242,12 @@ def test_head_vertical_padding_preserves_wrap_horizontal_inset() -> None:
 
 
 def test_compact_nav_avoids_full_width_third_row() -> None:
-    """Mobile nav stays compact: no nav-back forced to 100% width (third sticky row)."""
+    """Mobile nav wraps links; title may span full row but links stay on following rows."""
     shell = (STATIC / "shell-shared.css").read_text(encoding="utf-8")
     assert "nav-back" not in shell
-    assert "flex: 1 1 100%" not in shell
     assert "nav-inner" in shell and "flex-wrap" in shell
-    assert "min-height: 44px" in shell
+    assert "white-space: normal" in shell
+    assert "overflow-wrap" in shell
 
 
 def test_privacy_doc_shares_wrap_column_with_page_head() -> None:

@@ -54,11 +54,19 @@
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   transition: color var(--hub-transition, 170ms ease);
-  padding: 0.35rem 0;
+  padding: 0.35rem 0.15rem;
   min-height: 40px;
   display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+.app-nav .nav-contact {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
   align-items: center;
 }
 .app-nav a:hover {
@@ -71,14 +79,21 @@
   outline-offset: 2px;
 }
 @media (max-width: 480px) {
+  .app-nav .nav-inner {
+    gap: 0.35rem 0.55rem;
+  }
   .app-nav .nav-title {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     min-width: 0;
     max-width: 100%;
   }
+  .app-nav .nav-title span {
+    overflow-wrap: anywhere;
+  }
   .app-nav a:not(.nav-title) {
-    font-size: 0.82rem;
-    min-height: 44px;
-    padding: 0.2rem 0;
+    font-size: 0.8rem;
+    min-height: 40px;
+    padding: 0.15rem 0.1rem;
+    flex: 0 1 auto;
   }
 }
