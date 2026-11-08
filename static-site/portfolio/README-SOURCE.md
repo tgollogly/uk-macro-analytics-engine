@@ -1,6 +1,8 @@
 # Portfolio demo mirror (source)
 
-Static copies of selected pages from [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) (MIT):
+**Canonical deploy path:** `static-site/portfolio/` in [**uk-macro-analytics-engine**](https://github.com/tgollogly/uk-macro-analytics-engine) (served at https://tgollogly.dev/).
+
+Static copies of selected pages, originally from [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) (MIT; owner-approved archive):
 
 - `beneish.html`, `heat-dome.html`, `thermal-compare.html`, `bundlebuilder.html`
 - `privacy.html`

@@ -2,7 +2,7 @@
 
 This file ties **evidence in the repository** to what a junior **reporting analyst**, **data analyst**, **data technician**, or **junior BI** hire might look for: sources, quality checks, methods, how to reproduce, **measured** results (from this repo’s outputs), and limits. It does **not** promise job outcomes, senior skills, or contributions beyond what the code and tests document.
 
-Links use paths inside [**uk-macro-analytics-engine**](https://github.com/tgollogly/uk-macro-analytics-engine). Mirrored portfolio demos live under `static-site/portfolio/`; their canonical source is [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio).
+Links use paths inside [**uk-macro-analytics-engine**](https://github.com/tgollogly/uk-macro-analytics-engine). Mirrored portfolio demos live under `static-site/portfolio/` (canonical source and deploy). Upstream MIT originals were [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) (approved for archive — see `docs/PORTFOLIO_REPO_INVENTORY.md`).
 
 ---
 

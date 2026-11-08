@@ -279,6 +279,21 @@ def test_ats_workers_wrangler_enables_observability_logs() -> None:
         assert "invocation_logs = true" in blob, name
 
 
+def test_portfolio_footers_point_at_canonical_repo() -> None:
+    """Live mirror source links target uk-macro-analytics-engine, not active portfolio deploy."""
+    canon = "github.com/tgollogly/uk-macro-analytics-engine"
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "privacy.html",
+    ):
+        html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
+        assert canon in html, name
+        assert 'href="https://github.com/tgollogly/portfolio"' not in html, name
+
+
 def test_portfolio_footers_link_site_home_not_cv() -> None:
     """Mirrored portfolio pages must not imply a public CV download."""
     for name in (

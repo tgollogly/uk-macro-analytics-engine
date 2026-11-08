@@ -77,7 +77,7 @@ def test_demo_page_mentions_evidence_path() -> None:
     demo = (ROOT / "static-site" / "demo.html").read_text(encoding="utf-8")
     assert "manifest.json" in demo
     assert "CASE_STUDIES.md" in demo
-    assert "blob/6c0bc2a06bef8960bd4291ec9e6218e1d394e8ea/docs/CASE_STUDIES.md" in demo
+    assert "blob/main/docs/CASE_STUDIES.md" in demo
 
 
 def test_case_studies_page_links_rebuilt_summaries() -> None:
