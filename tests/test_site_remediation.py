@@ -19,7 +19,8 @@ def test_hub_promotes_case_studies_and_contact() -> None:
     assert "linkedin.com/in/thomasgollogly" in html
     assert "UK-remote junior" in html or "junior / trainee" in html
     assert "AI-assisted build" in html
-    assert "CV PDF is <strong>not</strong> hosted" in html
+    assert "cv.pdf" not in html.lower()
+    assert "linkedin.com/in/thomasgollogly" in html
 
 
 def test_macro_story_static_not_published() -> None:
