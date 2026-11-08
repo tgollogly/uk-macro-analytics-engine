@@ -23,11 +23,11 @@
   <meta name="twitter:image" content="https://tgollogly.dev/og-hub-public-data-20251108a.png" />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./hub-tokens.css?v=20251107d2" />
-  <link rel="stylesheet" href="./shell-shared.css?v=20251107d2" />
-  <link rel="stylesheet" href="./hub-pages.css?v=20251107d2" />
+  <link rel="stylesheet" href="./hub-tokens.css?v=20251108d6" />
+  <link rel="stylesheet" href="./shell-shared.css?v=20251108d6" />
+  <link rel="stylesheet" href="./hub-pages.css?v=20251108d6" />
   <link rel="stylesheet" href="./hub-motion.css?v=20251107d4" />
-  <link rel="stylesheet" href="./hub-visual-polish.css?v=20251107d4" />
+  <link rel="stylesheet" href="./hub-visual-polish.css?v=20251108d6" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -40,9 +40,10 @@
         ><svg class="tg-mark" width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" /><text x="15" y="20" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" text-anchor="middle">TG</text></svg
         ><span>Thomas Gollogly</span></a
       >
-      <a href="#story">Data story</a>
+      <a href="./case-studies.html">Case studies</a>
+      <a href="#story">Snapshot</a>
       <a href="#hub">Demos</a>
-      <a href="./demo.html">UK macro charts</a>
+      <a class="nav-contact" href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a>
       <a href="./portfolio/privacy.html">Privacy</a>
     </nav>
   </header>
@@ -51,20 +52,21 @@
     <div class="inner motion-in">
       <div class="hero-layout">
         <div class="hero-copy">
-          <p class="hero-eyebrow">Junior reporting &amp; data technician portfolio</p>
-          <h1>From ONS tables to <span class="hero-title-warm">explainable</span> <span class="hero-title-accent">charts</span></h1>
+          <p class="hero-eyebrow">Seeking UK-remote junior / trainee data &amp; reporting roles</p>
+          <h1>Public-data analysis you can <span class="hero-title-warm">click</span> and <span class="hero-title-accent">audit</span></h1>
           <p class="lead">
-            I build small, testable pipelines in Python and DuckDB, export traceable CSV/JSON, and ship static demos a recruiter can click in under a minute.
-            Numbers below come from the <strong>committed snapshot</strong> in this repo — not invented headlines and not a live ONS pull in the browser.
+            Portfolio of reproducible open-data work: DuckDB + Python pipelines, committed snapshot JSON exports, and static charts with explicit limits — not a live ONS pull in the browser.
+            I am <strong>not</strong> claiming paid analyst employment — this site shows what I can build, test, and document.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#story">Read the snapshot story</a>
-            <a class="btn btn-secondary" href="#hub">Seven interactive demos</a>
-            <a class="btn btn-secondary" href="https://github.com/tgollogly/uk-macro-analytics-engine">Engine on GitHub</a>
+            <a class="btn btn-primary" href="./case-studies.html">Open case studies</a>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn profile</a>
+            <a class="btn btn-secondary" href="#story">ONS snapshot highlights</a>
           </div>
           <p class="hero-note hub-prose">
-            Evidence and limits: <a href="./case-studies.html">case studies hub</a> · <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">CASE_STUDIES.md</a>.
-            ATS resume matcher is <strong>retired</strong> on this site (no CV submission). Weather and Beneish demos use third-party or illustrative inputs as labelled.
+            <strong>Contact:</strong> <a href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">linkedin.com/in/thomasgollogly</a>.
+            A public CV PDF is <strong>not</strong> hosted on this site yet — ask via LinkedIn if you need one.
+            Methods: <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/CASE_STUDIES.md">CASE_STUDIES.md</a>.
           </p>
         </div>
         <aside class="hero-data-stage motion-in" data-stagger="1" aria-labelledby="hero-stage-title">
@@ -118,22 +120,37 @@
         </article>
       </div>
 
-      <div class="site-notice motion-in" id="hub" data-stagger="2">
-        <strong>Seven demos</strong> — macro engine chart, trend explorer, coverage QA, mirrored portfolio tools (Beneish, weather, BundleBuilder).
-        Portfolio HTML is attributed to <a href="https://github.com/tgollogly/portfolio">tgollogly/portfolio</a> (MIT) where noted; macro analytics pages are authored in this repo.
+      <h2 class="hub-section-title" id="hub">Strongest evidence first</h2>
+      <div class="hub-grid-demos">
+        <article class="hub-card hub-card-feature motion-in reveal-section" data-stagger="1">
+          <h2><span class="hub-tag">NI · Aug 2026</span> GP prescribing scale &amp; cost</h2>
+          <p>
+            <strong>So what:</strong> one month, all NI practices — item counts vs actual/gross reimbursement from Open Data NI.
+            Does not explain clinical outcomes or policy.
+          </p>
+          <a class="btn btn-primary" href="./case-studies.html#study-ni">NI prescribing study</a>
+        </article>
+        <article class="hub-card hub-card-feature motion-in reveal-section">
+          <h2><span class="hub-tag">Trade · Q2</span> Crude exports YoY (CPA 06.1)</h2>
+          <p>
+            <strong>So what:</strong> same CPA product row, current prices, Q2 2025 vs Q2 2026 — not a whole-economy energy narrative.
+          </p>
+          <a class="btn btn-primary" href="./case-studies.html#study-trade">Energy trade study</a>
+        </article>
       </div>
 
-      <h2 class="hub-section-title">Macro &amp; analytics</h2>
+      <div class="site-notice motion-in reveal-section" data-stagger="2">
+        <strong>AI-assisted build, human-checked methods.</strong>
+        Parts of this site were built with AI coding tools; aggregates, manifests, and <code>pytest</code> checks live in the GitHub repo.
+        I do <strong>not</strong> claim independent validation beyond what is reproduced and cited there — please read limits on each page.
+      </div>
+
+      <h2 class="hub-section-title">Macro &amp; analytics demos</h2>
       <div class="hub-grid-demos">
         <article class="hub-card hub-card-feature motion-in" data-stagger="1">
           <h2><span class="hub-tag">Charts</span> UK macro — dual series (separate axes)</h2>
           <p>Chart.js dashboard: CPIH YoY % and PSNB £m from the same snapshot bundle; downloads and manifest provenance on-page.</p>
           <a class="btn btn-primary" href="./demo.html">Open macro charts</a>
-        </article>
-        <article class="hub-card hub-card-feature motion-in">
-          <h2><span class="hub-tag">Story</span> Monthly macro patterns</h2>
-          <p>Heatmap, turning points, and PSNB lumps from the same snapshot — patterns without invented causes.</p>
-          <a class="btn btn-primary" href="./macro-story.html">Open data story</a>
         </article>
         <article class="hub-card motion-in">
           <h2><span class="hub-tag">Explorer</span> Macro trend explorer</h2>
@@ -168,15 +185,6 @@
           <h2><span class="hub-tag">Print</span> BundleBuilder</h2>
           <p>Fictional court-bundle layout; print/PDF stays in your browser.</p>
           <a class="btn btn-primary" href="./portfolio/bundlebuilder.html">Open BundleBuilder</a>
-        </article>
-      </div>
-
-      <h2 class="hub-section-title">Analyst evidence</h2>
-      <div class="hub-grid-demos">
-        <article class="hub-card hub-card-feature motion-in">
-          <h2><span class="hub-tag">Review</span> Case studies &amp; CV handoff</h2>
-          <p>Verified UK macro work in-repo; NI prescribing and energy trade documented only when sources are attached — no screenshot statistics on the public page.</p>
-          <a class="btn btn-primary" href="./case-studies.html">Open case studies</a>
         </article>
       </div>
 
@@ -216,7 +224,7 @@
       sparklineYoY,
       sparklinePsnb,
       drawSparkline,
-    } from "./hub-insights.js?v=20251107d2";
+    } from "./hub-insights.js?v=20251108d6";
 
     initPageMotion();
     initSectionReveal(".reveal-section, .insight-feature");

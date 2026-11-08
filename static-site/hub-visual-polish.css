@@ -1,6 +1,8 @@
 /* Readable analytics polish — light ivory shell, generous type, bounded charts. */
 
-.page-shell {
+/* Avoid clipping readable hero/nav copy on narrow viewports (scroll containment on grids only). */
+.hub-main,
+.case-studies-page .hub-main {
   overflow-x: clip;
 }
 
