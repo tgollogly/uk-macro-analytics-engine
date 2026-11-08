@@ -279,6 +279,22 @@ def test_ats_workers_wrangler_enables_observability_logs() -> None:
         assert "invocation_logs = true" in blob, name
 
 
+def test_portfolio_footers_link_site_home_not_cv() -> None:
+    """Mirrored portfolio pages must not imply a public CV download."""
+    for name in (
+        "beneish.html",
+        "heat-dome.html",
+        "thermal-compare.html",
+        "bundlebuilder.html",
+        "privacy.html",
+    ):
+        html = (STATIC / "portfolio" / name).read_text(encoding="utf-8")
+        assert 'aria-label="CV"' not in html, name
+        assert ">CV</span>" not in html, name
+        assert 'aria-label="Site home' in html, name
+        assert "../index.html" in html, name
+
+
 def test_ats_upstream_timeout_documented_in_worker_core() -> None:
     """Optional worker stack retained in repo; public hub does not expose ATS UI."""
     core = (ROOT / "workers" / "ats-api" / "src" / "ats-core.ts").read_text(encoding="utf-8")

@@ -2,6 +2,8 @@
 
 This document inventories references to the upstream portfolio repository [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) inside **uk-macro-analytics-engine**. It supports a **safe archive plan** after domain cutover — **no deletion or archive is performed by this repo**.
 
+Broader **keep / archive / merge** mapping (public repos + Workers): [`REPO_CONSOLIDATION_PROPOSAL.md`](REPO_CONSOLIDATION_PROPOSAL.md) (read-only proposal — requires owner approval before any GitHub action).
+
 ## Upstream source (verified)
 
 | Item | URL / location |

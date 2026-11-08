@@ -20,7 +20,7 @@ Edit `static-site/index.html` and add your **Streamlit Cloud app URL** as the ma
 1. Push repo to GitHub.
 2. [share.streamlit.io](https://share.streamlit.io) → New app → select repo, main file `streamlit_app.py`.
 3. Python 3.11, `requirements.txt` for dependencies.
-4. Copy the public URL into your CV and into `static-site/index.html`.
+4. Copy the public Streamlit URL into `static-site/index.html` (and LinkedIn/application materials as needed — no public CV PDF on the hub).
 
 ## “Real-time” data
 
