@@ -34,7 +34,9 @@ def draw_card(img: Image.Image, *, headline: str, subline: str, detail: str, bad
     w, h = img.size
     draw = ImageDraw.Draw(img)
     draw.rectangle((0, 0, w, h), fill=IVORY)
-    draw.rounded_rectangle((40, 36, w - 40, h - 36), radius=26, fill=SURFACE, outline=COBALT, width=3)
+    draw.rounded_rectangle(
+        (40, 36, w - 40, h - 36), radius=26, fill=SURFACE, outline=COBALT, width=3
+    )
     draw.rectangle((40, 36, 46, h - 36), fill=CORAL)
     draw.rectangle((46, 36, 52, h - 36), fill=TEAL)
     draw.rectangle((52, 36, 58, h - 36), fill=AMBER)

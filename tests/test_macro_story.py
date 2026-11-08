@@ -24,7 +24,10 @@ def test_macro_story_bundle_matches_snapshot_rows() -> None:
         assert committed["cpih_yoy_last_24m"][-1]["month"] == live["cpih_yoy_last_24m"][-1]["month"]
 
 
-@pytest.mark.skipif(not STORY_HTML.is_file(), reason="macro story HTML not published on static landing")
+@pytest.mark.skipif(
+    not STORY_HTML.is_file(),
+    reason="macro story HTML not published on static landing",
+)
 def test_story_page_exists_when_published() -> None:
     html = STORY_HTML.read_text(encoding="utf-8")
     assert "macro-story.json" in html or "macro-story/story.js" in html
