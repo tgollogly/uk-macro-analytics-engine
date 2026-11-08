@@ -38,7 +38,7 @@ Per-script **route tables** returned empty from API for `uk-macro-analytics-land
 | Repo | Role | After cutover |
 |------|------|---------------|
 | `tgollogly/uk-macro-analytics-engine` | Source of truth for hub + pipeline | Hub + pipeline URLs point here (no public CV PDF) |
-| `tgollogly/portfolio` | Upstream MIT mirror for some HTML | **Archive later** with README pointer — see `docs/PORTFOLIO_REPO_INVENTORY.md` |
+| `tgollogly/portfolio` | Upstream MIT mirror (superseded by in-tree copy) | **Archive approved** — manual step if agent token lacks admin; see `docs/PORTFOLIO_REPO_INVENTORY.md` |
 
 ## Preflight (before any production switch)
 

@@ -1,6 +1,6 @@
 # Portfolio repository dependency inventory
 
-This document inventories references to the upstream portfolio repository [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) inside **uk-macro-analytics-engine**. It supports a **safe archive plan** after domain cutover — **no deletion or archive is performed by this repo**.
+This document inventories references to the upstream portfolio repository [**tgollogly/portfolio**](https://github.com/tgollogly/portfolio) inside **uk-macro-analytics-engine**. It supports a **safe archive plan** after domain cutover. **Archive execution:** owner-approved 8 Nov 2026; agent **dependency check passed** (demos + licence in-tree; CI/deploy unaffected). GitHub archive API returned **403** from the cloud-agent token — complete archive manually (Settings → Archive) or with a token that has `admin:repo_hook` / repo admin on `tgollogly/portfolio`.
 
 Broader **keep / archive / merge** mapping (public repos + Workers): [`REPO_CONSOLIDATION_PROPOSAL.md`](REPO_CONSOLIDATION_PROPOSAL.md) (read-only proposal — requires owner approval before any GitHub action).
 
