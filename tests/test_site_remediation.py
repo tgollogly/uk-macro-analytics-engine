@@ -17,10 +17,10 @@ def test_hub_promotes_case_studies_and_contact() -> None:
     html = INDEX.read_text(encoding="utf-8")
     assert "macro-story.html" not in html
     assert "linkedin.com/in/thomasgollogly" in html
+    assert "mailto:thomas@tgollogly.dev" in html
     assert "UK-remote junior" in html or "junior / trainee" in html
     assert "AI-assisted build" in html
     assert "cv.pdf" not in html.lower()
-    assert "linkedin.com/in/thomasgollogly" in html
 
 
 def test_macro_story_static_not_published() -> None:

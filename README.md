@@ -261,6 +261,12 @@ After regenerating bitmaps, commit the updated **`hero-README-v2.png`** / **`arc
 
 ---
 
+## Contact
+
+**Thomas Gollogly** — [thomas@tgollogly.dev](mailto:thomas@tgollogly.dev) · [LinkedIn](https://www.linkedin.com/in/thomasgollogly) · live portfolio hub [tgollogly.dev](https://tgollogly.dev/). No public CV PDF on the site; use email or LinkedIn for roles.
+
+---
+
 ## Legal — licence & disclaimer
 
 ### Software (this repository)
