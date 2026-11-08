@@ -169,15 +169,16 @@ SHA-256 of the August 2026 CSV is recorded in `static-site/case-studies/manifest
 | Total items | 3,638,019 |
 | Gross cost (£) | 41,961,966.94 |
 | Actual cost (£) | 40,416,549.60 |
-| BNF ch.4 actual cost (“CNS” proxy) | 7,598,986.45 |
+| BNF ch.4 actual cost (therapy-area shorthand, sometimes called “CNS” in notes) | 7,598,986.45 |
 | Tirzepatide items / actual cost | 9,352 / £2,096,263.00 |
-| Atorvastatin items | 152,303 |
+| Atorvastatin items / actual cost | 152,303 / £175,013.42 |
 
 ### Methods and limits
 
 - DuckDB `read_csv` with **latin-1** encoding and explicit column names (pound sign in headers).
 - **Items** are dispensing lines, not patients or events; **Actual cost** is contractor reimbursement, not full NHS spend.
-- Tirzepatide / atorvastatin matched on presentation/VMP/AMP name contains.
+- **BNF chapter 4** = sum of actual cost where `bnf_chapter = 4` in this file (central nervous system chapter in BNF numbering) — a **cost aggregate**, not a diagnosis count.
+- **Tirzepatide / atorvastatin** = rows where presentation, VMP, or AMP name contains that string (case-insensitive). Recomputed totals are in JSON; they are **not** independently validated against a separate drug reference list.
 
 **Reproduce:**
 
@@ -216,7 +217,11 @@ pytest tests/test_case_studies_rebuild.py -q
 
 PDF headline **crude exports +109% to £5.4bn** does **not** match CPA **06.1** on this vintage — see claim matrix in JSON `original_pdf_claim_check`.
 
+**Import-growth share (two baskets):** CPA **06 only** import YoY delta ≈ £3.13bn → **~19.7%** of total goods import growth. PDF-style **~44%** uses **CPA 06 + 19.2 refined imports** → **~44.2%** (`cpa_energy_import_growth` in JSON). Do not mix the two denominators.
+
 **Reproduce:** `PYTHONPATH=. python tools/export_case_studies.py` then `pytest tests/test_case_studies_rebuild.py -q`.
+
+**Not published on tgollogly.dev:** Monthly macro story HTML and PR #20-only polish pages — see [`EVIDENCE_HANDOFF.md`](./EVIDENCE_HANDOFF.md) for live vs in-repo-only features.
 
 ---
 

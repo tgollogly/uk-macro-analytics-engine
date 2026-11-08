@@ -140,8 +140,13 @@
         <p class="cs-chart-caption" id="ni-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="ni-findings">Loading findings…</p>
         <div class="cs-block">
+          <strong>So what (plain terms)</strong>
+          <p>August 2026: about <strong>3.6 million prescription lines</strong> across <strong>304</strong> practices; reimbursement was about <strong>£40.4m</strong> actual vs <strong>£42.0m</strong> gross on the chart. That describes <em>volume and money in one month</em> — not whether care improved.</p>
+          <p>Named-drug slices in the committed JSON (e.g. tirzepatide, atorvastatin) use <strong>text matches</strong> on drug names in the CSV — useful for demos, not a formal medicines audit.</p>
+        </div>
+        <div class="cs-block">
           <strong>Limits</strong>
-          <p>One month snapshot; therapy-area cuts (e.g. BNF chapter 4) are defined in repo docs — not a clinical outcome study.</p>
+          <p>One month only. “BNF chapter 4” sums are a <strong>therapy-area cost shortcut</strong>, not a patient count or clinical outcome measure.</p>
         </div>
       </article>
 
@@ -166,8 +171,13 @@
         <p class="cs-chart-caption" id="trade-chart-caption" aria-live="polite"></p>
         <p class="cs-findings" id="trade-findings">Loading findings…</p>
         <div class="cs-block">
+          <strong>So what (plain terms)</strong>
+          <p>On the pinned ONS file, <strong>crude petroleum exports</strong> (CPA 06.1) rose sharply in value between Q2 2025 and Q2 2026 at current prices. That is <strong>one product line</strong> — it does not explain why prices or volumes moved, and it is not the same as total UK trade.</p>
+          <p>A prior workbook’s “~44% of import growth” figure uses a <strong>wider import basket</strong> (CPA 06 crude+gas <em>plus</em> 19.2 refined). Using only CPA 06 gives ~20% — see <a href="https://github.com/tgollogly/uk-macro-analytics-engine/blob/main/docs/EVIDENCE_HANDOFF.md">EVIDENCE_HANDOFF.md</a>.</p>
+        </div>
+        <div class="cs-block">
           <strong>Limits</strong>
-          <p>One commodity line only; wider “energy” baskets (e.g. imports of crude+gas and refined fuels) are documented in the JSON summary for reviewers.</p>
+          <p>CPA (08) taxonomy, not SITC. Bulletin headlines may use different baskets or revisions.</p>
         </div>
       </article>
 
