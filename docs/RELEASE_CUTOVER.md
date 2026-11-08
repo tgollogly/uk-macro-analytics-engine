@@ -59,7 +59,7 @@ Per-script **route tables** returned empty from API for `uk-macro-analytics-land
 2. Workers & Pages → `uk-macro-analytics-landing` → **Settings → Domains & Routes** → Add custom domain **`tgollogly.dev`** (or move domain from `portfolio1` per dashboard workflow).
 3. Remove or disable **`portfolio1`** binding to `tgollogly.dev` **only after** new binding serves 200 on all hub paths (`/`, `/demo.html`, `/portfolio/macro-explorer.html`, `/favicon.ico`).
 4. **Do not** change `longshots.tgollogly.dev`, MX, SPF, or DKIM records.
-5. Update README / application links to `https://tgollogly.dev/...` (after verification; LinkedIn for contact — no public CV on the hub).
+5. Update README / application links to `https://tgollogly.dev/...` (after verification; `thomas@tgollogly.dev` + LinkedIn — no public CV on the hub).
 
 **Out of scope for cutover:** Streamlit hosting, ATS Worker secrets, Gemini provider calls, deleting `portfolio1` Worker script, archiving GitHub `portfolio` repo.
 

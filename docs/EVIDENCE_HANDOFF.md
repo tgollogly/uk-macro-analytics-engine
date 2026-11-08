@@ -4,7 +4,7 @@
 
 **Site status:** Case studies and hub are **live** on [tgollogly.dev](https://tgollogly.dev/) (deploy via PR #21, Nov 2026). **Monthly macro story** (`macro-story.html`) is **not** published on the static site — Python bundle code may exist in-repo for a future release only.
 
-**Contact:** [LinkedIn](https://www.linkedin.com/in/thomasgollogly) only on the public site. **No public CV PDF** is hosted in this repo or on the landing Worker (by design).
+**Contact:** [thomas@tgollogly.dev](mailto:thomas@tgollogly.dev) and [LinkedIn](https://www.linkedin.com/in/thomasgollogly) on the public hub. **No public CV PDF** is hosted in this repo or on the landing Worker (by design).
 
 **Rebuild disclaimer:** NI prescribing and UK energy trade are **Nov 2026 AI-assisted recreations** from official files. They demonstrate traceability in this repo; they do **not** prove prior personal authorship of any earlier notebook or PDF.
 
