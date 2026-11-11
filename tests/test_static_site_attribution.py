@@ -20,6 +20,12 @@ NEEDLE_GROUPS = (
 )
 
 
+@pytest.mark.parametrize("rel", ("index.html", "demo.html", "case-studies.html"))
+def test_static_pages_include_copyright_2026(rel: str) -> None:
+    text = (STATIC / rel).read_text(encoding="utf-8")
+    assert "Copyright © 2026 Thomas Gollogly" in text, rel
+
+
 @pytest.mark.parametrize("rel", ("index.html", "demo.html"))
 def test_static_pages_include_attribution_and_legal(rel: str) -> None:
     text = (STATIC / rel).read_text(encoding="utf-8")
@@ -185,7 +191,7 @@ def test_mirror_privacy_describes_hub_without_active_ats() -> None:
 
 
 def test_portfolio_footnotes_match_mirror_disclosure() -> None:
-    needle = "Portfolio demos on this mirror are for demonstration only"
+    needle = "Mirrored demos on this site are for demonstration only"
     for name in (
         "beneish.html",
         "heat-dome.html",

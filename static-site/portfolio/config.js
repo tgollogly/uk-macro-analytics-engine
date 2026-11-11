@@ -6,6 +6,6 @@ window.AI_BACKEND_URL =
 
 window.CHAT_MAINTENANCE_MODE = true;
 window.CHAT_MAINTENANCE_MESSAGE =
-  "Chat is not bundled on this static hub. Use the portfolio site or open individual demos from the hub.";
+  "Chat is not bundled on this static hub. Open individual demos from the hub.";
 
 window.CV_HIDDEN = true;

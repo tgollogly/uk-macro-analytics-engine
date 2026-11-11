@@ -8,6 +8,6 @@
     window.CHAT_MAINTENANCE_MODE = true;
     window.CHAT_MAINTENANCE_MESSAGE =
       "The AI assistant widget is not loaded on this demo hub. " +
-      "Open the portfolio site for chat, or use the project pages linked from the hub.";
+      "Chat is not available on this static hub; use the project pages linked from the hub.";
   }
 })();
