@@ -219,6 +219,36 @@ pytest -q
 
 ---
 
+## Verify your download
+
+Official release assets include a checksum manifest and GitHub build provenance attestations.
+
+### SHA256 checksum
+
+**Windows (PowerShell / cmd):**
+
+```text
+certutil -hashfile FILE SHA256
+```
+
+Compare the output with the matching line in `SHA256SUMS.txt` from the release.
+
+**macOS / Linux:**
+
+```bash
+shasum -a 256 -c SHA256SUMS.txt
+```
+
+### Build provenance
+
+With the [GitHub CLI](https://cli.github.com/) installed, verify each downloaded release file (wheel, sdist, zip, npm pack tarball):
+
+```bash
+gh attestation verify FILE --repo tgollogly/uk-macro-analytics-engine
+```
+
+---
+
 ## Project layout
 
 ```
