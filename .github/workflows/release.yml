@@ -107,8 +107,21 @@ jobs:
             echo '🔒 These files are sealed: SHA-256 checksums in SHA256SUMS.txt plus GitHub build attestations. See the README "Verify your download" section to check them.'
           } >> release-notes.md
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # v2.2.0
-        with:
-          body_path: release-notes.md
-          files: dist/*
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          assets=(dist/*)
+          if ((${#assets[@]} == 0)); then
+            echo "No release assets in dist/" >&2
+            exit 1
+          fi
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" "${assets[@]}" --clobber
+          else
+            gh release create "${GITHUB_REF_NAME}" \
+              --title "${GITHUB_REF_NAME}" \
+              --notes-file release-notes.md \
+              "${assets[@]}"
+          fi
