@@ -12,6 +12,7 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square" alt="MIT License" /></a>
   <a href="./NOTICE.md"><img src="https://img.shields.io/badge/Data-OGL%20v3-0ea5e9?style=flat-square" alt="Open Government Licence" /></a>
   <a href="./.github/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-181717?style=flat-square&logo=github" alt="CI" /></a>
+  <a href="#verify-your-download"><img src="https://img.shields.io/badge/releases-signed%20%26%20verifiable-brightgreen" alt="Signed releases" /></a>
 </p>
 
 <p align="center">
