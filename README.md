@@ -12,6 +12,7 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square" alt="MIT License" /></a>
   <a href="./NOTICE.md"><img src="https://img.shields.io/badge/Data-OGL%20v3-0ea5e9?style=flat-square" alt="Open Government Licence" /></a>
   <a href="./.github/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-181717?style=flat-square&logo=github" alt="CI" /></a>
+  <a href="#verify-your-download"><img src="https://img.shields.io/badge/releases-signed%20%26%20verifiable-brightgreen" alt="Signed releases" /></a>
 </p>
 
 <p align="center">
@@ -215,6 +216,36 @@ Workflow: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 
 ```bash
 pytest -q
+```
+
+---
+
+## Verify your download
+
+Official release assets include a checksum manifest and GitHub build provenance attestations.
+
+### SHA256 checksum
+
+**Windows (PowerShell / cmd):**
+
+```text
+certutil -hashfile FILE SHA256
+```
+
+Compare the output with the matching line in `SHA256SUMS.txt` from the release.
+
+**macOS / Linux:**
+
+```bash
+shasum -a 256 -c SHA256SUMS.txt
+```
+
+### Build provenance
+
+With the [GitHub CLI](https://cli.github.com/) installed, verify each downloaded release file (wheel, sdist, zip, npm pack tarball):
+
+```bash
+gh attestation verify FILE --repo tgollogly/uk-macro-analytics-engine
 ```
 
 ---
