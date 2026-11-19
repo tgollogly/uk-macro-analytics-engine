@@ -1,6 +1,6 @@
-@import url("../../hub-tokens.css?v=20251108d6");
-@import url("../../hub-motion.css?v=20251108d6");
-@import url("../../shell-shared.css?v=20251108d6");
+@import url("../../hub-tokens.css?v=20251119a1");
+@import url("../../hub-motion.css?v=20251119a1");
+@import url("../../shell-shared.css?v=20251119a1");
 
 /* =====================================================================
    site.css — colour, type, shell for portfolio mirror demos (dark product UI).
@@ -556,4 +556,55 @@ h3,
     font-size: 11px;
     padding: 5px 9px;
   }
+}
+
+/* ---------- cross-page responsive safeguards ---------- */
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.layout,
+.frm,
+.meta-in,
+.metrics,
+.chips,
+.row {
+  min-width: 0;
+}
+
+.mapwrap {
+  height: min(52vh, 480px);
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .mapwrap {
+    height: min(50vh, 400px);
+  }
+  .wrap {
+    padding-inline: max(12px, var(--hub-content-pad, 16px));
+  }
+}
+
+@media (max-width: 400px) {
+  .mapwrap {
+    height: min(46vh, 340px);
+  }
+}
+
+.panel table,
+table.cov {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.panel .btn,
+.panel button,
+.chip,
+a.btn {
+  min-height: 44px;
 }
