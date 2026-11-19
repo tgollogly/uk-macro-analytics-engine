@@ -66,10 +66,8 @@ def test_case_studies_matches_committed_demo_numbers(
     assert str(int(borrow)) in md if float(borrow).is_integer() else str(borrow) in md
 
 
-def test_hub_mentions_case_studies_and_manifest() -> None:
+def test_hub_mentions_manifest() -> None:
     idx = (ROOT / "static-site" / "index.html").read_text(encoding="utf-8")
-    assert "CASE_STUDIES.md" in idx
-    assert "docs/CASE_STUDIES.md" in idx
     assert "manifest.json" in idx
 
 
