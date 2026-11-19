@@ -21,7 +21,7 @@ def test_case_studies_html_has_dom_captions_and_overflow_guards() -> None:
     assert "overflow-x: clip" in html
     assert "ni-chart-caption" in html
     assert "trade-chart-caption" in html
-    assert "case-studies/app.js?v=20251108d6" in html
+    assert "case-studies/app.js?v=20251119a1" in html
 
 
 def test_case_studies_js_has_no_canvas_kpi_plugins() -> None:
@@ -33,7 +33,7 @@ def test_case_studies_js_has_no_canvas_kpi_plugins() -> None:
 
 def test_hub_asset_build_bumped() -> None:
     build = (ROOT / "static-site" / "hub-asset-build.txt").read_text(encoding="utf-8").strip()
-    assert build == "20251108d6"
+    assert build == "20251119a1"
 
 
 @pytest.mark.skipif(

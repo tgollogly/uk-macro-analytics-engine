@@ -23,11 +23,11 @@
   <meta name="twitter:image" content="https://tgollogly.dev/og-hub-public-data-20251108a.png" />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./hub-tokens.css?v=20251108d6" />
-  <link rel="stylesheet" href="./shell-shared.css?v=20251108d6" />
-  <link rel="stylesheet" href="./hub-pages.css?v=20251108d6" />
+  <link rel="stylesheet" href="./hub-tokens.css?v=20251119a1" />
+  <link rel="stylesheet" href="./shell-shared.css?v=20251119a1" />
+  <link rel="stylesheet" href="./hub-pages.css?v=20251119a1" />
   <link rel="stylesheet" href="./hub-motion.css?v=20251107d4" />
-  <link rel="stylesheet" href="./hub-visual-polish.css?v=20251108d6" />
+  <link rel="stylesheet" href="./hub-visual-polish.css?v=20251119a1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -43,6 +43,8 @@
       <a href="./case-studies.html">Case studies</a>
       <a href="#story">Snapshot</a>
       <a href="#hub">Demos</a>
+      <a href="#featured">Bunker</a>
+      <a href="#engineering">Engineering</a>
       <a class="nav-contact" href="mailto:thomas@tgollogly.dev">Email</a>
       <a class="nav-contact" href="https://www.linkedin.com/in/thomasgollogly" rel="noopener me">LinkedIn</a>
       <a href="./portfolio/privacy.html">Privacy</a>
@@ -91,6 +93,15 @@
 
   <main class="hub-main" id="main">
     <div class="inner">
+      <section class="hub-featured motion-in reveal-section" id="featured" aria-labelledby="featured-h">
+        <h2 class="hub-section-title" id="featured-h">Featured project</h2>
+        <article class="hub-card hub-card-feature hub-card-feature--full motion-in">
+          <h2><span class="hub-tag">Python</span> <span class="hub-tag">DuckDB</span> <span class="hub-tag">FastAPI</span> <span class="hub-tag">Docker</span> Project Bunker: Offline Continuity Kit</h2>
+          <p>A local toolkit that snapshots calendar, contacts and documents from Microsoft Graph, Google, iCal, CSV/vCard or a folder into encrypted storage, with an offline web UI and a printable outage-pack PDF. Backed by 173 automated tests, a CI coverage gate, linting, type-checking and signed releases.</p>
+          <a class="btn btn-primary" href="https://github.com/tgollogly/project-bunker" target="_blank" rel="noopener">View on GitHub</a>
+        </article>
+      </section>
+
       <section class="story-intro motion-in" id="story" aria-labelledby="story-h" data-stagger="1">
         <h2 id="story-h">Question → source → chart → takeaway</h2>
         <p>
@@ -190,7 +201,7 @@
         </article>
       </div>
 
-      <h2 class="hub-section-title hub-grid-secondary">Engineering notes</h2>
+      <h2 class="hub-section-title hub-grid-secondary" id="engineering">Engineering notes</h2>
       <div class="hub-grid">
         <article class="hub-card motion-in">
           <h2><span class="hub-pill">Pipeline</span> Python + DuckDB + CI</h2>
@@ -204,11 +215,6 @@
           <p class="hub-prose" style="font-size:0.88rem;color:var(--shell-muted)">
             <a href="./portfolio/privacy.html">Privacy &amp; data notice</a> · MIT where mirrored · Crown OGL for ONS-derived stats.
           </p>
-        </article>
-        <article class="hub-card motion-in">
-          <h2><span class="hub-tag">Python</span> <span class="hub-tag">DuckDB</span> <span class="hub-tag">FastAPI</span> <span class="hub-tag">Docker</span> Project Bunker: Offline Continuity Kit</h2>
-          <p>A local toolkit that snapshots calendar, contacts and documents from Microsoft Graph, Google, iCal, CSV/vCard or a folder into encrypted storage, with an offline web UI and a printable outage-pack PDF. Backed by 173 automated tests, a CI coverage gate, linting, type-checking and signed releases.</p>
-          <a class="btn btn-primary" href="https://github.com/tgollogly/project-bunker" target="_blank" rel="noopener">View on GitHub</a>
         </article>
       </div>
     </div>
@@ -231,7 +237,7 @@
       sparklineYoY,
       sparklinePsnb,
       drawSparkline,
-    } from "./hub-insights.js?v=20251108d6";
+    } from "./hub-insights.js?v=20251119a1";
 
     initPageMotion();
     initSectionReveal(".reveal-section, .insight-feature");

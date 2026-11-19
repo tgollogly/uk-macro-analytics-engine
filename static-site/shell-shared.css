@@ -2,6 +2,11 @@
 
 /* Shared sticky nav + horizontal inset — hub, macro demo, portfolio (8 pages). */
 
+html {
+  overflow-x: clip;
+  scroll-padding-top: 3.25rem;
+}
+
 .tg-mark {
   flex-shrink: 0;
   vertical-align: middle;
@@ -58,7 +63,7 @@
   overflow-wrap: anywhere;
   transition: color var(--hub-transition, 170ms ease);
   padding: 0.35rem 0.15rem;
-  min-height: 40px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   max-width: 100%;
@@ -78,22 +83,45 @@
   outline: 2px solid var(--hub-focus-ring);
   outline-offset: 2px;
 }
-@media (max-width: 480px) {
+/* Compact single-row nav: title + horizontally scrollable links (no hamburger). */
+@media (max-width: 767px) {
+  .app-nav {
+    padding-block: 0.2rem;
+  }
   .app-nav .nav-inner {
-    gap: 0.35rem 0.55rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .app-nav .nav-inner::-webkit-scrollbar {
+    display: none;
   }
   .app-nav .nav-title {
-    flex: 1 1 100%;
-    min-width: 0;
-    max-width: 100%;
+    flex: 0 0 auto;
+    margin-right: 0.15rem;
+    font-size: 0.92rem;
+    max-width: min(46vw, 10.5rem);
   }
   .app-nav .nav-title span {
-    overflow-wrap: anywhere;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .app-nav a:not(.nav-title) {
-    font-size: 0.8rem;
-    min-height: 40px;
-    padding: 0.15rem 0.1rem;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    min-height: 44px;
+    padding: 0.35rem 0.45rem;
+    overflow-wrap: normal;
+  }
+  .app-nav .nav-contact {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
   }
 }

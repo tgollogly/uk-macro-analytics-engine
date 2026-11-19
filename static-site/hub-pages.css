@@ -19,6 +19,8 @@
 .page-shell {
   margin: 0;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: clip;
   font-family: var(--shell-font);
   background: var(--shell-page);
   background-image:
@@ -247,6 +249,16 @@
   color: var(--shell-muted);
   max-width: 42rem;
   overflow-wrap: anywhere;
+}
+.hero-note a {
+  color: var(--shell-link);
+  text-decoration: none;
+  font-weight: 500;
+}
+.hero-note a:hover {
+  color: var(--hub-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Buttons */
@@ -565,6 +577,23 @@
   border-color: rgba(29, 92, 140, 0.25);
   background: linear-gradient(145deg, #ffffff 0%, var(--hub-bg-deep) 100%);
 }
+.hub-featured {
+  margin-bottom: 0.5rem;
+}
+.hub-featured .hub-section-title {
+  margin-top: 0;
+}
+.hub-card-feature--full {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.hub-featured .hub-card-feature--full h2 {
+  font-size: clamp(1.05rem, 3.8vw, 1.35rem);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
 .hub-section-title {
   font-family: var(--hub-font-serif);
   font-size: 1.35rem;
@@ -629,6 +658,7 @@
   padding: 1.5rem var(--hub-content-pad) 3rem;
   min-width: 0;
   box-sizing: border-box;
+  overflow-x: clip;
 }
 .demo-main h1 {
   font-family: var(--hub-font-serif);
@@ -659,6 +689,16 @@
   .hero {
     padding-top: 1.75rem;
   }
+  .hub-main {
+    padding-top: 1.5rem;
+  }
+  .hub-section-title {
+    font-size: clamp(1.15rem, 4.5vw, 1.35rem);
+  }
+}
+
+.case-studies-page .hub-main {
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
