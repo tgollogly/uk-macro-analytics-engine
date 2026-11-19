@@ -24,15 +24,28 @@ function cacheControlFor(url) {
   return null;
 }
 
+/** Baseline headers for static HTML/assets (CSP left to Cloudflare dashboard if needed). */
+function applyBaselineSecurityHeaders(headers) {
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("X-Frame-Options", "SAMEORIGIN");
+  headers.set(
+    "Permissions-Policy",
+    "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
+  );
+}
+
 export default {
   async fetch(request, env) {
     const response = await env.ASSETS.fetch(request);
-    const policy = cacheControlFor(new URL(request.url));
-    if (!policy || response.status !== 200) {
-      return response;
-    }
     const headers = new Headers(response.headers);
-    headers.set("Cache-Control", policy);
+    if (response.status === 200) {
+      applyBaselineSecurityHeaders(headers);
+    }
+    const policy = cacheControlFor(new URL(request.url));
+    if (policy && response.status === 200) {
+      headers.set("Cache-Control", policy);
+    }
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,

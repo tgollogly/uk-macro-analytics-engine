@@ -84,7 +84,12 @@ loadMacroBundle().then(({ manifest, cpih, psnb }) => {
   </article>`;
   document.getElementById("main").innerHTML = html;
 }).catch((e) => {
-  document.getElementById("main").innerHTML = `<p class="errbox">${e.message}</p>`;
+  const main = document.getElementById("main");
+  main.replaceChildren();
+  const p = document.createElement("p");
+  p.className = "errbox";
+  p.textContent = e && e.message ? String(e.message) : "Could not load snapshot.";
+  main.appendChild(p);
 });
 </script>
 <div class="sitefoot"><div class="in footnote">
